@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2018  José Miguel García Urrutia <josemgu91@gmail.com>
+  ~
+  ~ This file is part of HabitTune.
+  ~
+  ~ HabitTune is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ HabitTune is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/actionSchedule"
+            android:title="@string/menu_navigation_main_schedule" />
+        <item
+            android:id="@+id/actionRoutines"
+            android:title="@string/menu_navigation_main_routines" />
+        <item
+            android:id="@+id/actionActivities"
+            android:title="@string/menu_navigation_main_activities" />
+        <item
+            android:id="@+id/actionStatistics"
+            android:title="@string/menu_navigation_main_statistics" />
+        <item
+            android:id="@+id/actionSettings"
+            android:title="@string/menu_navigation_main_settings" />
+        <item
+            android:id="@+id/actionHelp"
+            android:title="@string/menu_navigation_main_help" />
+    </group>
+
+</menu>
