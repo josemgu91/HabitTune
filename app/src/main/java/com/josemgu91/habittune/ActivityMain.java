@@ -21,6 +21,7 @@ package com.josemgu91.habittune;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -31,11 +32,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    @IdRes
+    private final static int DEFAULT_MENU_SELECTION = R.id.actionSchedule;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+
+    private NavigationRouter navigationRouter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         final NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(DEFAULT_MENU_SELECTION);
+        navigationRouter = new FragmentNavigationRouter(getSupportFragmentManager(), R.id.fragment_container);
     }
 
     private ActionBarDrawerToggle setupActionBarDrawerToggle() {
@@ -80,7 +88,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
+        switch (item.getItemId()) {
+            case R.id.actionSchedule:
+                navigationRouter.goToSchedule();
+                break;
+            case R.id.actionRoutines:
+                navigationRouter.goToRoutines();
+                break;
+            case R.id.actionActivities:
+                navigationRouter.goToActivities();
+                break;
+            case R.id.actionStatistics:
+                navigationRouter.goToStatistics();
+                break;
+            case R.id.actionSettings:
+                navigationRouter.goToSettings();
+                break;
+            case R.id.actionHelp:
+                navigationRouter.goToHelp();
+                break;
+        }
         drawerLayout.closeDrawers();
         return true;
     }
