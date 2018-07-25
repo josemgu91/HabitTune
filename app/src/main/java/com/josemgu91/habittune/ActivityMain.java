@@ -30,12 +30,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @IdRes
-    private final static int DEFAULT_MENU_SELECTION = R.id.actionSchedule;
+    private final static int DEFAULT_MENU_SELECTION = R.id.navigationMenuGoToSchedule;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -89,22 +88,22 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.actionSchedule:
+            case R.id.navigationMenuGoToSchedule:
                 navigationRouter.goToSchedule();
                 break;
-            case R.id.actionRoutines:
+            case R.id.navigationMenuGoToRoutines:
                 navigationRouter.goToRoutines();
                 break;
-            case R.id.actionActivities:
+            case R.id.navigationMenuGoToActivities:
                 navigationRouter.goToActivities();
                 break;
-            case R.id.actionStatistics:
+            case R.id.navigationMenuGoToStatistics:
                 navigationRouter.goToStatistics();
                 break;
-            case R.id.actionSettings:
+            case R.id.navigationMenuGoToSettings:
                 navigationRouter.goToSettings();
                 break;
-            case R.id.actionHelp:
+            case R.id.navigationMenuGoToHelp:
                 navigationRouter.goToHelp();
                 break;
         }

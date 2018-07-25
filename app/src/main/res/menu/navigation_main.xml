@@ -19,24 +19,29 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/navigationMenuSectionMain"
+        android:checkableBehavior="single">
         <item
-            android:id="@+id/actionSchedule"
+            android:id="@+id/navigationMenuGoToSchedule"
             android:title="@string/menu_navigation_main_schedule" />
         <item
-            android:id="@+id/actionRoutines"
+            android:id="@+id/navigationMenuGoToRoutines"
             android:title="@string/menu_navigation_main_routines" />
         <item
-            android:id="@+id/actionActivities"
+            android:id="@+id/navigationMenuGoToActivities"
             android:title="@string/menu_navigation_main_activities" />
         <item
-            android:id="@+id/actionStatistics"
+            android:id="@+id/navigationMenuGoToStatistics"
             android:title="@string/menu_navigation_main_statistics" />
+    </group>
+    <group android:id="@+id/navigationMenuSectionSettingsAndHelp">
+
         <item
-            android:id="@+id/actionSettings"
+            android:id="@+id/navigationMenuGoToSettings"
             android:title="@string/menu_navigation_main_settings" />
         <item
-            android:id="@+id/actionHelp"
+            android:id="@+id/navigationMenuGoToHelp"
             android:title="@string/menu_navigation_main_help" />
     </group>
 
