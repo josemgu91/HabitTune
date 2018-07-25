@@ -20,6 +20,7 @@
 package com.josemgu91.habittune;
 
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -30,6 +31,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.josemgu91.habittune.databinding.ActivityMainBinding;
 
 public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,16 +48,18 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        toolbar = findViewById(R.id.toolbar);
+        final ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        toolbar = activityMainBinding.includedToolbar.toolbar;
+        drawerLayout = activityMainBinding.drawerLayout;
+        final NavigationView navigationView = activityMainBinding.navigationView;
+
         setSupportActionBar(toolbar);
-        drawerLayout = findViewById(R.id.drawerLayout);
         actionBarDrawerToggle = setupActionBarDrawerToggle();
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        final NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(DEFAULT_MENU_SELECTION);
-        navigationRouter = new FragmentNavigationRouter(getSupportFragmentManager(), R.id.fragment_container);
+        navigationRouter = new FragmentNavigationRouter(getSupportFragmentManager(), R.id.fragmentContainer);
     }
 
     private ActionBarDrawerToggle setupActionBarDrawerToggle() {
