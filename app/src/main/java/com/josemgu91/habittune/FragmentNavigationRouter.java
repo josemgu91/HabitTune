@@ -52,6 +52,11 @@ public class FragmentNavigationRouter implements NavigationRouter {
 
     @Override
     public void goToRoutines() {
+        Fragment fragment = findFragmentByTag(FRAGMENT_TAG_ROUTINES);
+        if (fragment == null) {
+            fragment = new FragmentRoutines();
+        }
+        showFragment(fragment, FRAGMENT_TAG_ROUTINES);
 
     }
 
@@ -66,17 +71,29 @@ public class FragmentNavigationRouter implements NavigationRouter {
 
     @Override
     public void goToStatistics() {
-
+        Fragment fragment = findFragmentByTag(FRAGMENT_TAG_STATISTICS);
+        if (fragment == null) {
+            fragment = new FragmentStatistics();
+        }
+        showFragment(fragment, FRAGMENT_TAG_STATISTICS);
     }
 
     @Override
     public void goToSettings() {
-
+        Fragment fragment = findFragmentByTag(FRAGMENT_TAG_SETTINGS);
+        if (fragment == null) {
+            fragment = new FragmentSettings();
+        }
+        showFragment(fragment, FRAGMENT_TAG_SETTINGS);
     }
 
     @Override
     public void goToHelp() {
-
+        Fragment fragment = findFragmentByTag(FRAGMENT_TAG_HELP);
+        if (fragment == null) {
+            fragment = new FragmentHelp();
+        }
+        showFragment(fragment, FRAGMENT_TAG_HELP);
     }
 
     private void showFragment(final Fragment fragment, final String tag) {
