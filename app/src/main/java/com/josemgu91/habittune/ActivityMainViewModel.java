@@ -19,11 +19,20 @@
 
 package com.josemgu91.habittune;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-public class ActivityMainViewModel extends ViewModel {
+public class ActivityMainViewModel extends ViewModel implements MenuController.MenuPresenter {
 
+    public MutableLiveData<MenuController.MenuViewModel> menuViewModelLiveData;
 
+    public ActivityMainViewModel() {
+        this.menuViewModelLiveData = new MutableLiveData<>();
+    }
 
-
+    @Override
+    public void show(MenuController.MenuViewModel menuViewModel) {
+        menuViewModelLiveData.postValue(menuViewModel);
+    }
 }

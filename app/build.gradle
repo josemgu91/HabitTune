@@ -51,12 +51,18 @@ dependencies {
     def jUnitVersion = '4.12'
     def testRunnerVersion = '1.0.2'
     def espressoVersion = '3.0.2'
+    def lifecycle_version = "1.1.1"
+
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:design:$supportLibraryVersion"
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+
     testImplementation "junit:junit:$jUnitVersion"
+
     androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
 }

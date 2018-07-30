@@ -19,6 +19,10 @@
 
 package com.josemgu91.habittune;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -30,6 +34,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
@@ -43,7 +48,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
-    private NavigationRouter navigationRouter;
+    private MenuController menuController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +64,70 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(DEFAULT_MENU_SELECTION);
-        navigationRouter = new FragmentNavigationRouter(getSupportFragmentManager(), R.id.fragmentContainer);
+        final NavigationRouter navigationRouter = new FragmentNavigationRouter(getSupportFragmentManager(), R.id.fragmentContainer);
+
+        final ActivityMainViewModel activityMainViewModel = ViewModelProviders.of(this).get(ActivityMainViewModel.class);
+        menuController = new MenuController(activityMainViewModel, new MenuController.TitleProvider() {
+            @Override
+            public String getScheduleTitle() {
+                return getString(R.string.menu_navigation_main_schedule);
+            }
+
+            @Override
+            public String getRoutinesTitle() {
+                return "TEST";
+            }
+
+            @Override
+            public String getActivitiesTitle() {
+                return "TEST";
+            }
+
+            @Override
+            public String getStatisticsTitle() {
+                return "TEST";
+            }
+
+            @Override
+            public String getSettingsTitle() {
+                return "TEST";
+            }
+
+            @Override
+            public String getHelpTitle() {
+                return "TEST";
+            }
+        });
+        activityMainViewModel.menuViewModelLiveData.observe(this, new Observer<MenuController.MenuViewModel>() {
+            @Override
+            public void onChanged(@Nullable MenuController.MenuViewModel menuViewModel) {
+                Log.d("ActivityMain", "onChanged");
+                if (menuViewModel != null) {
+                    switch (menuViewModel.currentScreen){
+                        case SCHEDULE:
+                            toolbar.setTitle(menuViewModel.title);
+                            navigationRouter.goToSchedule();
+                            break;
+                        case ROUTINES:
+                            toolbar.setTitle(menuViewModel.title);
+                            navigationRouter.goToRoutines();
+                            break;
+                        case ACTIVITIES:
+                            toolbar.setTitle(menuViewModel.title);
+                            break;
+                        case STATISTICS:
+                            toolbar.setTitle(menuViewModel.title);
+                            break;
+                        case SETTINGS:
+                            toolbar.setTitle(menuViewModel.title);
+                            break;
+                        case HELP:
+                            toolbar.setTitle(menuViewModel.title);
+                            break;
+                    }
+                }
+            }
+        });
     }
 
     private ActionBarDrawerToggle setupActionBarDrawerToggle() {
@@ -94,22 +162,22 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigationMenuGoToSchedule:
-                navigationRouter.goToSchedule();
+                menuController.goToSchedule();
                 break;
             case R.id.navigationMenuGoToRoutines:
-                navigationRouter.goToRoutines();
+                menuController.goToRoutines();
                 break;
             case R.id.navigationMenuGoToActivities:
-                navigationRouter.goToActivities();
+                menuController.goToActivities();
                 break;
             case R.id.navigationMenuGoToStatistics:
-                navigationRouter.goToStatistics();
+                menuController.goToStatistics();
                 break;
             case R.id.navigationMenuGoToSettings:
-                navigationRouter.goToSettings();
+                menuController.goToSettings();
                 break;
             case R.id.navigationMenuGoToHelp:
-                navigationRouter.goToHelp();
+                menuController.goToHelp();
                 break;
         }
         drawerLayout.closeDrawers();
