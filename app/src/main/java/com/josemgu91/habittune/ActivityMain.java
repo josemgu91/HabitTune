@@ -34,7 +34,7 @@ import android.view.MenuItem;
 
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
 
-public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ActivityMainController.MainMenuPresenter {
 
     @IdRes
     private final static int DEFAULT_MENU_SELECTION = R.id.navigationMenuGoToSchedule;
@@ -43,7 +43,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
-    private NavigationRouter navigationRouter;
+    private ActivityMainController activityMainController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,9 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(DEFAULT_MENU_SELECTION);
-        navigationRouter = new FragmentNavigationRouter(getSupportFragmentManager(), R.id.fragmentContainer);
+
+        activityMainController = new ActivityMainController(this, getSupportFragmentManager(), R.id.fragmentContainer);
+        activityMainController.init();
     }
 
     private ActionBarDrawerToggle setupActionBarDrawerToggle() {
@@ -94,25 +96,30 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigationMenuGoToSchedule:
-                navigationRouter.goToSchedule();
+                activityMainController.goToSchedule();
                 break;
             case R.id.navigationMenuGoToRoutines:
-                navigationRouter.goToRoutines();
+                activityMainController.goToRoutines();
                 break;
             case R.id.navigationMenuGoToActivities:
-                navigationRouter.goToActivities();
+                activityMainController.goToActivities();
                 break;
             case R.id.navigationMenuGoToStatistics:
-                navigationRouter.goToStatistics();
+                activityMainController.goToStatistics();
                 break;
             case R.id.navigationMenuGoToSettings:
-                navigationRouter.goToSettings();
+                activityMainController.goToSettings();
                 break;
             case R.id.navigationMenuGoToHelp:
-                navigationRouter.goToHelp();
+                activityMainController.goToHelp();
                 break;
         }
         drawerLayout.closeDrawers();
         return true;
+    }
+
+    @Override
+    public void onScreenChanged(int toolbarTitle, boolean canOpenDrawer) {
+        toolbar.setTitle(toolbarTitle);
     }
 }

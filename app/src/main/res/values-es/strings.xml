@@ -26,4 +26,11 @@
     <string name="menu_navigation_main_help">Ayuda</string>
     <string name="menu_navigation_open_drawer">Abrir panel de navegación</string>
     <string name="menu_navigation_close_drawer">Cerrar panel de navegación</string>
+
+    <string name="title_schedule">Horario</string>
+    <string name="title_routines">Rutinas</string>
+    <string name="title_activities">Actividades</string>
+    <string name="title_statistics">Estadísticas</string>
+    <string name="title_settings">Configuración</string>
+    <string name="title_help">Ayuda</string>
 </resources>
