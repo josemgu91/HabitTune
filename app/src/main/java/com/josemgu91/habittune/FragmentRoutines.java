@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,9 +30,25 @@ import android.view.ViewGroup;
 
 public class FragmentRoutines extends Fragment {
 
+    private FragmentInteractionListener fragmentInteractionListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentInteractionListener = (FragmentInteractionListener) getActivity();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_routines, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (fragmentInteractionListener != null) {
+            fragmentInteractionListener.updateTitle(getString(R.string.title_routines));
+        }
     }
 }

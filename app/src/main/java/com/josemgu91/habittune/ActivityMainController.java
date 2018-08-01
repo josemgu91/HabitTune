@@ -20,11 +20,10 @@
 package com.josemgu91.habittune;
 
 import android.support.annotation.IdRes;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-public class ActivityMainController implements NavigationRouter, FragmentManager.OnBackStackChangedListener {
+public class ActivityMainController implements NavigationRouter {
 
     private static final String FRAGMENT_TAG_SCHEDULE = "fragment_schedule";
     private static final String FRAGMENT_TAG_ROUTINES = "fragment_routines";
@@ -39,81 +38,66 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
     @IdRes
     private final int containerId;
 
-    private MainMenuPresenter mainMenuPresenter;
-
-    public ActivityMainController(final MainMenuPresenter mainMenuPresenter, FragmentManager fragmentManager, @IdRes int containerId) {
+    public ActivityMainController(final FragmentManager fragmentManager, @IdRes final int containerId) {
         this.fragmentManager = fragmentManager;
         this.containerId = containerId;
-        this.mainMenuPresenter = mainMenuPresenter;
-        this.fragmentManager.addOnBackStackChangedListener(this);
     }
 
     @Override
     public void goToSchedule() {
-        Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_SCHEDULE);
+        FragmentSchedule fragment = (FragmentSchedule) fragmentManager.findFragmentByTag(FRAGMENT_TAG_SCHEDULE);
         if (fragment == null) {
             fragment = new FragmentSchedule();
         }
         clearBackStackAndAddFragment(fragment, FRAGMENT_TAG_SCHEDULE);
-        mainMenuPresenter.onScreenChanged(R.string.title_schedule, true);
     }
 
     @Override
     public void goToRoutines() {
-        Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ROUTINES);
+        FragmentRoutines fragment = (FragmentRoutines) fragmentManager.findFragmentByTag(FRAGMENT_TAG_ROUTINES);
         if (fragment == null) {
             fragment = new FragmentRoutines();
         }
         clearTopAndAddFragment(fragment, FRAGMENT_TAG_ROUTINES);
-        mainMenuPresenter.onScreenChanged(R.string.title_routines, true);
     }
 
     @Override
     public void goToActivities() {
-        Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ACTIVITIES);
+        FragmentActivities fragment = (FragmentActivities) fragmentManager.findFragmentByTag(FRAGMENT_TAG_ACTIVITIES);
         if (fragment == null) {
             fragment = new FragmentActivities();
         }
         clearTopAndAddFragment(fragment, FRAGMENT_TAG_ACTIVITIES);
-        mainMenuPresenter.onScreenChanged(R.string.title_activities, true);
     }
 
     @Override
     public void goToStatistics() {
-        Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_STATISTICS);
+        FragmentStatistics fragment = (FragmentStatistics) fragmentManager.findFragmentByTag(FRAGMENT_TAG_STATISTICS);
         if (fragment == null) {
             fragment = new FragmentStatistics();
         }
         clearTopAndAddFragment(fragment, FRAGMENT_TAG_STATISTICS);
-        mainMenuPresenter.onScreenChanged(R.string.title_statistics, true);
     }
 
     @Override
     public void goToSettings() {
-        Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_SETTINGS);
+        FragmentSettings fragment = (FragmentSettings) fragmentManager.findFragmentByTag(FRAGMENT_TAG_SETTINGS);
         if (fragment == null) {
             fragment = new FragmentSettings();
         }
         addTransactionToBackStackAndAddFragment(fragment, FRAGMENT_TAG_SETTINGS);
-        mainMenuPresenter.onScreenChanged(R.string.title_settings, false);
     }
 
     @Override
     public void goToHelp() {
-        Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_HELP);
+        FragmentHelp fragment = (FragmentHelp) fragmentManager.findFragmentByTag(FRAGMENT_TAG_HELP);
         if (fragment == null) {
             fragment = new FragmentHelp();
         }
         addTransactionToBackStackAndAddFragment(fragment, FRAGMENT_TAG_HELP);
-        mainMenuPresenter.onScreenChanged(R.string.title_help, false);
     }
 
-    @Override
-    public void onBackStackChanged() {
-
-    }
-
-    private void addTransactionToBackStackAndAddFragment(final Fragment fragment, final String fragmentTag){
+    private void addTransactionToBackStackAndAddFragment(final Fragment fragment, final String fragmentTag) {
         fragmentManager.beginTransaction()
                 .addToBackStack(null)
                 .replace(containerId, fragment, fragmentTag)
@@ -133,11 +117,6 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         fragmentManager.beginTransaction()
                 .replace(containerId, fragment, fragmentTag)
                 .commit();
-    }
-
-    interface MainMenuPresenter {
-
-        void onScreenChanged(@StringRes final int toolbarTitle, final boolean canOpenDrawer);
     }
 
 }

@@ -34,7 +34,7 @@ import android.view.MenuItem;
 
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
 
-public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ActivityMainController.MainMenuPresenter {
+public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentInteractionListener {
 
     @IdRes
     private final static int DEFAULT_MENU_SELECTION = R.id.navigationMenuGoToSchedule;
@@ -60,8 +60,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(DEFAULT_MENU_SELECTION);
 
-        activityMainController = new ActivityMainController(this, getSupportFragmentManager(), R.id.fragmentContainer);
-        activityMainController.goToSchedule();
+        activityMainController = new ActivityMainController(getSupportFragmentManager(), R.id.fragmentContainer);
+
+        if (savedInstanceState == null) {
+            activityMainController.goToSchedule();
+        }
     }
 
     private ActionBarDrawerToggle setupActionBarDrawerToggle() {
@@ -119,7 +122,12 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onScreenChanged(int toolbarTitle, boolean canOpenDrawer) {
-        toolbar.setTitle(toolbarTitle);
+    public void updateNavigationDrawerAndToolbar(boolean canOpenDrawer, boolean showUpNavigation, int upNavigationDrawable) {
+
+    }
+
+    @Override
+    public void updateTitle(String title) {
+        toolbar.setTitle(title);
     }
 }
