@@ -64,7 +64,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentRoutines();
         }
-        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_ROUTINES);
+        clearTopAndAddFragment(fragment, FRAGMENT_TAG_ROUTINES);
         mainMenuPresenter.onScreenChanged(R.string.title_routines, true);
     }
 
@@ -74,7 +74,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentActivities();
         }
-        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_ACTIVITIES);
+        clearTopAndAddFragment(fragment, FRAGMENT_TAG_ACTIVITIES);
         mainMenuPresenter.onScreenChanged(R.string.title_activities, true);
     }
 
@@ -84,7 +84,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentStatistics();
         }
-        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_STATISTICS);
+        clearTopAndAddFragment(fragment, FRAGMENT_TAG_STATISTICS);
         mainMenuPresenter.onScreenChanged(R.string.title_statistics, true);
     }
 
@@ -94,7 +94,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentSettings();
         }
-        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_SETTINGS);
+        addTransactionToBackStackAndAddFragment(fragment, FRAGMENT_TAG_SETTINGS);
         mainMenuPresenter.onScreenChanged(R.string.title_settings, false);
     }
 
@@ -104,7 +104,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentHelp();
         }
-        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_HELP);
+        addTransactionToBackStackAndAddFragment(fragment, FRAGMENT_TAG_HELP);
         mainMenuPresenter.onScreenChanged(R.string.title_help, false);
     }
 
@@ -113,7 +113,14 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
 
     }
 
-    private void clearTopFragmentAndAddFragment(final Fragment fragment, final String fragmentTag) {
+    private void addTransactionToBackStackAndAddFragment(final Fragment fragment, final String fragmentTag){
+        fragmentManager.beginTransaction()
+                .addToBackStack(null)
+                .replace(containerId, fragment, fragmentTag)
+                .commit();
+    }
+
+    private void clearTopAndAddFragment(final Fragment fragment, final String fragmentTag) {
         fragmentManager.popBackStack(FRAGMENT_TRANSACTION_HOME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager.beginTransaction()
                 .addToBackStack(FRAGMENT_TRANSACTION_HOME)
