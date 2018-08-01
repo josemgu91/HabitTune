@@ -61,7 +61,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         navigationView.setCheckedItem(DEFAULT_MENU_SELECTION);
 
         activityMainController = new ActivityMainController(this, getSupportFragmentManager(), R.id.fragmentContainer);
-        activityMainController.init();
+        activityMainController.goToSchedule();
     }
 
     private ActionBarDrawerToggle setupActionBarDrawerToggle() {

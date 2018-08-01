@@ -33,6 +33,8 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
     private static final String FRAGMENT_TAG_SETTINGS = "fragment_settings";
     private static final String FRAGMENT_TAG_HELP = "fragment_help";
 
+    private static final String FRAGMENT_TRANSACTION_HOME = "transaction_home";
+
     private final FragmentManager fragmentManager;
     @IdRes
     private final int containerId;
@@ -46,28 +48,13 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         this.fragmentManager.addOnBackStackChangedListener(this);
     }
 
-    public void init() {
-        Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_SCHEDULE);
-        if (fragment == null) {
-            fragment = new FragmentSchedule();
-        }
-        fragmentManager
-                .beginTransaction()
-                .replace(containerId, fragment, FRAGMENT_TAG_SCHEDULE)
-                .commit();
-        mainMenuPresenter.onScreenChanged(R.string.title_schedule, true);
-    }
-
     @Override
     public void goToSchedule() {
         Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_SCHEDULE);
         if (fragment == null) {
             fragment = new FragmentSchedule();
         }
-        fragmentManager
-                .beginTransaction()
-                .replace(containerId, fragment, FRAGMENT_TAG_SCHEDULE)
-                .commit();
+        clearBackStackAndAddFragment(fragment, FRAGMENT_TAG_SCHEDULE);
         mainMenuPresenter.onScreenChanged(R.string.title_schedule, true);
     }
 
@@ -77,10 +64,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentRoutines();
         }
-        fragmentManager
-                .beginTransaction()
-                .replace(containerId, fragment, FRAGMENT_TAG_ROUTINES)
-                .commit();
+        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_ROUTINES);
         mainMenuPresenter.onScreenChanged(R.string.title_routines, true);
     }
 
@@ -90,10 +74,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentActivities();
         }
-        fragmentManager
-                .beginTransaction()
-                .replace(containerId, fragment, FRAGMENT_TAG_ACTIVITIES)
-                .commit();
+        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_ACTIVITIES);
         mainMenuPresenter.onScreenChanged(R.string.title_activities, true);
     }
 
@@ -103,10 +84,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentStatistics();
         }
-        fragmentManager
-                .beginTransaction()
-                .replace(containerId, fragment, FRAGMENT_TAG_STATISTICS)
-                .commit();
+        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_STATISTICS);
         mainMenuPresenter.onScreenChanged(R.string.title_statistics, true);
     }
 
@@ -116,10 +94,7 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentSettings();
         }
-        fragmentManager
-                .beginTransaction()
-                .replace(containerId, fragment, FRAGMENT_TAG_SETTINGS)
-                .commit();
+        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_SETTINGS);
         mainMenuPresenter.onScreenChanged(R.string.title_settings, false);
     }
 
@@ -129,16 +104,28 @@ public class ActivityMainController implements NavigationRouter, FragmentManager
         if (fragment == null) {
             fragment = new FragmentHelp();
         }
-        fragmentManager
-                .beginTransaction()
-                .replace(containerId, fragment, FRAGMENT_TAG_HELP)
-                .commit();
+        clearTopFragmentAndAddFragment(fragment, FRAGMENT_TAG_HELP);
         mainMenuPresenter.onScreenChanged(R.string.title_help, false);
     }
 
     @Override
     public void onBackStackChanged() {
-        //fragmentManager.
+
+    }
+
+    private void clearTopFragmentAndAddFragment(final Fragment fragment, final String fragmentTag) {
+        fragmentManager.popBackStack(FRAGMENT_TRANSACTION_HOME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.beginTransaction()
+                .addToBackStack(FRAGMENT_TRANSACTION_HOME)
+                .replace(containerId, fragment, fragmentTag)
+                .commit();
+    }
+
+    private void clearBackStackAndAddFragment(final Fragment fragment, final String fragmentTag) {
+        fragmentManager.popBackStack(FRAGMENT_TRANSACTION_HOME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.beginTransaction()
+                .replace(containerId, fragment, fragmentTag)
+                .commit();
     }
 
     interface MainMenuPresenter {
