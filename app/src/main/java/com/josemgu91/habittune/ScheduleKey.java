@@ -17,30 +17,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package com.josemgu91.habittune;
 
-buildscript {
+import android.os.Parcel;
+import android.support.v4.app.Fragment;
 
-    repositories {
-        google()
-        jcenter()
+public class ScheduleKey extends BaseKey {
+    @Override
+    protected Fragment createFragment() {
+        return new FragmentSchedule();
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    @Override
+    public int describeContents() {
+        return 0;
     }
-}
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
-}
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    public static final Creator<ScheduleKey> CREATOR = new Creator<ScheduleKey>() {
+        @Override
+        public ScheduleKey createFromParcel(Parcel source) {
+            return new ScheduleKey();
+        }
+
+        @Override
+        public ScheduleKey[] newArray(int size) {
+            return new ScheduleKey[size];
+        }
+    };
 }

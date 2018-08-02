@@ -30,11 +30,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
+import com.zhuinden.simplestack.BackstackDelegate;
+import com.zhuinden.simplestack.History;
+import com.zhuinden.simplestack.StateChange;
+import com.zhuinden.simplestack.StateChanger;
 
-public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentInteractionListener {
+public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentInteractionListener, StateChanger {
 
     @IdRes
     private final static int DEFAULT_MENU_SELECTION = R.id.navigationMenuGoToSchedule;
@@ -43,10 +48,18 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
-    private ActivityMainController activityMainController;
+    //private ActivityMainController activityMainController;
+
+    private BackstackDelegate backstackDelegate;
+    private FragmentStateChanger fragmentStateChanger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        backstackDelegate = new BackstackDelegate(null);
+        backstackDelegate.onCreate(savedInstanceState,
+                getLastCustomNonConfigurationInstance(),
+                History.single(new ScheduleKey()));
+        backstackDelegate.registerForLifecycleCallbacks(this);
         super.onCreate(savedInstanceState);
         final ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -60,11 +73,13 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(DEFAULT_MENU_SELECTION);
 
-        activityMainController = new ActivityMainController(getSupportFragmentManager(), R.id.fragmentContainer);
+        //activityMainController = new ActivityMainController(getSupportFragmentManager(), R.id.fragmentContainer);
 
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             activityMainController.goToSchedule();
-        }
+        }*/
+        fragmentStateChanger = new FragmentStateChanger(getSupportFragmentManager(), R.id.fragmentContainer);
+        backstackDelegate.setStateChanger(this);
     }
 
     private ActionBarDrawerToggle setupActionBarDrawerToggle() {
@@ -73,6 +88,18 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 toolbar,
                 R.string.menu_navigation_open_drawer,
                 R.string.menu_navigation_close_drawer);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!backstackDelegate.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return backstackDelegate.onRetainCustomNonConfigurationInstance();
     }
 
     @Override
@@ -99,22 +126,25 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigationMenuGoToSchedule:
-                activityMainController.goToSchedule();
+                //activityMainController.goToSchedule();
+                backstackDelegate.getBackstack().goTo(backstackDelegate.getBackstack().root());
                 break;
             case R.id.navigationMenuGoToRoutines:
-                activityMainController.goToRoutines();
+                //activityMainController.goToRoutines();
+                backstackDelegate.getBackstack().goTo(new RoutinesKey());
                 break;
             case R.id.navigationMenuGoToActivities:
-                activityMainController.goToActivities();
+                //activityMainController.goToActivities();
+                backstackDelegate.getBackstack().goTo(new ActivitiesKey());
                 break;
             case R.id.navigationMenuGoToStatistics:
-                activityMainController.goToStatistics();
+                //activityMainController.goToStatistics();
                 break;
             case R.id.navigationMenuGoToSettings:
-                activityMainController.goToSettings();
+                //activityMainController.goToSettings();
                 break;
             case R.id.navigationMenuGoToHelp:
-                activityMainController.goToHelp();
+                //activityMainController.goToHelp();
                 break;
         }
         drawerLayout.closeDrawers();
@@ -122,12 +152,18 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void updateNavigationDrawerAndToolbar(boolean canOpenDrawer, boolean showUpNavigation, int upNavigationDrawable) {
-
+    public void updateTitle(String title) {
+        toolbar.setTitle(title);
     }
 
     @Override
-    public void updateTitle(String title) {
-        toolbar.setTitle(title);
+    public void handleStateChange(@NonNull StateChange stateChange, @NonNull Callback completionCallback) {
+        Log.d("ActivityMain", "handleStateChange");
+        if(stateChange.topNewState().equals(stateChange.topPreviousState())) {
+            completionCallback.stateChangeComplete();
+            return;
+        }
+        fragmentStateChanger.handleStateChange(stateChange); // handle fragment nav.
+        completionCallback.stateChangeComplete();
     }
 }

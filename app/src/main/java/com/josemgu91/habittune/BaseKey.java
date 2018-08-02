@@ -17,30 +17,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package com.josemgu91.habittune;
 
-buildscript {
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 
-    repositories {
-        google()
-        jcenter()
+public abstract class BaseKey implements Parcelable {
+
+    public String getFragmentTag() {
+        return toString();
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    public final Fragment newFragment() {
+        return createFragment();
     }
-}
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    protected abstract Fragment createFragment();
 }
