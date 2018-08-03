@@ -49,4 +49,14 @@ public class ActivitiesKey extends BaseKey {
             return new ActivitiesKey[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "ActivitiesKey{}";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ActivitiesKey;
+    }
 }

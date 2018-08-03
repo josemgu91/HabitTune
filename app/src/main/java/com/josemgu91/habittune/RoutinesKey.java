@@ -49,4 +49,14 @@ public class RoutinesKey extends BaseKey {
             return new RoutinesKey[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "RoutinesKey{}";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof RoutinesKey;
+    }
 }

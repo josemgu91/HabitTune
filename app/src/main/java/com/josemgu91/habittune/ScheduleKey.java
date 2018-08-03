@@ -49,4 +49,14 @@ public class ScheduleKey extends BaseKey {
             return new ScheduleKey[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "ScheduleKey{}";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ScheduleKey;
+    }
 }

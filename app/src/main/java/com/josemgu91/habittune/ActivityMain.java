@@ -53,6 +53,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     private BackstackDelegate backstackDelegate;
     private FragmentStateChanger fragmentStateChanger;
 
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         backstackDelegate = new BackstackDelegate(null);
@@ -65,7 +67,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
         toolbar = activityMainBinding.includedToolbar.toolbar;
         drawerLayout = activityMainBinding.drawerLayout;
-        final NavigationView navigationView = activityMainBinding.navigationView;
+        navigationView = activityMainBinding.navigationView;
 
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = setupActionBarDrawerToggle();
@@ -92,7 +94,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if(!backstackDelegate.onBackPressed()) {
+        if (!backstackDelegate.onBackPressed()) {
             super.onBackPressed();
         }
     }
@@ -127,15 +129,15 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.navigationMenuGoToSchedule:
                 //activityMainController.goToSchedule();
-                backstackDelegate.getBackstack().goTo(backstackDelegate.getBackstack().root());
+                backstackDelegate.getBackstack().jumpToRoot();
                 break;
             case R.id.navigationMenuGoToRoutines:
                 //activityMainController.goToRoutines();
-                backstackDelegate.getBackstack().goTo(new RoutinesKey());
+                backstackDelegate.getBackstack().setHistory(History.of(new ScheduleKey(), new RoutinesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToActivities:
                 //activityMainController.goToActivities();
-                backstackDelegate.getBackstack().goTo(new ActivitiesKey());
+                backstackDelegate.getBackstack().setHistory(History.of(new ScheduleKey(), new ActivitiesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToStatistics:
                 //activityMainController.goToStatistics();
@@ -159,9 +161,17 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public void handleStateChange(@NonNull StateChange stateChange, @NonNull Callback completionCallback) {
         Log.d("ActivityMain", "handleStateChange");
-        if(stateChange.topNewState().equals(stateChange.topPreviousState())) {
+        if (stateChange.topNewState().equals(stateChange.topPreviousState())) {
             completionCallback.stateChangeComplete();
             return;
+        }
+        final Object topState = stateChange.topNewState();
+        if (topState instanceof ScheduleKey) {
+            navigationView.setCheckedItem(R.id.navigationMenuGoToSchedule);
+        } else if (topState instanceof RoutinesKey) {
+            navigationView.setCheckedItem(R.id.navigationMenuGoToRoutines);
+        } else if (topState instanceof ActivitiesKey) {
+            navigationView.setCheckedItem(R.id.navigationMenuGoToActivities);
         }
         fragmentStateChanger.handleStateChange(stateChange); // handle fragment nav.
         completionCallback.stateChangeComplete();
