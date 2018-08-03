@@ -17,12 +17,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune;
+package com.josemgu91.habittune.android.navigation;
 
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -33,6 +32,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
 import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.History;
@@ -40,56 +41,43 @@ import com.zhuinden.simplestack.StateChange;
 import com.zhuinden.simplestack.StateChanger;
 
 public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentInteractionListener, StateChanger {
-
-    @IdRes
-    private final static int DEFAULT_MENU_SELECTION = R.id.navigationMenuGoToSchedule;
-
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-
-    //private ActivityMainController activityMainController;
 
     private BackstackDelegate backstackDelegate;
     private FragmentStateChanger fragmentStateChanger;
 
     private NavigationView navigationView;
 
+    private FragmentKeyFactory fragmentKeyFactory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        fragmentKeyFactory = new FragmentKeyFactory();
         backstackDelegate = new BackstackDelegate(null);
         backstackDelegate.onCreate(savedInstanceState,
                 getLastCustomNonConfigurationInstance(),
-                History.single(new ScheduleKey()));
+                History.single(fragmentKeyFactory.createScheduleKey()));
         backstackDelegate.registerForLifecycleCallbacks(this);
-        super.onCreate(savedInstanceState);
-        final ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        super.onCreate(savedInstanceState);
+
+        final ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         toolbar = activityMainBinding.includedToolbar.toolbar;
         drawerLayout = activityMainBinding.drawerLayout;
         navigationView = activityMainBinding.navigationView;
-
         setSupportActionBar(toolbar);
-        actionBarDrawerToggle = setupActionBarDrawerToggle();
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(DEFAULT_MENU_SELECTION);
-
-        //activityMainController = new ActivityMainController(getSupportFragmentManager(), R.id.fragmentContainer);
-
-        /*if (savedInstanceState == null) {
-            activityMainController.goToSchedule();
-        }*/
-        fragmentStateChanger = new FragmentStateChanger(getSupportFragmentManager(), R.id.fragmentContainer);
-        backstackDelegate.setStateChanger(this);
-    }
-
-    private ActionBarDrawerToggle setupActionBarDrawerToggle() {
-        return new ActionBarDrawerToggle(this,
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this,
                 drawerLayout,
                 toolbar,
                 R.string.menu_navigation_open_drawer,
                 R.string.menu_navigation_close_drawer);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        fragmentStateChanger = new FragmentStateChanger(getSupportFragmentManager(), R.id.fragmentContainer, new FragmentKeyFactory.FragmentFactory());
+        backstackDelegate.setStateChanger(this);
     }
 
     @Override
@@ -128,25 +116,22 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigationMenuGoToSchedule:
-                //activityMainController.goToSchedule();
                 backstackDelegate.getBackstack().jumpToRoot();
                 break;
             case R.id.navigationMenuGoToRoutines:
-                //activityMainController.goToRoutines();
-                backstackDelegate.getBackstack().setHistory(History.of(new ScheduleKey(), new RoutinesKey()), StateChange.REPLACE);
+                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createRoutinesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToActivities:
-                //activityMainController.goToActivities();
-                backstackDelegate.getBackstack().setHistory(History.of(new ScheduleKey(), new ActivitiesKey()), StateChange.REPLACE);
+                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createActivitiesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToStatistics:
-                //activityMainController.goToStatistics();
+                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createActivitiesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToSettings:
-                //activityMainController.goToSettings();
+                backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createSettingsKey());
                 break;
             case R.id.navigationMenuGoToHelp:
-                //activityMainController.goToHelp();
+                backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createHelpKey());
                 break;
         }
         drawerLayout.closeDrawers();
@@ -160,20 +145,38 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void handleStateChange(@NonNull StateChange stateChange, @NonNull Callback completionCallback) {
-        Log.d("ActivityMain", "handleStateChange");
+        Log.d("ActivityMain", "State change: " +
+                (stateChange.getDirection() == StateChange.REPLACE ? "Replace" :
+                        stateChange.getDirection() == StateChange.BACKWARD ? "Backward" :
+                                stateChange.getDirection() == StateChange.FORWARD ? "Forward" :
+                                        "Unknown")
+        );
         if (stateChange.topNewState().equals(stateChange.topPreviousState())) {
             completionCallback.stateChangeComplete();
             return;
         }
-        final Object topState = stateChange.topNewState();
-        if (topState instanceof ScheduleKey) {
-            navigationView.setCheckedItem(R.id.navigationMenuGoToSchedule);
-        } else if (topState instanceof RoutinesKey) {
-            navigationView.setCheckedItem(R.id.navigationMenuGoToRoutines);
-        } else if (topState instanceof ActivitiesKey) {
-            navigationView.setCheckedItem(R.id.navigationMenuGoToActivities);
+        final FragmentKey topStateKey = stateChange.topNewState();
+        switch (topStateKey.getFragmentTag()) {
+            case FragmentKeyFactory.FRAGMENT_TAG_SCHEDULE:
+                navigationView.setCheckedItem(R.id.navigationMenuGoToSchedule);
+                break;
+            case FragmentKeyFactory.FRAGMENT_TAG_ROUTINES:
+                navigationView.setCheckedItem(R.id.navigationMenuGoToRoutines);
+                break;
+            case FragmentKeyFactory.FRAGMENT_TAG_ACTIVITIES:
+                navigationView.setCheckedItem(R.id.navigationMenuGoToActivities);
+                break;
+            case FragmentKeyFactory.FRAGMENT_TAG_STATISTICS:
+                navigationView.setCheckedItem(R.id.navigationMenuGoToStatistics);
+                break;
+            case FragmentKeyFactory.FRAGMENT_TAG_SETTINGS:
+                navigationView.setCheckedItem(R.id.navigationMenuGoToSettings);
+                break;
+            case FragmentKeyFactory.FRAGMENT_TAG_HELP:
+                navigationView.setCheckedItem(R.id.navigationMenuGoToHelp);
+                break;
         }
-        fragmentStateChanger.handleStateChange(stateChange); // handle fragment nav.
+        fragmentStateChanger.handleStateChange(stateChange);
         completionCallback.stateChangeComplete();
     }
 }

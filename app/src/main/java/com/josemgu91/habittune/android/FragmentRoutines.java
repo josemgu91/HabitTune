@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune;
+package com.josemgu91.habittune.android;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -28,7 +28,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class FragmentSettings extends Fragment {
+import com.josemgu91.habittune.R;
+
+public class FragmentRoutines extends Fragment {
 
     private FragmentInteractionListener fragmentInteractionListener;
 
@@ -41,14 +43,14 @@ public class FragmentSettings extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return inflater.inflate(R.layout.fragment_routines, container, false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateTitle(getString(R.string.title_settings));
+            fragmentInteractionListener.updateTitle(getString(R.string.title_routines));
         }
     }
 }

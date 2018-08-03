@@ -17,21 +17,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune;
+package com.josemgu91.habittune.android;
 
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.app.Fragment;
+import android.support.annotation.DrawableRes;
 
-public abstract class BaseKey implements Parcelable {
+public interface FragmentInteractionListener {
 
-    public String getFragmentTag() {
-        return toString();
-    }
+    void updateTitle(final String title);
 
-    public final Fragment newFragment() {
-        return createFragment();
-    }
-
-    protected abstract Fragment createFragment();
 }
