@@ -25,10 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.databinding.ElementActivityBinding;
 
 import java.util.ArrayList;
@@ -38,7 +35,7 @@ import java.util.List;
  * Created by jose on 2/15/18.
  */
 
-public class ActivitiesRecyclerViewAdapter extends RecyclerView.Adapter<ActivitiesRecyclerViewAdapter.ActivityViewHolder> {
+public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<RecyclerViewAdapterActivities.ViewHolderActivity> {
 
     private final LayoutInflater layoutInflater;
     private final Context context;
@@ -47,7 +44,7 @@ public class ActivitiesRecyclerViewAdapter extends RecyclerView.Adapter<Activiti
 
     private OnActivitySelectedListener onActivitySelectedListener;
 
-    public ActivitiesRecyclerViewAdapter(final Context context, final LayoutInflater layoutInflater) {
+    public RecyclerViewAdapterActivities(final Context context, final LayoutInflater layoutInflater) {
         this.layoutInflater = layoutInflater;
         this.context = context;
         activityList = new ArrayList<>();
@@ -55,13 +52,13 @@ public class ActivitiesRecyclerViewAdapter extends RecyclerView.Adapter<Activiti
 
     @NonNull
     @Override
-    public ActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolderActivity onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final ElementActivityBinding elementActivityBinding = ElementActivityBinding.inflate(layoutInflater, parent, false);
-        return new ActivityViewHolder(elementActivityBinding);
+        return new ViewHolderActivity(elementActivityBinding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ActivityViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolderActivity holder, int position) {
         final String activityName = activityList.get(position);
         holder.bind(activityName, onActivitySelectedListener);
     }
@@ -80,11 +77,11 @@ public class ActivitiesRecyclerViewAdapter extends RecyclerView.Adapter<Activiti
         this.onActivitySelectedListener = onActivitySelectedListener;
     }
 
-    static class ActivityViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolderActivity extends RecyclerView.ViewHolder {
 
         private final ElementActivityBinding elementActivityBinding;
 
-        public ActivityViewHolder(final ElementActivityBinding elementActivityBinding) {
+        public ViewHolderActivity(final ElementActivityBinding elementActivityBinding) {
             super(elementActivityBinding.getRoot());
             this.elementActivityBinding = elementActivityBinding;
         }

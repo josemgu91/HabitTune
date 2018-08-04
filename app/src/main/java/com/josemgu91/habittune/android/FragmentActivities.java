@@ -26,13 +26,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FragmentActivities extends Fragment {
 
@@ -58,10 +63,39 @@ public class FragmentActivities extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        final RecyclerViewAdapterActivities recyclerViewAdapterActivities = new RecyclerViewAdapterActivities(getContext(), LayoutInflater.from(getContext()));
+        recyclerViewAdapterActivities.setActivities(generateActivityTestData(20));
+        recyclerViewAdapterActivities.setOnActivitySelectedListener(new RecyclerViewAdapterActivities.OnActivitySelectedListener() {
+            @Override
+            public void onActivitySelected(String activityName) {
+                Toast.makeText(getContext(), activityName, Toast.LENGTH_SHORT).show();
+            }
+        });
+        recyclerViewActivities.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewActivities.setAdapter(recyclerViewAdapterActivities);
+        floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Add FAB clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (fragmentInteractionListener != null) {
             fragmentInteractionListener.updateTitle(getString(R.string.title_activities));
         }
+    }
+
+    private List<String> generateActivityTestData(final int size) {
+        final List<String> activityList = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            activityList.add("Activity " + (i + 1));
+        }
+        return activityList;
     }
 }
