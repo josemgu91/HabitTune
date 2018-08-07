@@ -26,6 +26,7 @@
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/secondary</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="AppTheme.AppBarLayout" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
