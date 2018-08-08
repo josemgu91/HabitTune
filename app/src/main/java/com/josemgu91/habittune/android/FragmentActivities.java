@@ -38,7 +38,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
-import com.josemgu91.habittune.android.navigation.ActivityMain;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class FragmentActivities extends Fragment {
                 actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        
+                        mode.getMenuInflater().inflate(R.menu.list_multiple_selection, menu);
                         return true;
                     }
 
@@ -98,7 +97,13 @@ public class FragmentActivities extends Fragment {
 
                     @Override
                     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        return false;
+                        switch (item.getItemId()) {
+                            case R.id.actionDeleteItems:
+                                Toast.makeText(getContext(), "Delete Items", Toast.LENGTH_SHORT).show();
+                                return true;
+                            default:
+                                return false;
+                        }
                     }
 
                     @Override
@@ -117,11 +122,17 @@ public class FragmentActivities extends Fragment {
 
             @Override
             public void onItemSelected() {
-                actionMode.setSubtitle(String.valueOf(recyclerViewAdapterActivities.getSelectedActivities().size()));
+                actionMode.setTitle(String.valueOf(recyclerViewAdapterActivities.getSelectedActivities().size()));
             }
         });
         recyclerViewActivities.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewActivities.setAdapter(recyclerViewAdapterActivities);
+        floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "FAB clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

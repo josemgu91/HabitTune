@@ -33,4 +33,6 @@
     <string name="title_statistics">Estadísticas</string>
     <string name="title_settings">Configuración</string>
     <string name="title_help">Ayuda</string>
+
+    <string name="menu_delete_items">Borrar Elementos</string>
 </resources>
