@@ -43,11 +43,60 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
     private List<String> activityList;
 
     private OnActivitySelectedListener onActivitySelectedListener;
+    private OnMultiSelectionModeListener onMultiSelectionModeListener;
+
+    private OnItemClickListener onItemClickListener;
+
+    private boolean isInMultiSelectionMode;
+    private List<Integer> selectedItems;
 
     public RecyclerViewAdapterActivities(final Context context, final LayoutInflater layoutInflater) {
         this.layoutInflater = layoutInflater;
         this.context = context;
         activityList = new ArrayList<>();
+        isInMultiSelectionMode = false;
+        selectedItems = new ArrayList<>();
+        onItemClickListener = new OnItemClickListener() {
+            @Override
+            public void onItemLongClickListener(int position) {
+                if (isInMultiSelectionMode) {
+                    handleWhenMultiSelectionModeEnabled(position);
+                    return;
+                }
+                isInMultiSelectionMode = true;
+                selectedItems.add(position);
+                if (onMultiSelectionModeListener != null) {
+                    onMultiSelectionModeListener.onMultiSelectionModeEnabled();
+                }
+            }
+
+            @Override
+            public void onItemClickListener(int position) {
+                if (isInMultiSelectionMode) {
+                    handleWhenMultiSelectionModeEnabled(position);
+                    return;
+                }
+                if (onActivitySelectedListener != null) {
+                    onActivitySelectedListener.onActivitySelected(activityList.get(position));
+                }
+            }
+
+            private void handleWhenMultiSelectionModeEnabled(int position) {
+                if (selectedItems.contains(position)) {
+                    selectedItems.remove(position);
+                } else {
+                    selectedItems.add(position);
+                }
+                if (selectedItems.size() > 0) {
+                    return;
+                }
+                isInMultiSelectionMode = false;
+                if (onMultiSelectionModeListener != null) {
+                    onMultiSelectionModeListener.onMultiSelectionModeDisabled();
+                }
+            }
+
+        };
     }
 
     @NonNull
@@ -60,7 +109,7 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(@NonNull ViewHolderActivity holder, int position) {
         final String activityName = activityList.get(position);
-        holder.bind(activityName, onActivitySelectedListener);
+        holder.bind(activityName, onItemClickListener, position);
     }
 
     @Override
@@ -77,9 +126,27 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
         this.onActivitySelectedListener = onActivitySelectedListener;
     }
 
+    public void setOnMultiSelectionModeListener(OnMultiSelectionModeListener onMultiSelectionModeListener) {
+        this.onMultiSelectionModeListener = onMultiSelectionModeListener;
+    }
+
+    public List<String> getSelectedActivities() {
+        return null;
+    }
+
+    public boolean isInMultiSelectionMode() {
+        return isInMultiSelectionMode;
+    }
+
+    public void setMultiSelectionMode(final boolean enableMultiSelectionMode) {
+        isInMultiSelectionMode = enableMultiSelectionMode;
+    }
+
     static class ViewHolderActivity extends RecyclerView.ViewHolder {
 
         private final ElementActivityBinding elementActivityBinding;
+
+        private boolean isSelected;
 
         public ViewHolderActivity(final ElementActivityBinding elementActivityBinding) {
             super(elementActivityBinding.getRoot());
@@ -87,23 +154,49 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
         }
 
         public void bind(final String activityName,
-                         final OnActivitySelectedListener onActivitySelectedListener) {
+                         final OnItemClickListener onItemClickListener,
+                         final int position) {
             elementActivityBinding.textViewActivityName.setText(activityName);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (onActivitySelectedListener != null) {
-                        onActivitySelectedListener.onActivitySelected(activityName);
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClickListener(position);
                     }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemLongClickListener(position);
+                        return true;
+                    }
+                    return false;
                 }
             });
         }
 
     }
 
+    private interface OnItemClickListener {
+
+        void onItemLongClickListener(final int position);
+
+        void onItemClickListener(final int position);
+    }
+
     public interface OnActivitySelectedListener {
 
-        void onActivitySelected(String activityName);
+        void onActivitySelected(final String activityName);
+
+    }
+
+    public interface OnMultiSelectionModeListener {
+
+        void onMultiSelectionModeEnabled();
+
+        void onMultiSelectionModeDisabled();
 
     }
 
