@@ -26,14 +26,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.navigation.ActivityMain;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
 
 import java.util.ArrayList;
@@ -73,14 +78,50 @@ public class FragmentActivities extends Fragment {
                 Toast.makeText(getContext(), activityName, Toast.LENGTH_SHORT).show();
             }
         });
-        recyclerViewActivities.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewActivities.setAdapter(recyclerViewAdapterActivities);
-        floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
+        recyclerViewAdapterActivities.setOnMultiSelectionModeListener(new RecyclerViewAdapterActivities.OnMultiSelectionModeListener() {
+
+            private ActionMode actionMode;
+
             @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Add FAB clicked", Toast.LENGTH_SHORT).show();
+            public void onMultiSelectionModeEnabled() {
+                actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                        
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode mode) {
+                        recyclerViewAdapterActivities.setMultiSelectionMode(false);
+                    }
+                });
+            }
+
+            @Override
+            public void onMultiSelectionModeDisabled() {
+                if (actionMode != null) {
+                    actionMode.finish();
+                }
+            }
+
+            @Override
+            public void onItemSelected() {
+                actionMode.setSubtitle(String.valueOf(recyclerViewAdapterActivities.getSelectedActivities().size()));
             }
         });
+        recyclerViewActivities.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewActivities.setAdapter(recyclerViewAdapterActivities);
     }
 
     @Override

@@ -58,22 +58,24 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
         selectedItems = new ArrayList<>();
         onItemClickListener = new OnItemClickListener() {
             @Override
-            public void onItemLongClickListener(int position) {
+            public void onItemLongClickListener(final int position, final ViewHolderActivity viewHolderActivity) {
                 if (isInMultiSelectionMode) {
-                    handleWhenMultiSelectionModeEnabled(position);
+                    handleWhenMultiSelectionModeEnabled(position, viewHolderActivity);
                     return;
                 }
                 isInMultiSelectionMode = true;
                 selectedItems.add(position);
+                notifyItemChanged(position);
                 if (onMultiSelectionModeListener != null) {
                     onMultiSelectionModeListener.onMultiSelectionModeEnabled();
+                    onMultiSelectionModeListener.onItemSelected();
                 }
             }
 
             @Override
-            public void onItemClickListener(int position) {
+            public void onItemClickListener(final int position, final ViewHolderActivity viewHolderActivity) {
                 if (isInMultiSelectionMode) {
-                    handleWhenMultiSelectionModeEnabled(position);
+                    handleWhenMultiSelectionModeEnabled(position, viewHolderActivity);
                     return;
                 }
                 if (onActivitySelectedListener != null) {
@@ -81,12 +83,14 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
                 }
             }
 
-            private void handleWhenMultiSelectionModeEnabled(int position) {
+            private void handleWhenMultiSelectionModeEnabled(final int position, final ViewHolderActivity viewHolderActivity) {
                 if (selectedItems.contains(position)) {
-                    selectedItems.remove(position);
+                    selectedItems.remove((Integer) position);
                 } else {
                     selectedItems.add(position);
                 }
+                onMultiSelectionModeListener.onItemSelected();
+                notifyItemChanged(position);
                 if (selectedItems.size() > 0) {
                     return;
                 }
@@ -109,7 +113,7 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(@NonNull ViewHolderActivity holder, int position) {
         final String activityName = activityList.get(position);
-        holder.bind(activityName, onItemClickListener, position);
+        holder.bind(activityName, onItemClickListener, position, selectedItems.contains(position));
     }
 
     @Override
@@ -131,7 +135,20 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
     }
 
     public List<String> getSelectedActivities() {
-        return null;
+        final List<String> selectedActivities = new ArrayList<>();
+        if (isInMultiSelectionMode) {
+            for (final int selectedItemIndex : selectedItems) {
+                selectedActivities.add(activityList.get(selectedItemIndex));
+            }
+        }
+        return selectedActivities;
+    }
+
+    public void deleteItems(int... positions) {
+        for (final int itemIndex : positions) {
+            activityList.remove(itemIndex);
+            notifyItemChanged(itemIndex);
+        }
     }
 
     public boolean isInMultiSelectionMode() {
@@ -139,6 +156,13 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
     }
 
     public void setMultiSelectionMode(final boolean enableMultiSelectionMode) {
+        if (!enableMultiSelectionMode) {
+            final List<Integer> itemsToDelete = new ArrayList<>(selectedItems);
+            selectedItems.clear();
+            for (final int selectedItemIndex : itemsToDelete) {
+                notifyItemChanged(selectedItemIndex);
+            }
+        }
         isInMultiSelectionMode = enableMultiSelectionMode;
     }
 
@@ -155,13 +179,19 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
 
         public void bind(final String activityName,
                          final OnItemClickListener onItemClickListener,
-                         final int position) {
+                         final int position,
+                         final boolean isSelected) {
             elementActivityBinding.textViewActivityName.setText(activityName);
+            if (isSelected) {
+                elementActivityBinding.elementContainer.setSelected(true);
+            } else {
+                elementActivityBinding.elementContainer.setSelected(false);
+            }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onItemClickListener(position);
+                        onItemClickListener.onItemClickListener(position, ViewHolderActivity.this);
                     }
                 }
             });
@@ -169,7 +199,7 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
                 @Override
                 public boolean onLongClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onItemLongClickListener(position);
+                        onItemClickListener.onItemLongClickListener(position, ViewHolderActivity.this);
                         return true;
                     }
                     return false;
@@ -181,9 +211,9 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
 
     private interface OnItemClickListener {
 
-        void onItemLongClickListener(final int position);
+        void onItemLongClickListener(final int position, final ViewHolderActivity viewHolderActivity);
 
-        void onItemClickListener(final int position);
+        void onItemClickListener(final int position, final ViewHolderActivity viewHolderActivity);
     }
 
     public interface OnActivitySelectedListener {
@@ -193,6 +223,8 @@ public class RecyclerViewAdapterActivities extends RecyclerView.Adapter<Recycler
     }
 
     public interface OnMultiSelectionModeListener {
+
+        void onItemSelected();
 
         void onMultiSelectionModeEnabled();
 
