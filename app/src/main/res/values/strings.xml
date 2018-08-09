@@ -37,4 +37,11 @@
     <string name="title_help">Help</string>
 
     <string name="menu_delete_items">Delete Items</string>
+
+    <string name="new_activity_title">New Activity</string>
+    <string name="new_activity_hint_activity_name">Activity Name</string>
+    <string name="new_activity_hint_activity_description">Description</string>
+    <string name="new_activity_label_activity_color">Color</string>
+    <string name="new_activity_hint_activity_color">Color</string>
+    <string name="new_activity_hint_activity_tags">Tags&#8230;</string>
 </resources>

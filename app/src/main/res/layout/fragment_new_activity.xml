@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2018  José Miguel García Urrutia <josemgu91@gmail.com>
+  ~
+  ~ This file is part of HabitTune.
+  ~
+  ~ HabitTune is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ HabitTune is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/layoutMarginBottom"
+        android:paddingEnd="@dimen/layoutMarginEnd"
+        android:paddingStart="@dimen/layoutMarginStart"
+        android:paddingTop="@dimen/layoutMarginTop">
+
+        <EditText
+            android:id="@+id/editTextActivityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/new_activity_hint_activity_name"
+            android:inputType="textCapSentences"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextActivityDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/new_activity_hint_activity_description"
+            android:inputType="textMultiLine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextActivityName" />
+
+        <TextView
+            android:id="@+id/textViewColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/new_activity_label_activity_color"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_constraintBottom_toTopOf="@+id/editTextActivityTags"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextActivityDescription" />
+
+        <View
+            android:id="@+id/viewColor"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/new_activity_hint_activity_color"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/editTextActivityTags"
+            app:layout_constraintStart_toEndOf="@+id/textViewColor"
+            app:layout_constraintTop_toBottomOf="@+id/editTextActivityDescription"
+            tools:background="@color/secondary" />
+
+        <EditText
+            android:id="@+id/editTextActivityTags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/new_activity_hint_activity_tags"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/barrierColorBottom" />
+
+        <android.support.constraint.Barrier
+            android:id="@+id/barrierColorTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="textViewColor,viewColor" />
+
+        <android.support.constraint.Barrier
+            android:id="@+id/barrierColorBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="textViewColor,viewColor" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

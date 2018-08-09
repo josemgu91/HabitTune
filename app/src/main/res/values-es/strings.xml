@@ -35,4 +35,11 @@
     <string name="title_help">Ayuda</string>
 
     <string name="menu_delete_items">Borrar Elementos</string>
+
+    <string name="new_activity_title">Nueva Actividad</string>
+    <string name="new_activity_hint_activity_name">Nombre de la Actividad</string>
+    <string name="new_activity_hint_activity_description">Descripción</string>
+    <string name="new_activity_label_activity_color">Color</string>
+    <string name="new_activity_hint_activity_color">Color</string>
+    <string name="new_activity_hint_activity_tags">Etiquetas&#8230;</string>
 </resources>
