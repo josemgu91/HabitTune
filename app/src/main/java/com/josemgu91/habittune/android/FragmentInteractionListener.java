@@ -25,4 +25,6 @@ public interface FragmentInteractionListener {
 
     void updateTitle(final String title);
 
+    void navigateToFragmentNewActivity();
+
 }

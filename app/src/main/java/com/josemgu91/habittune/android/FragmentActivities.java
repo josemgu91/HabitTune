@@ -130,7 +130,7 @@ public class FragmentActivities extends Fragment {
         floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "FAB clicked", Toast.LENGTH_SHORT).show();
+                fragmentInteractionListener.navigateToFragmentNewActivity();
             }
         });
     }

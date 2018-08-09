@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,7 +36,15 @@ import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class FragmentNewActivity extends Fragment {
 
+    private FragmentInteractionListener fragmentInteractionListener;
+
     private FragmentNewActivityBinding fragmentNewActivityBinding;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentInteractionListener = (FragmentInteractionListener) getActivity();
+    }
 
     @Nullable
     @Override

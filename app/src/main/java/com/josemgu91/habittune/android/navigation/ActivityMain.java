@@ -139,11 +139,6 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void updateTitle(String title) {
-        toolbar.setTitle(title);
-    }
-
-    @Override
     public void handleStateChange(@NonNull StateChange stateChange, @NonNull Callback completionCallback) {
         Log.d("ActivityMain", "State change: " +
                 (stateChange.getDirection() == StateChange.REPLACE ? "Replace" :
@@ -178,5 +173,15 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         }
         fragmentStateChanger.handleStateChange(stateChange);
         completionCallback.stateChangeComplete();
+    }
+
+    @Override
+    public void updateTitle(String title) {
+        toolbar.setTitle(title);
+    }
+
+    @Override
+    public void navigateToFragmentNewActivity() {
+        backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createNewActivityKey());
     }
 }

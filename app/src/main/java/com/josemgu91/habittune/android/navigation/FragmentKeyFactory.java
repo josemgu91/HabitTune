@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment;
 
 import com.josemgu91.habittune.android.FragmentActivities;
 import com.josemgu91.habittune.android.FragmentHelp;
+import com.josemgu91.habittune.android.FragmentNewActivity;
 import com.josemgu91.habittune.android.FragmentRoutines;
 import com.josemgu91.habittune.android.FragmentSchedule;
 import com.josemgu91.habittune.android.FragmentSettings;
@@ -36,6 +37,8 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_STATISTICS = "fragment_statistics";
     public static final String FRAGMENT_TAG_SETTINGS = "fragment_settings";
     public static final String FRAGMENT_TAG_HELP = "fragment_help";
+
+    public static final String FRAGMENT_TAG_NEW_ACTIVITY = "fragment_new_activity";
 
     public FragmentKey createScheduleKey() {
         return new FragmentKey(FRAGMENT_TAG_SCHEDULE, null);
@@ -51,6 +54,10 @@ public class FragmentKeyFactory {
 
     public FragmentKey createStatisticsKey() {
         return new FragmentKey(FRAGMENT_TAG_STATISTICS, null);
+    }
+
+    public FragmentKey createNewActivityKey() {
+        return new FragmentKey(FRAGMENT_TAG_NEW_ACTIVITY, null);
     }
 
     public FragmentKey createSettingsKey() {
@@ -76,6 +83,8 @@ public class FragmentKeyFactory {
                     return new FragmentSettings();
                 case FRAGMENT_TAG_HELP:
                     return new FragmentHelp();
+                case FRAGMENT_TAG_NEW_ACTIVITY:
+                    return new FragmentNewActivity();
                 default:
                     throw new RuntimeException("Unknown fragment tag!");
             }
