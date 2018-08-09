@@ -31,10 +31,9 @@
 
         <EditText
             android:id="@+id/editTextActivityName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:ems="10"
             android:hint="@string/new_activity_hint_activity_name"
             android:inputType="textCapSentences"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,10 +41,9 @@
 
         <EditText
             android:id="@+id/editTextActivityDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:ems="10"
             android:hint="@string/new_activity_hint_activity_description"
             android:inputType="textMultiLine"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,10 +78,9 @@
 
         <EditText
             android:id="@+id/editTextActivityTags"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:ems="10"
             android:hint="@string/new_activity_hint_activity_tags"
             android:inputType="textPersonName"
             app:layout_constraintStart_toStartOf="parent"
