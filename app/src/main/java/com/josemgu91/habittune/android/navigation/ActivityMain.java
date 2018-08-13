@@ -181,14 +181,14 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         switch (toolbarToggleIcon) {
             case FragmentInteractionListener.IC_NAVIGATION_CLOSE:
                 actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
-                actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_navigation_up_black_24dp);
+                actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_navigation_close_black_24dp);
                 break;
             case FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER:
                 actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
                 break;
             case FragmentInteractionListener.IC_NAVIGATION_UP:
                 actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
-                actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_navigation_close_black_24dp);
+                actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_navigation_up_black_24dp);
                 break;
             default:
                 throw new RuntimeException("Unknown toolbarToggleIcon constant");
