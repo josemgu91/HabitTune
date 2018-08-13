@@ -95,6 +95,15 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (fragmentInteractionListener != null) {
+            fragmentInteractionListener.updateToolbar(getString(R.string.new_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
+            fragmentInteractionListener.updateNavigationDrawer(false);
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, selectedColor);

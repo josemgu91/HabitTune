@@ -50,7 +50,8 @@ public class FragmentStatistics extends Fragment {
     public void onResume() {
         super.onResume();
         if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateTitle(getString(R.string.title_statistics));
+            fragmentInteractionListener.updateToolbar(getString(R.string.title_statistics), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
+            fragmentInteractionListener.updateNavigationDrawer(true);
         }
     }
 }

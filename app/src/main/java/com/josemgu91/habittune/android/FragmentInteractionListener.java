@@ -19,11 +19,25 @@
 
 package com.josemgu91.habittune.android;
 
-import android.support.annotation.DrawableRes;
+import android.support.annotation.IntDef;
 
 public interface FragmentInteractionListener {
 
-    void updateTitle(final String title);
+    public static final int IC_NAVIGATION_HAMBURGUER = 0;
+    public static final int IC_NAVIGATION_UP = 1;
+    public static final int IC_NAVIGATION_CLOSE = 2;
+
+    @IntDef({
+            IC_NAVIGATION_HAMBURGUER,
+            IC_NAVIGATION_UP,
+            IC_NAVIGATION_CLOSE
+    })
+    public @interface NavigationIcon {
+    }
+
+    void updateToolbar(final String title, @NavigationIcon final int toolbarToggleIcon);
+
+    void updateNavigationDrawer(final boolean allowOpening);
 
     void navigateToFragmentNewActivity();
 

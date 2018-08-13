@@ -176,8 +176,32 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void updateTitle(String title) {
+    public void updateToolbar(String title, int toolbarToggleIcon) {
         toolbar.setTitle(title);
+        switch (toolbarToggleIcon) {
+            case FragmentInteractionListener.IC_NAVIGATION_CLOSE:
+                actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+                actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_navigation_up_black_24dp);
+                break;
+            case FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER:
+                actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+                break;
+            case FragmentInteractionListener.IC_NAVIGATION_UP:
+                actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+                actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_navigation_up_black_24dp);
+                break;
+            default:
+                throw new RuntimeException("Unknown toolbarToggleIcon constant");
+        }
+    }
+
+    @Override
+    public void updateNavigationDrawer(boolean allowOpening) {
+        if (allowOpening) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        } else {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
     }
 
     @Override

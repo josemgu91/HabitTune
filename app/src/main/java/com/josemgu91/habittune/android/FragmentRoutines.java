@@ -50,7 +50,8 @@ public class FragmentRoutines extends Fragment {
     public void onResume() {
         super.onResume();
         if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateTitle(getString(R.string.title_routines));
+            fragmentInteractionListener.updateToolbar(getString(R.string.title_routines), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
+            fragmentInteractionListener.updateNavigationDrawer(true);
         }
     }
 }
