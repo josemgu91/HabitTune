@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -78,6 +79,12 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
         fragmentStateChanger = new FragmentStateChanger(getSupportFragmentManager(), R.id.fragmentContainer, new FragmentKeyFactory.FragmentFactory());
         backstackDelegate.setStateChanger(this);
+        actionBarDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
