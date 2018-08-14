@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.navigation;
+package com.josemgu91.habittune.android.activities;
 
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
@@ -35,6 +35,9 @@ import android.view.View;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
+import com.josemgu91.habittune.android.navigation.FragmentKey;
+import com.josemgu91.habittune.android.navigation.FragmentKeyFactory;
+import com.josemgu91.habittune.android.navigation.FragmentStateChanger;
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
 import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.History;
