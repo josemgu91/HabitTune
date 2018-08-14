@@ -139,7 +139,7 @@ public class FragmentActivities extends Fragment {
     public void onResume() {
         super.onResume();
         if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateToolbar(getString(R.string.title_activities), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
+            fragmentInteractionListener.updateToolbar(getString(R.string.activities_title), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
             fragmentInteractionListener.updateNavigationDrawer(true);
         }
     }

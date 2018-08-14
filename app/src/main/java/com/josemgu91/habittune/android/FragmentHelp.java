@@ -50,7 +50,7 @@ public class FragmentHelp extends Fragment {
     public void onResume() {
         super.onResume();
         if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateToolbar(getString(R.string.title_help), FragmentInteractionListener.IC_NAVIGATION_UP);
+            fragmentInteractionListener.updateToolbar(getString(R.string.help_title), FragmentInteractionListener.IC_NAVIGATION_UP);
             fragmentInteractionListener.updateNavigationDrawer(false);
         }
     }

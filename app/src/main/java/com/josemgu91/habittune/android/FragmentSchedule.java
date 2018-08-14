@@ -50,7 +50,7 @@ public class FragmentSchedule extends Fragment {
     public void onResume() {
         super.onResume();
         if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateToolbar(getString(R.string.title_schedule), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
+            fragmentInteractionListener.updateToolbar(getString(R.string.schedule_title), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
             fragmentInteractionListener.updateNavigationDrawer(true);
         }
     }
