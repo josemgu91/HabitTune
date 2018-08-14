@@ -17,24 +17,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.domain.datagateways;
+package com.josemgu91.habittune.domain.usecases;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import com.josemgu91.habittune.domain.DomainException;
 
-import com.josemgu91.habittune.domain.entities.Activity;
+public class UseCaseException extends DomainException {
 
-import java.util.List;
-
-public interface ActivityDataGateway {
-
-    @NonNull
-    LiveData<List<Activity>> getActivities() throws DataGatewayException;
-
-    boolean deleteActivityByName(final String name) throws DataGatewayException;
-
-    boolean createActivity(@NonNull final Activity activity) throws DataGatewayException;
-
-    boolean updateActivity(@NonNull final Activity activity) throws DataGatewayException;
-
+    public UseCaseException(String message) {
+        super(message);
+    }
 }
