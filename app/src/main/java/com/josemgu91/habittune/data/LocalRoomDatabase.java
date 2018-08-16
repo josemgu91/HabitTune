@@ -19,7 +19,13 @@
 
 package com.josemgu91.habittune.data;
 
+import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import com.josemgu91.habittune.data.model.Activity;
+import com.josemgu91.habittune.data.model.ActivityTagJoin;
+import com.josemgu91.habittune.data.model.Tag;
+
+@Database(entities = {Activity.class, ActivityTagJoin.class, Tag.class}, version = 1)
 public abstract class LocalRoomDatabase extends RoomDatabase {
 }
