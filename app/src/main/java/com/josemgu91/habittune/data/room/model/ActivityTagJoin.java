@@ -26,7 +26,7 @@ import android.support.annotation.NonNull;
 
 @Entity(tableName = "activityTagJoins",
         primaryKeys = {"activityName", "tagName"},
-        indices = {@Index("tagName")},
+        indices = {@Index(value = {"tagName", "activityName"})},
         foreignKeys = {
                 @ForeignKey(entity = Activity.class,
                         parentColumns = "name",
