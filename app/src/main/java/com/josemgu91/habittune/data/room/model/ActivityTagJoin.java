@@ -17,13 +17,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.data.model;
+package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-
-import com.josemgu91.habittune.domain.entities.Activity;
-import com.josemgu91.habittune.domain.entities.Tag;
 
 @Entity(tableName = "activityTagJoins",
         primaryKeys = {"activityName", "tagName"},

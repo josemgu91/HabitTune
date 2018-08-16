@@ -17,18 +17,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.data.model;
+package com.josemgu91.habittune.data.room;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.RoomDatabase;
 
-@Entity(tableName = "tags")
-public class Tag {
+import com.josemgu91.habittune.data.room.model.Activity;
+import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
+import com.josemgu91.habittune.data.room.model.Tag;
 
-    @PrimaryKey
-    public final String name;
-
-    public Tag(String name) {
-        this.name = name;
-    }
+@Database(entities = {Activity.class, ActivityTagJoin.class, Tag.class}, version = 1)
+public abstract class LocalRoomDatabase extends RoomDatabase {
 }
