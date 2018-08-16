@@ -75,15 +75,35 @@ public class RoomDatabaseTest {
 
     @Test
     public void writeActivities() throws Exception {
-        final List<Activity> testActivities = testDataGenerator.createActivities(5);
+        final int testSize = 5;
+        final List<Activity> testActivities = testDataGenerator.createActivities(testSize);
         final List<Activity> testActivitiesWithId = new ArrayList<>();
         for (final Activity activity : testActivities) {
             final long id = activityDao.insertActivity(activity);
             testActivitiesWithId.add(testDataGenerator.addIdToActivity(activity, id));
         }
         final List<Activity> storedActivities = liveDataTestUtils.getValueSync(activityDao.getAllActivities());
-        Assert.assertEquals(storedActivities.containsAll(testActivitiesWithId), true);
-        Assert.assertEquals(storedActivities.size(), 5);
+        Assert.assertEquals(true, storedActivities.containsAll(testActivitiesWithId));
+        Assert.assertEquals(testSize, storedActivities.size());
+    }
+
+    @Test
+    public void updateActivityName() throws Exception {
+        final String originalActivityName = "Piano practice";
+        final Activity testActivity = new Activity(0, originalActivityName, "Practice piano lessons.", 0xFFFF0000);
+        final long activityId = activityDao.insertActivity(testActivity);
+        final Activity testActivityWithId = testDataGenerator.addIdToActivity(testActivity, activityId);
+        final String newActivityName = "Practice piano lessons";
+        final Activity activityToUpdate = new Activity(
+                testActivityWithId.id,
+                newActivityName,
+                testActivityWithId.description,
+                testActivityWithId.color
+        );
+        final int rowsUpdated = activityDao.updateActivity(activityToUpdate);
+        final Activity updatedActivity = liveDataTestUtils.getValueSync(activityDao.getActivityById(activityId));
+        Assert.assertEquals(1, rowsUpdated);
+        Assert.assertEquals(activityToUpdate, updatedActivity);
     }
 
     private static class TestDataGenerator {
