@@ -21,9 +21,12 @@ package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "activityTagJoins",
         primaryKeys = {"activityName", "tagName"},
+        indices = {@Index("tagName")},
         foreignKeys = {
                 @ForeignKey(entity = Activity.class,
                         parentColumns = "name",
@@ -34,10 +37,12 @@ import android.arch.persistence.room.ForeignKey;
         })
 public class ActivityTagJoin {
 
+    @NonNull
     public final String activityName;
+    @NonNull
     public final String tagName;
 
-    public ActivityTagJoin(String activityName, String tagName) {
+    public ActivityTagJoin(@NonNull final String activityName, @NonNull final String tagName) {
         this.activityName = activityName;
         this.tagName = tagName;
     }

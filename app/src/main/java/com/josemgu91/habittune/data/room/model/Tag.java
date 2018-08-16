@@ -21,14 +21,16 @@ package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "tags")
 public class Tag {
 
     @PrimaryKey
+    @NonNull
     public final String name;
 
-    public Tag(String name) {
+    public Tag(@NonNull final String name) {
         this.name = name;
     }
 }

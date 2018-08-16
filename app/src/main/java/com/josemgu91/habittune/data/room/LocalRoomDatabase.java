@@ -22,10 +22,20 @@ package com.josemgu91.habittune.data.room;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import com.josemgu91.habittune.data.room.dao.ActivityDao;
+import com.josemgu91.habittune.data.room.dao.ActivityTagJoinDao;
+import com.josemgu91.habittune.data.room.dao.TagDao;
 import com.josemgu91.habittune.data.room.model.Activity;
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.Tag;
 
-@Database(entities = {Activity.class, ActivityTagJoin.class, Tag.class}, version = 1)
+/*TODO: Set exportSchema directory when the final version releases.*/
+@Database(entities = {Activity.class, ActivityTagJoin.class, Tag.class}, version = 1, exportSchema = false)
 public abstract class LocalRoomDatabase extends RoomDatabase {
+
+    public abstract ActivityDao getActivityDao();
+
+    public abstract TagDao getTagDao();
+
+    public abstract ActivityTagJoinDao getActivityTagJoinDao();
 }

@@ -21,16 +21,19 @@ package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "activities")
 public class Activity {
 
     @PrimaryKey
+    @NonNull
     public final String name;
+    @NonNull
     public final String description;
     public final int color;
 
-    public Activity(String name, String description, int color) {
+    public Activity(@NonNull final String name, @NonNull final String description, int color) {
         this.name = name;
         this.description = description;
         this.color = color;

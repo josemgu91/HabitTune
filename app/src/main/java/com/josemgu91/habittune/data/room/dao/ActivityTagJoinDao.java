@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.data.room.dao;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -27,16 +28,18 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
+import com.josemgu91.habittune.data.room.model.Tag;
 
 import java.util.List;
 
+@Dao
 public interface ActivityTagJoinDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertActivityTagJoin(final ActivityTagJoin activityTagJoin);
 
-    @Query("SELECT * FROM activityTagJoins WHERE activityName = :activityName ORDER BY tagName ASC")
-    LiveData<List<ActivityTagJoinDao>> getAllActivityTagJoinsByActivityName(final String activityName);
+    @Query("SELECT tagName AS `name` FROM activityTagJoins WHERE activityName = :activityName ORDER BY tagName ASC")
+    LiveData<List<Tag>> getAllTagsByActivityName(final String activityName);
 
     @Update(onConflict = OnConflictStrategy.ABORT)
     int updateActivityTagJoin(final ActivityTagJoin activityTagJoin);

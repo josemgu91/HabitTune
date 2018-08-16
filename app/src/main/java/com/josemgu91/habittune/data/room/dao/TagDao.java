@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.data.room.dao;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -30,6 +31,7 @@ import com.josemgu91.habittune.data.room.model.Tag;
 
 import java.util.List;
 
+@Dao
 public interface TagDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
