@@ -20,19 +20,28 @@
 package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.util.Objects;
 
-@Entity(tableName = "tags")
+@Entity(
+        tableName = "tags",
+        indices = @Index(
+                value = "name",
+                unique = true
+        )
+)
 public class Tag {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    public final long id;
     @NonNull
     public final String name;
 
-    public Tag(@NonNull final String name) {
+    public Tag(long id, @NonNull String name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -41,18 +50,20 @@ public class Tag {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return Objects.equals(name, tag.name);
+        return id == tag.id &&
+                Objects.equals(name, tag.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id, name);
     }
 
     @Override
     public String toString() {
         return "Tag{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

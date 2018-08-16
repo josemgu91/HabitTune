@@ -22,31 +22,28 @@ package com.josemgu91.habittune.data.room.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
-import android.support.annotation.NonNull;
 
 import java.util.Objects;
 
 @Entity(tableName = "activityTagJoins",
-        primaryKeys = {"activityName", "tagName"},
-        indices = {@Index(value = {"tagName", "activityName"})},
+        primaryKeys = {"activityId", "tagId"},
+        indices = {@Index(value = {"tagId", "activityId"})},
         foreignKeys = {
                 @ForeignKey(entity = Activity.class,
-                        parentColumns = "name",
-                        childColumns = "activityName"),
+                        parentColumns = "id",
+                        childColumns = "activityId"),
                 @ForeignKey(entity = Tag.class,
-                        parentColumns = "name",
-                        childColumns = "tagName")
+                        parentColumns = "id",
+                        childColumns = "tagId")
         })
 public class ActivityTagJoin {
 
-    @NonNull
-    public final String activityName;
-    @NonNull
-    public final String tagName;
+    public final long activityId;
+    public final long tagId;
 
-    public ActivityTagJoin(@NonNull final String activityName, @NonNull final String tagName) {
-        this.activityName = activityName;
-        this.tagName = tagName;
+    public ActivityTagJoin(long activityId, long tagId) {
+        this.activityId = activityId;
+        this.tagId = tagId;
     }
 
     @Override
@@ -54,20 +51,20 @@ public class ActivityTagJoin {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ActivityTagJoin that = (ActivityTagJoin) o;
-        return Objects.equals(activityName, that.activityName) &&
-                Objects.equals(tagName, that.tagName);
+        return activityId == that.activityId &&
+                tagId == that.tagId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(activityName, tagName);
+        return Objects.hash(activityId, tagId);
     }
 
     @Override
     public String toString() {
         return "ActivityTagJoin{" +
-                "activityName='" + activityName + '\'' +
-                ", tagName='" + tagName + '\'' +
+                "activityId=" + activityId +
+                ", tagId=" + tagId +
                 '}';
     }
 }

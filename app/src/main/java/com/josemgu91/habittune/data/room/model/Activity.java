@@ -20,22 +20,31 @@
 package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.util.Objects;
 
-@Entity(tableName = "activities")
+@Entity(
+        tableName = "activities",
+        indices = @Index(
+                value = "name",
+                unique = true
+        )
+)
 public class Activity {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    public final long id;
     @NonNull
     public final String name;
     @NonNull
     public final String description;
     public final int color;
 
-    public Activity(@NonNull final String name, @NonNull final String description, int color) {
+    public Activity(long id, @NonNull String name, @NonNull String description, int color) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.color = color;
@@ -46,20 +55,22 @@ public class Activity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Activity activity = (Activity) o;
-        return color == activity.color &&
+        return id == activity.id &&
+                color == activity.color &&
                 Objects.equals(name, activity.name) &&
                 Objects.equals(description, activity.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, color);
+        return Objects.hash(id, name, description, color);
     }
 
     @Override
     public String toString() {
         return "Activity{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", color=" + color +
                 '}';

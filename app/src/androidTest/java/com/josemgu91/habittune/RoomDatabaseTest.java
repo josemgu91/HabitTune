@@ -26,7 +26,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import com.josemgu91.habittune.data.room.LocalRoomDatabase;
 import com.josemgu91.habittune.data.room.dao.ActivityDao;
@@ -61,7 +60,7 @@ public class RoomDatabaseTest {
     @Before
     public void createDatabase() {
         final Context context = InstrumentationRegistry.getTargetContext();
-        localRoomDatabase = Room.inMemoryDatabaseBuilder(context, LocalRoomDatabase.class).allowMainThreadQueries().build();
+        localRoomDatabase = Room.inMemoryDatabaseBuilder(context, LocalRoomDatabase.class).build();
         activityDao = localRoomDatabase.getActivityDao();
         tagDao = localRoomDatabase.getTagDao();
         activityTagJoinDao = localRoomDatabase.getActivityTagJoinDao();
@@ -76,12 +75,14 @@ public class RoomDatabaseTest {
 
     @Test
     public void writeActivities() throws Exception {
-        final List<Activity> activities = testDataGenerator.createActivities(5);
-        for (final Activity activity : activities) {
-            Log.d("Test", "" + activityDao.insertActivity(activity));
+        final List<Activity> testActivities = testDataGenerator.createActivities(5);
+        final List<Activity> testActivitiesWithId = new ArrayList<>();
+        for (final Activity activity : testActivities) {
+            final long id = activityDao.insertActivity(activity);
+            testActivitiesWithId.add(testDataGenerator.addIdToActivity(activity, id));
         }
         final List<Activity> storedActivities = liveDataTestUtils.getValueSync(activityDao.getAllActivities());
-        Assert.assertEquals(storedActivities.containsAll(activities), true);
+        Assert.assertEquals(storedActivities.containsAll(testActivitiesWithId), true);
         Assert.assertEquals(storedActivities.size(), 5);
     }
 
@@ -91,6 +92,7 @@ public class RoomDatabaseTest {
             final List<Activity> activities = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 final Activity activity = new Activity(
+                        0,
                         "Activity " + (i + 1),
                         "Activity description " + (i + 1),
                         0xFF00FF00
@@ -98,6 +100,15 @@ public class RoomDatabaseTest {
                 activities.add(activity);
             }
             return activities;
+        }
+
+        public Activity addIdToActivity(final Activity activity, final long id) {
+            return new Activity(
+                    id,
+                    activity.name,
+                    activity.description,
+                    activity.color
+            );
         }
 
     }

@@ -38,8 +38,11 @@ public interface ActivityTagJoinDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertActivityTagJoin(final ActivityTagJoin activityTagJoin);
 
-    @Query("SELECT tagName AS `name` FROM activityTagJoins WHERE activityName = :activityName ORDER BY tagName ASC")
-    LiveData<List<Tag>> getAllTagsByActivityName(final String activityName);
+    @Query("SELECT * FROM activityTagJoins")
+    LiveData<List<ActivityTagJoin>> getAllActivityTagJoins();
+
+    @Query("SELECT tags.id AS `id`, tags.name AS `name` FROM tags INNER JOIN activityTagJoins ON tags.id = activityTagJoins.tagId WHERE activityTagJoins.activityId = :activityId")
+    LiveData<List<Tag>> getAllTagsByActivityId(final long activityId);
 
     @Update(onConflict = OnConflictStrategy.ABORT)
     int updateActivityTagJoin(final ActivityTagJoin activityTagJoin);
