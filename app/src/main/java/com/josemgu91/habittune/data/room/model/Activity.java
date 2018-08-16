@@ -23,6 +23,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Objects;
+
 @Entity(tableName = "activities")
 public class Activity {
 
@@ -37,5 +39,29 @@ public class Activity {
         this.name = name;
         this.description = description;
         this.color = color;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Activity activity = (Activity) o;
+        return color == activity.color &&
+                Objects.equals(name, activity.name) &&
+                Objects.equals(description, activity.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, color);
+    }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", color=" + color +
+                '}';
     }
 }

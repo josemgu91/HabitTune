@@ -24,6 +24,8 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.support.annotation.NonNull;
 
+import java.util.Objects;
+
 @Entity(tableName = "activityTagJoins",
         primaryKeys = {"activityName", "tagName"},
         indices = {@Index(value = {"tagName", "activityName"})},
@@ -45,5 +47,27 @@ public class ActivityTagJoin {
     public ActivityTagJoin(@NonNull final String activityName, @NonNull final String tagName) {
         this.activityName = activityName;
         this.tagName = tagName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActivityTagJoin that = (ActivityTagJoin) o;
+        return Objects.equals(activityName, that.activityName) &&
+                Objects.equals(tagName, that.tagName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(activityName, tagName);
+    }
+
+    @Override
+    public String toString() {
+        return "ActivityTagJoin{" +
+                "activityName='" + activityName + '\'' +
+                ", tagName='" + tagName + '\'' +
+                '}';
     }
 }
