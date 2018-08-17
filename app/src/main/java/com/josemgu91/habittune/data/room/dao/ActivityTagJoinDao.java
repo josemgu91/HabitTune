@@ -42,7 +42,7 @@ public interface ActivityTagJoinDao {
 
     @Query("SELECT tags.id AS `id`, tags.name AS `name` FROM tags INNER JOIN activityTagJoins ON tags.id = activityTagJoins.tagId WHERE activityTagJoins.activityId = :activityId")
     LiveData<List<Tag>> getAllTagsByActivityId(final long activityId);
-    
+
     @Delete
     int deleteActivityTagJoin(final ActivityTagJoin activityTagJoin);
 }

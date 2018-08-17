@@ -19,34 +19,29 @@
 
 package com.josemgu91.habittune.domain.usecases;
 
-import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.entities.Activity;
 
-import java.util.List;
+public class CreateActivity {
 
-public class GetActivities {
-
-    private final UseCaseOutput<LiveData<List<Activity>>> output;
+    private final UseCaseOutput<Boolean> output;
     private final ActivityDataGateway activityDataGateway;
+    private final Activity activity;
 
-    public GetActivities(@NonNull final UseCaseOutput<LiveData<List<Activity>>> output, @NonNull final ActivityDataGateway activityDataGateway) {
+    public CreateActivity(@NonNull final UseCaseOutput<Boolean> output, @NonNull ActivityDataGateway activityDataGateway, @NonNull Activity activity) {
         this.output = output;
         this.activityDataGateway = activityDataGateway;
+        this.activity = activity;
     }
 
     public void execute() {
         output.showInProgress();
         try {
-            final LiveData<List<Activity>> result = activityDataGateway.getActivities();
-            if (result.getValue().size() == 0) {
-                output.showNoResult();
-            } else {
-                output.showResult(result);
-            }
+            final boolean activityCreated = activityDataGateway.createActivity(activity);
+            output.showResult(activityCreated);
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.showError();
