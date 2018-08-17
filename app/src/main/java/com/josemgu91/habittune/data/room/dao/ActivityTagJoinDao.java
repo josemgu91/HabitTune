@@ -25,7 +25,6 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.Tag;
@@ -43,10 +42,7 @@ public interface ActivityTagJoinDao {
 
     @Query("SELECT tags.id AS `id`, tags.name AS `name` FROM tags INNER JOIN activityTagJoins ON tags.id = activityTagJoins.tagId WHERE activityTagJoins.activityId = :activityId")
     LiveData<List<Tag>> getAllTagsByActivityId(final long activityId);
-
-    @Update(onConflict = OnConflictStrategy.ABORT)
-    int updateActivityTagJoin(final ActivityTagJoin activityTagJoin);
-
+    
     @Delete
     int deleteActivityTagJoin(final ActivityTagJoin activityTagJoin);
 }
