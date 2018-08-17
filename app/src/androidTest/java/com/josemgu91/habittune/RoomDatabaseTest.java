@@ -24,6 +24,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -33,6 +34,7 @@ import com.josemgu91.habittune.data.room.dao.ActivityDao;
 import com.josemgu91.habittune.data.room.dao.ActivityTagJoinDao;
 import com.josemgu91.habittune.data.room.dao.TagDao;
 import com.josemgu91.habittune.data.room.model.Activity;
+import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.Tag;
 
 import org.junit.After;
@@ -232,6 +234,104 @@ public class RoomDatabaseTest {
         final Tag testTagWithId = testDataGenerator.addIdToTag(testTag, testTagId);
         final int deletedRows = tagDao.deleteTag(testTagWithId);
         Assert.assertEquals(1, deletedRows);
+    }
+
+    @Test
+    public void insertActivityTagJoin() {
+        final Activity insertedActivity = createAndInsertTestActivity("Piano lesson", "Practice piano lessons.", 0xFF0000FF);
+        final Tag insertedTag = createAndInsertTestTag("Music");
+        final ActivityTagJoin activityTagJoinToInsert = new ActivityTagJoin(
+                insertedActivity.id,
+                insertedTag.id
+        );
+        final long insertedActivityTagJoinRowId = activityTagJoinDao.insertActivityTagJoin(activityTagJoinToInsert);
+        Assert.assertNotEquals(-1, insertedActivityTagJoinRowId);
+        final ActivityTagJoin invalidActivityTagJoin = new ActivityTagJoin(
+                4,
+                insertedTag.id
+        );
+        try {
+            activityTagJoinDao.insertActivityTagJoin(invalidActivityTagJoin);
+            Assert.fail();
+        } catch (SQLiteConstraintException e) {
+            Assert.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void getActivityTags() throws Exception {
+        final Activity practicePianoActivity = createAndInsertTestActivity("Practice piano", "Piano lessons practice.", 0xFF0000FF);
+        final Activity practiceMathActivity = createAndInsertTestActivity("Practice math", "Math lessons practice.", 0xFF0000FF);
+        final Tag musicTag = createAndInsertTestTag("Music");
+        final Tag studyTag = createAndInsertTestTag("Study");
+        final Tag funTag = createAndInsertTestTag("Fun");
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                musicTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                studyTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                funTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practiceMathActivity.id,
+                studyTag.id
+        ));
+        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practicePianoActivity.id));
+        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practiceMathActivity.id));
+        Assert.assertEquals(3, practicePianoTags.size());
+        Assert.assertEquals(1, practiceMathTags.size());
+    }
+
+    @Test
+    public void deleteTags() throws Exception {
+        final Activity practicePianoActivity = createAndInsertTestActivity("Practice piano", "Piano lessons practice.", 0xFF0000FF);
+        final Tag musicTag = createAndInsertTestTag("Music");
+        final Tag studyTag = createAndInsertTestTag("Study");
+        final Tag exerciseTag = createAndInsertTestTag("Exercise");
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                musicTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                studyTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                exerciseTag.id
+        ));
+        final long removedRows = activityTagJoinDao.deleteActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                exerciseTag.id
+        ));
+        Assert.assertEquals(1, removedRows);
+        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practicePianoActivity.id));
+        Assert.assertEquals(2, practicePianoTags.size());
+    }
+
+    private Activity createAndInsertTestActivity(@NonNull final String name, @NonNull final String description, final int color) {
+        final Activity activityToInsert = new Activity(
+                0,
+                name,
+                description,
+                0xFF0000FF
+        );
+        final long insertedActivityId = activityDao.insertActivity(activityToInsert);
+        return testDataGenerator.addIdToActivity(activityToInsert, insertedActivityId);
+    }
+
+    private Tag createAndInsertTestTag(@NonNull final String name) {
+        final Tag tagToInsert = new Tag(
+                0,
+                name
+        );
+        final long insertedTagId = tagDao.insertTag(tagToInsert);
+        return testDataGenerator.addIdToTag(tagToInsert, insertedTagId);
     }
 
     private static class TestDataGenerator {
