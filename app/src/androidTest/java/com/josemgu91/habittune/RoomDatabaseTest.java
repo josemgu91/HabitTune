@@ -33,6 +33,7 @@ import com.josemgu91.habittune.data.room.dao.ActivityDao;
 import com.josemgu91.habittune.data.room.dao.ActivityTagJoinDao;
 import com.josemgu91.habittune.data.room.dao.TagDao;
 import com.josemgu91.habittune.data.room.model.Activity;
+import com.josemgu91.habittune.data.room.model.Tag;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -80,7 +81,14 @@ public class RoomDatabaseTest {
     }
 
     @Test
-    public void writeActivities() throws Exception {
+    public void insertActivity() {
+        final Activity activity = testDataGenerator.createActivities(1).get(0);
+        final long activityId = activityDao.insertActivity(activity);
+        Assert.assertNotEquals(-1, activityId);
+    }
+
+    @Test
+    public void readActivities() throws Exception {
         final int testSize = 5;
         final List<Activity> testActivities = testDataGenerator.createActivities(testSize);
         final List<Activity> testActivitiesWithId = new ArrayList<>();
@@ -120,8 +128,110 @@ public class RoomDatabaseTest {
         final Activity sameNameActivity = new Activity(0, duplicatedActivityName, "test 2", 1);
         final long originalActivityId = activityDao.insertActivity(originalActivity);
         Assert.assertNotEquals(-1, originalActivityId);
-        expectedException.expect(SQLiteConstraintException.class);
-        final long sameNameActivityId = activityDao.insertActivity(sameNameActivity);
+        try {
+            activityDao.insertActivity(sameNameActivity);
+            Assert.fail();
+        } catch (SQLiteConstraintException e) {
+            Assert.assertTrue(true);
+        }
+        try {
+            final Activity newActivity = new Activity(0, "Activity 2", "test", 0);
+            final long newActivityId = activityDao.insertActivity(newActivity);
+            final Activity newActivityWithSameNameToUpdate = new Activity(
+                    newActivityId,
+                    originalActivityName,
+                    newActivity.description,
+                    newActivity.color
+            );
+            activityDao.updateActivity(newActivityWithSameNameToUpdate);
+            Assert.fail();
+        } catch (SQLiteConstraintException e) {
+            Assert.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void deleteActivity() {
+        final Activity testActivity = testDataGenerator.createActivities(1).get(0);
+        final long testActivityId = activityDao.insertActivity(testActivity);
+        final Activity testActivityWithId = testDataGenerator.addIdToActivity(testActivity, testActivityId);
+        final int deletedRows = activityDao.deleteActivity(testActivityWithId);
+        Assert.assertEquals(1, deletedRows);
+    }
+
+    @Test
+    public void insertTag() {
+        final Tag tag = testDataGenerator.createTags(1).get(0);
+        final long tagId = tagDao.insertTag(tag);
+        Assert.assertNotEquals(-1, tagId);
+    }
+
+    @Test
+    public void readTags() throws Exception {
+        final int testSize = 5;
+        final List<Tag> testTags = testDataGenerator.createTags(testSize);
+        final List<Tag> testTagsWithId = new ArrayList<>();
+        for (final Tag tag : testTags) {
+            final long id = tagDao.insertTag(tag);
+            testTagsWithId.add(testDataGenerator.addIdToTag(tag, id));
+        }
+        final List<Tag> storedTags = liveDataTestUtils.getValueSync(tagDao.getAllTags());
+        Assert.assertEquals(true, storedTags.containsAll(testTagsWithId));
+        Assert.assertEquals(testSize, storedTags.size());
+    }
+
+    @Test
+    public void updateTagName() throws Exception {
+        final String originalTagName = "My Tag";
+        final Tag testTag = new Tag(0, originalTagName);
+        final long tagId = tagDao.insertTag(testTag);
+        final Tag testTagWithId = testDataGenerator.addIdToTag(testTag, tagId);
+        final String newTagName = "Study";
+        final Tag tagToUpdate = new Tag(
+                testTagWithId.id,
+                newTagName
+        );
+        final int rowsUpdated = tagDao.updateTag(tagToUpdate);
+        final Tag updatedTag = liveDataTestUtils.getValueSync(tagDao.getAllTags()).get(0);
+        Assert.assertEquals(1, rowsUpdated);
+        Assert.assertEquals(tagToUpdate, updatedTag);
+    }
+
+    @Test
+    public void assertUniqueTagName() {
+        final String originalTagName = "Tag 1";
+        final String duplicatedTagName = "Tag 1";
+        final Tag originalTag = new Tag(0, originalTagName);
+        final Tag sameNameTag = new Tag(0, duplicatedTagName);
+        final long originalTagId = tagDao.insertTag(originalTag);
+        Assert.assertNotEquals(-1, originalTagId);
+        try {
+            tagDao.insertTag(sameNameTag);
+            Assert.fail();
+        } catch (SQLiteConstraintException e) {
+            Assert.assertTrue(true);
+        }
+        try {
+            final Tag newTag = new Tag(0, "Tag 2");
+            final long newTagId = tagDao.insertTag(newTag);
+            final Tag newTagWithSameNameToUpdate = new Tag(
+                    newTagId,
+                    originalTagName
+            );
+            tagDao.updateTag(newTagWithSameNameToUpdate);
+            Assert.fail();
+        } catch (SQLiteConstraintException e) {
+            Assert.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void deleteTag() {
+        final Tag testTag = testDataGenerator.createTags(1).get(0);
+        final long testTagId = tagDao.insertTag(testTag);
+        final Tag testTagWithId = testDataGenerator.addIdToTag(testTag, testTagId);
+        final int deletedRows = tagDao.deleteTag(testTagWithId);
+        Assert.assertEquals(1, deletedRows);
     }
 
     private static class TestDataGenerator {
@@ -140,12 +250,31 @@ public class RoomDatabaseTest {
             return activities;
         }
 
+        public List<Tag> createTags(final int size) {
+            final List<Tag> tags = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                final Tag tag = new Tag(
+                        0,
+                        "Tag " + (i + 1)
+                );
+                tags.add(tag);
+            }
+            return tags;
+        }
+
         public Activity addIdToActivity(final Activity activity, final long id) {
             return new Activity(
                     id,
                     activity.name,
                     activity.description,
                     activity.color
+            );
+        }
+
+        public Tag addIdToTag(final Tag tag, final long id) {
+            return new Tag(
+                    id,
+                    tag.name
             );
         }
 
