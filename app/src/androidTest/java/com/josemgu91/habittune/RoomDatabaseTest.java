@@ -23,6 +23,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -36,7 +37,9 @@ import com.josemgu91.habittune.data.room.model.Activity;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
@@ -56,6 +59,9 @@ public class RoomDatabaseTest {
     private LocalRoomDatabase localRoomDatabase;
 
     private TestDataGenerator testDataGenerator;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void createDatabase() {
@@ -104,6 +110,18 @@ public class RoomDatabaseTest {
         final Activity updatedActivity = liveDataTestUtils.getValueSync(activityDao.getActivityById(activityId));
         Assert.assertEquals(1, rowsUpdated);
         Assert.assertEquals(activityToUpdate, updatedActivity);
+    }
+
+    @Test
+    public void assertUniqueActivityName() {
+        final String originalActivityName = "Activity 1";
+        final String duplicatedActivityName = "Activity 1";
+        final Activity originalActivity = new Activity(0, originalActivityName, "test", 0);
+        final Activity sameNameActivity = new Activity(0, duplicatedActivityName, "test 2", 1);
+        final long originalActivityId = activityDao.insertActivity(originalActivity);
+        Assert.assertNotEquals(-1, originalActivityId);
+        expectedException.expect(SQLiteConstraintException.class);
+        final long sameNameActivityId = activityDao.insertActivity(sameNameActivity);
     }
 
     private static class TestDataGenerator {
