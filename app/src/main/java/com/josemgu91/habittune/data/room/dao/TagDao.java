@@ -40,6 +40,9 @@ public interface TagDao {
     @Query("SELECT * FROM tags ORDER BY name ASC")
     LiveData<List<Tag>> getAllTags();
 
+    @Query("SELECT * FROM tags WHERE name = :name")
+    Tag getTagByName(final String name);
+
     @Update(onConflict = OnConflictStrategy.ABORT)
     int updateTag(final Tag tag);
 

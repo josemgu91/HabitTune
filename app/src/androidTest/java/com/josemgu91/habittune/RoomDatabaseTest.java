@@ -192,6 +192,15 @@ public class RoomDatabaseTest {
     }
 
     @Test
+    public void getTagByName() {
+        final String testTagName = "My Tag";
+        final long insertedTagId = tagDao.insertTag(new Tag(0, testTagName));
+        final Tag insertedTag = tagDao.getTagByName(testTagName);
+        Assert.assertEquals(insertedTagId, insertedTag.id);
+        Assert.assertEquals(testTagName, insertedTag.name);
+    }
+
+    @Test
     public void updateTagName() throws Exception {
         final String originalTagName = "My Tag";
         final Tag testTag = new Tag(0, originalTagName);
