@@ -19,6 +19,8 @@
 
 package com.josemgu91.habittune.android.activities;
 
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.navigation.FragmentKey;
 import com.josemgu91.habittune.android.navigation.FragmentKeyFactory;
 import com.josemgu91.habittune.android.navigation.FragmentStateChanger;
+import com.josemgu91.habittune.data.room.LocalRoomDatabase;
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
 import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.History;
@@ -55,6 +58,9 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     private FragmentKeyFactory fragmentKeyFactory;
+
+    //TEST
+    LocalRoomDatabase localRoomDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +94,9 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 onBackPressed();
             }
         });
+
+        //TEST
+        localRoomDatabase = Room.inMemoryDatabaseBuilder(this, LocalRoomDatabase.class).allowMainThreadQueries().build();
     }
 
     @Override
@@ -217,5 +226,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public void navigateToFragmentNewActivity() {
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createNewActivityKey());
+    }
+
+
+    //TEST
+    public LocalRoomDatabase getRoomInstance() {
+        return localRoomDatabase;
     }
 }

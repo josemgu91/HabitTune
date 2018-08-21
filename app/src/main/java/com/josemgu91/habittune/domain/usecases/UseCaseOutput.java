@@ -19,7 +19,7 @@
 
 package com.josemgu91.habittune.domain.usecases;
 
-interface UseCaseOutput<OutputObject> {
+public interface UseCaseOutput<OutputObject> {
 
     void showResult(final OutputObject output);
 

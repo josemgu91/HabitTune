@@ -19,6 +19,8 @@
 
 package com.josemgu91.habittune.android;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,10 +41,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.activities.ActivityMain;
+import com.josemgu91.habittune.data.room.RoomRepository;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
+import com.josemgu91.habittune.domain.usecases.CreateActivity;
+import com.josemgu91.habittune.domain.usecases.GetActivities;
+import com.josemgu91.habittune.domain.usecases.GetUseCaseOutput;
+import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class FragmentActivities extends Fragment {
 
@@ -54,6 +64,34 @@ public class FragmentActivities extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
+        GetActivities getActivities = new GetActivities(new GetUseCaseOutput<LiveData<List<GetActivities.Output>>>() {
+            @Override
+            public void showNoResult() {
+                Log.d("FragmentActivities", "showNoResult");
+            }
+
+            @Override
+            public void showResult(LiveData<List<GetActivities.Output>> output) {
+                Log.d("FragmentActivities", "showResult");
+                output.observe(FragmentActivities.this, new Observer<List<GetActivities.Output>>() {
+                    @Override
+                    public void onChanged(@Nullable List<GetActivities.Output> outputs) {
+                        Log.d("FragmentActivities", "output: "+outputs.size());
+                    }
+                });
+            }
+
+            @Override
+            public void showInProgress() {
+                Log.d("FragmentActivities", "showInProgress");
+            }
+
+            @Override
+            public void showError() {
+                Log.d("FragmentActivities", "showError");
+            }
+        }, new RoomRepository(((ActivityMain) context).getRoomInstance()));
+        getActivities.execute();
     }
 
     @Nullable
@@ -130,7 +168,30 @@ public class FragmentActivities extends Fragment {
         floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentInteractionListener.navigateToFragmentNewActivity();
+                //fragmentInteractionListener.navigateToFragmentNewActivity();
+                final CreateActivity.Input input = new CreateActivity.Input(
+                        "Test Activity"+new Random().nextInt(),
+                        "Test description",
+                        0xFF000000,
+                        new ArrayList<>()
+                );
+                CreateActivity createActivity = new CreateActivity(new UseCaseOutput<Boolean>() {
+                    @Override
+                    public void showResult(Boolean output) {
+                        Log.d("CreateActivity", "showResult: "+output);
+                    }
+
+                    @Override
+                    public void showInProgress() {
+                        Log.d("CreateActivity", "showInProgress");
+                    }
+
+                    @Override
+                    public void showError() {
+                        Log.d("CreateActivity", "showError");
+                    }
+                }, new RoomRepository(((ActivityMain) getActivity()).getRoomInstance()), input);
+                createActivity.execute();
             }
         });
     }
