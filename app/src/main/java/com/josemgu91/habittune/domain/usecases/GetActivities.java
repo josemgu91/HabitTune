@@ -34,11 +34,11 @@ import java.util.Objects;
 
 public class GetActivities {
 
-    private final GetUseCaseOutput<LiveData<List<Output>>> output;
+    private final UseCaseOutput<LiveData<List<Output>>> output;
     private final ActivityDataGateway activityDataGateway;
     private final Function<List<Activity>, List<Output>> listMapper;
 
-    public GetActivities(@NonNull final GetUseCaseOutput<LiveData<List<Output>>> output, @NonNull final ActivityDataGateway activityDataGateway) {
+    public GetActivities(@NonNull final UseCaseOutput<LiveData<List<Output>>> output, @NonNull final ActivityDataGateway activityDataGateway) {
         this.output = output;
         this.activityDataGateway = activityDataGateway;
         this.listMapper = new ListMapper<>(new ActivityMapper());
@@ -47,13 +47,9 @@ public class GetActivities {
     public void execute() {
         output.showInProgress();
         try {
-            if (activityDataGateway.countActivities() == 0) {
-                output.showNoResult();
-            } else {
-                final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivitiesButWithoutTags();
-                final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
-                output.showResult(outputLiveData);
-            }
+            final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivitiesButWithoutTags();
+            final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
+            output.showResult(outputLiveData);
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.showError();
