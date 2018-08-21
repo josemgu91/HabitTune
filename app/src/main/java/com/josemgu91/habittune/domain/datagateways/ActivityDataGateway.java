@@ -31,10 +31,13 @@ public interface ActivityDataGateway {
     @NonNull
     LiveData<List<Activity>> getActivities() throws DataGatewayException;
 
+    @NonNull
+    LiveData<List<Activity>> getActivitiesWithoutTags() throws DataGatewayException;
+
     boolean deleteActivityByName(final String name) throws DataGatewayException;
 
     boolean createActivity(@NonNull final Activity activity) throws DataGatewayException;
 
-    boolean updateActivity(@NonNull final Activity activity) throws DataGatewayException;
+    boolean updateActivity(@NonNull final Activity oldActivity, @NonNull final Activity newActivity) throws DataGatewayException;
 
 }
