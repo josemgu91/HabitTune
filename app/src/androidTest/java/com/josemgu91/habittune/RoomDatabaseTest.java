@@ -162,6 +162,15 @@ public class RoomDatabaseTest {
     }
 
     @Test
+    public void deleteActivityByName() {
+        final Activity testActivity = testDataGenerator.createActivities(1).get(0);
+        final long testActivityId = activityDao.insertActivity(testActivity);
+        final Activity testActivityWithId = testDataGenerator.addIdToActivity(testActivity, testActivityId);
+        final int deletedRows = activityDao.deleteActivityByName(testActivityWithId.name);
+        Assert.assertEquals(1, deletedRows);
+    }
+
+    @Test
     public void insertTag() {
         final Tag tag = testDataGenerator.createTags(1).get(0);
         final long tagId = tagDao.insertTag(tag);
@@ -288,7 +297,68 @@ public class RoomDatabaseTest {
     }
 
     @Test
-    public void deleteTags() throws Exception {
+    public void cascadeDeleteActivityTags() throws Exception {
+        final Activity practicePianoActivity = createAndInsertTestActivity("Practice piano", "Piano lessons practice.", 0xFF0000FF);
+        final Activity practiceMathActivity = createAndInsertTestActivity("Practice math", "Math lessons practice.", 0xFF0000FF);
+        final Tag musicTag = createAndInsertTestTag("Music");
+        final Tag studyTag = createAndInsertTestTag("Study");
+        final Tag funTag = createAndInsertTestTag("Fun");
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                musicTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                studyTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                funTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practiceMathActivity.id,
+                studyTag.id
+        ));
+        activityDao.deleteActivity(practiceMathActivity);
+        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practiceMathActivity.id));
+        Assert.assertEquals(0, practiceMathTags.size());
+        activityDao.deleteActivity(practicePianoActivity);
+        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practicePianoActivity.id));
+        Assert.assertEquals(0, practicePianoTags.size());
+    }
+
+    @Test
+    public void cascadeDeleteTag() throws Exception {
+        final Activity practicePianoActivity = createAndInsertTestActivity("Practice piano", "Piano lessons practice.", 0xFF0000FF);
+        final Activity practiceMathActivity = createAndInsertTestActivity("Practice math", "Math lessons practice.", 0xFF0000FF);
+        final Tag musicTag = createAndInsertTestTag("Music");
+        final Tag studyTag = createAndInsertTestTag("Study");
+        final Tag funTag = createAndInsertTestTag("Fun");
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                musicTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                studyTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practicePianoActivity.id,
+                funTag.id
+        ));
+        activityTagJoinDao.insertActivityTagJoin(new ActivityTagJoin(
+                practiceMathActivity.id,
+                studyTag.id
+        ));
+        tagDao.deleteTag(studyTag);
+        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practiceMathActivity.id));
+        Assert.assertEquals(0, practiceMathTags.size());
+        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practicePianoActivity.id));
+        Assert.assertEquals(2, practicePianoTags.size());
+    }
+
+    @Test
+    public void deleteActivityTags() throws Exception {
         final Activity practicePianoActivity = createAndInsertTestActivity("Practice piano", "Piano lessons practice.", 0xFF0000FF);
         final Tag musicTag = createAndInsertTestTag("Music");
         final Tag studyTag = createAndInsertTestTag("Study");

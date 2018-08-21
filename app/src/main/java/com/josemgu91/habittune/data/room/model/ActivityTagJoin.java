@@ -31,10 +31,12 @@ import java.util.Objects;
         foreignKeys = {
                 @ForeignKey(entity = Activity.class,
                         parentColumns = "id",
-                        childColumns = "activityId"),
+                        childColumns = "activityId",
+                        onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Tag.class,
                         parentColumns = "id",
-                        childColumns = "tagId")
+                        childColumns = "tagId",
+                        onDelete = ForeignKey.CASCADE)
         })
 public class ActivityTagJoin {
 

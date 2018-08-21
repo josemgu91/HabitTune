@@ -47,6 +47,9 @@ public interface ActivityDao {
     @Query("SELECT * FROM activities WHERE name = :activityName")
     LiveData<Activity> getActivityByName(@NonNull final String activityName);
 
+    @Query("DELETE FROM activities WHERE name = :activityName")
+    int deleteActivityByName(final String activityName);
+
     @Update(onConflict = OnConflictStrategy.ABORT)
     int updateActivity(final Activity activity);
 
