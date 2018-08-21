@@ -104,6 +104,15 @@ public class RoomDatabaseTest {
     }
 
     @Test
+    public void countActivities() {
+        final int originalCount = activityDao.countActivities();
+        Assert.assertEquals(0, originalCount);
+        activityDao.insertActivity(testDataGenerator.createActivities(1).get(0));
+        final int newCount = activityDao.countActivities();
+        Assert.assertEquals(1, newCount);
+    }
+
+    @Test
     public void updateActivityName() throws Exception {
         final String originalActivityName = "Piano practice";
         final Activity testActivity = new Activity(0, originalActivityName, "Practice piano lessons.", 0xFFFF0000);

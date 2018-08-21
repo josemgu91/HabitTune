@@ -17,29 +17,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.domain.datagateways;
+package com.josemgu91.habittune.domain.util;
 
-import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.josemgu91.habittune.domain.entities.Activity;
-
+import java.util.ArrayList;
 import java.util.List;
 
-public interface ActivityDataGateway {
+public class ListMapper<I, O> implements Function<List<I>, List<O>> {
 
     @NonNull
-    LiveData<List<Activity>> subscribeToAllActivities() throws DataGatewayException;
+    private final Function<I, O> function;
 
-    @NonNull
-    LiveData<List<Activity>> subscribeToAllActivitiesButWithoutTags() throws DataGatewayException;
+    public ListMapper(@NonNull final Function<I, O> function) {
+        this.function = function;
+    }
 
-    int countActivities() throws DataGatewayException;
-
-    boolean deleteActivityByName(final String name) throws DataGatewayException;
-
-    boolean createActivity(@NonNull final Activity activity) throws DataGatewayException;
-
-    boolean updateActivity(@NonNull final Activity oldActivity, @NonNull final Activity newActivity) throws DataGatewayException;
+    @Override
+    public List<O> apply(List<I> inputList) {
+        final List<O> outputList = new ArrayList<>();
+        for (final I inputListElement : inputList) {
+            outputList.add(function.apply(inputListElement));
+        }
+        return outputList;
+    }
 
 }

@@ -20,36 +20,104 @@
 package com.josemgu91.habittune.domain.usecases;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.entities.Activity;
+import com.josemgu91.habittune.domain.util.Function;
+import com.josemgu91.habittune.domain.util.ListMapper;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GetActivities {
 
-    private final UseCaseOutput<LiveData<List<Activity>>> output;
+    private final UseCaseOutput<LiveData<List<Output>>> output;
     private final ActivityDataGateway activityDataGateway;
+    private final Function<List<Activity>, List<Output>> listMapper;
 
-    public GetActivities(@NonNull final UseCaseOutput<LiveData<List<Activity>>> output, @NonNull final ActivityDataGateway activityDataGateway) {
+    public GetActivities(@NonNull final UseCaseOutput<LiveData<List<Output>>> output, @NonNull final ActivityDataGateway activityDataGateway) {
         this.output = output;
         this.activityDataGateway = activityDataGateway;
+        this.listMapper = new ListMapper<>(new ActivityMapper());
     }
 
     public void execute() {
         output.showInProgress();
         try {
-            final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivities();
-            if (result.getValue().size() == 0) {
+            if (activityDataGateway.countActivities() == 0) {
                 output.showNoResult();
             } else {
-                output.showResult(result);
+                final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivitiesButWithoutTags();
+                final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
+                output.showResult(outputLiveData);
             }
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.showError();
+        }
+    }
+
+    private final class ActivityMapper implements Function<Activity, Output> {
+
+        @Override
+        public Output apply(Activity input) {
+            return new Output(
+                    input.getName(),
+                    input.getDescription(),
+                    input.getColor()
+            );
+        }
+    }
+
+    public static class Output {
+
+        private final String name;
+        private final String description;
+        private final int color;
+
+        public Output(String name, String description, int color) {
+            this.name = name;
+            this.description = description;
+            this.color = color;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public int getColor() {
+            return color;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Output output = (Output) o;
+            return color == output.color &&
+                    Objects.equals(name, output.name) &&
+                    Objects.equals(description, output.description);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, description, color);
+        }
+
+        @Override
+        public String toString() {
+            return "Output{" +
+                    "name='" + name + '\'' +
+                    ", description='" + description + '\'' +
+                    ", color=" + color +
+                    '}';
         }
     }
 

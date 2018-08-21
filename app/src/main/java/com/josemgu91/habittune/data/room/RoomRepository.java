@@ -66,6 +66,11 @@ public class RoomRepository implements ActivityDataGateway {
     }
 
     @Override
+    public int countActivities() {
+        return localRoomDatabase.getActivityDao().countActivities();
+    }
+
+    @Override
     public boolean deleteActivityByName(String name) throws DataGatewayException {
         try {
             return localRoomDatabase.getActivityDao().deleteActivityByName(name) != 0;

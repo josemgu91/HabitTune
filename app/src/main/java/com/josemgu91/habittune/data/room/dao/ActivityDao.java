@@ -26,7 +26,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
-import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.data.room.model.Activity;
 
@@ -45,7 +44,10 @@ public interface ActivityDao {
     LiveData<Activity> subscribeToActivityById(final long activityId);
 
     @Query("SELECT * FROM activities WHERE name = :activityName")
-    LiveData<Activity> subscribeToActivityByName(@NonNull final String activityName);
+    LiveData<Activity> subscribeToActivityByName(final String activityName);
+
+    @Query("SELECT COUNT(name) FROM activities")
+    int countActivities();
 
     @Query("DELETE FROM activities WHERE name = :activityName")
     int deleteActivityByName(final String activityName);
