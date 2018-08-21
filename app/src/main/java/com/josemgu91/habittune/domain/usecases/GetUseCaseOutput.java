@@ -19,11 +19,12 @@
 
 package com.josemgu91.habittune.domain.usecases;
 
-interface UseCaseOutput<OutputObject> {
+/**
+ * Created by jose on 2/14/18.
+ */
 
-    void showResult(final OutputObject output);
+public interface GetUseCaseOutput<Output> extends UseCaseOutput<Output> {
 
-    void showInProgress();
+    void showNoResult();
 
-    void showError();
 }

@@ -34,11 +34,11 @@ import java.util.Objects;
 
 public class GetActivities {
 
-    private final UseCaseOutput<LiveData<List<Output>>> output;
+    private final GetUseCaseOutput<LiveData<List<Output>>> output;
     private final ActivityDataGateway activityDataGateway;
     private final Function<List<Activity>, List<Output>> listMapper;
 
-    public GetActivities(@NonNull final UseCaseOutput<LiveData<List<Output>>> output, @NonNull final ActivityDataGateway activityDataGateway) {
+    public GetActivities(@NonNull final GetUseCaseOutput<LiveData<List<Output>>> output, @NonNull final ActivityDataGateway activityDataGateway) {
         this.output = output;
         this.activityDataGateway = activityDataGateway;
         this.listMapper = new ListMapper<>(new ActivityMapper());
@@ -72,7 +72,7 @@ public class GetActivities {
         }
     }
 
-    public static class Output {
+    public static final class Output {
 
         private final String name;
         private final String description;
