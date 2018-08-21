@@ -43,11 +43,11 @@ public class RoomRepository implements ActivityDataGateway {
 
     @NonNull
     @Override
-    public LiveData<List<Activity>> getActivities() throws DataGatewayException {
-        final LiveData<List<com.josemgu91.habittune.data.room.model.Activity>> roomActivityListLiveData = localRoomDatabase.getActivityDao().getAllActivities();
+    public LiveData<List<Activity>> subscribeToAllActivities() throws DataGatewayException {
+        final LiveData<List<com.josemgu91.habittune.data.room.model.Activity>> roomActivityListLiveData = localRoomDatabase.getActivityDao().subscribeToAllActivities();
         Transformations.map(roomActivityListLiveData, roomActivityList -> {
             for (final com.josemgu91.habittune.data.room.model.Activity roomActivity : roomActivityList) {
-                final LiveData<List<com.josemgu91.habittune.data.room.model.Tag>> roomActivityTagsLiveData = localRoomDatabase.getActivityTagJoinDao().getAllTagsByActivityId(roomActivity.id);
+                final LiveData<List<com.josemgu91.habittune.data.room.model.Tag>> roomActivityTagsLiveData = localRoomDatabase.getActivityTagJoinDao().subscribeToAllTagsByActivityId(roomActivity.id);
                 Transformations.map(roomActivityTagsLiveData, roomActivityTags -> mapToEntityActivity(roomActivity, roomActivityTags));
             }
             return null;
@@ -57,9 +57,9 @@ public class RoomRepository implements ActivityDataGateway {
 
     @NonNull
     @Override
-    public LiveData<List<Activity>> getActivitiesWithoutTags() throws DataGatewayException {
+    public LiveData<List<Activity>> subscribeToAllActivitiesButWithoutTags() throws DataGatewayException {
         try {
-            return Transformations.map(localRoomDatabase.getActivityDao().getAllActivities(), input -> mapList(input, RoomRepository::mapToEntityActivity));
+            return Transformations.map(localRoomDatabase.getActivityDao().subscribeToAllActivities(), input -> mapList(input, RoomRepository::mapToEntityActivity));
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }

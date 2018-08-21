@@ -98,7 +98,7 @@ public class RoomDatabaseTest {
             final long id = activityDao.insertActivity(activity);
             testActivitiesWithId.add(testDataGenerator.addIdToActivity(activity, id));
         }
-        final List<Activity> storedActivities = liveDataTestUtils.getValueSync(activityDao.getAllActivities());
+        final List<Activity> storedActivities = liveDataTestUtils.getValueSync(activityDao.subscribeToAllActivities());
         Assert.assertEquals(true, storedActivities.containsAll(testActivitiesWithId));
         Assert.assertEquals(testSize, storedActivities.size());
     }
@@ -117,7 +117,7 @@ public class RoomDatabaseTest {
                 testActivityWithId.color
         );
         final int rowsUpdated = activityDao.updateActivity(activityToUpdate);
-        final Activity updatedActivity = liveDataTestUtils.getValueSync(activityDao.getActivityById(activityId));
+        final Activity updatedActivity = liveDataTestUtils.getValueSync(activityDao.subscribeToActivityById(activityId));
         Assert.assertEquals(1, rowsUpdated);
         Assert.assertEquals(activityToUpdate, updatedActivity);
     }
@@ -186,7 +186,7 @@ public class RoomDatabaseTest {
             final long id = tagDao.insertTag(tag);
             testTagsWithId.add(testDataGenerator.addIdToTag(tag, id));
         }
-        final List<Tag> storedTags = liveDataTestUtils.getValueSync(tagDao.getAllTags());
+        final List<Tag> storedTags = liveDataTestUtils.getValueSync(tagDao.subscribeToAllTags());
         Assert.assertEquals(true, storedTags.containsAll(testTagsWithId));
         Assert.assertEquals(testSize, storedTags.size());
     }
@@ -212,7 +212,7 @@ public class RoomDatabaseTest {
                 newTagName
         );
         final int rowsUpdated = tagDao.updateTag(tagToUpdate);
-        final Tag updatedTag = liveDataTestUtils.getValueSync(tagDao.getAllTags()).get(0);
+        final Tag updatedTag = liveDataTestUtils.getValueSync(tagDao.subscribeToAllTags()).get(0);
         Assert.assertEquals(1, rowsUpdated);
         Assert.assertEquals(tagToUpdate, updatedTag);
     }
@@ -299,8 +299,8 @@ public class RoomDatabaseTest {
                 practiceMathActivity.id,
                 studyTag.id
         ));
-        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practicePianoActivity.id));
-        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practiceMathActivity.id));
+        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.subscribeToAllTagsByActivityId(practicePianoActivity.id));
+        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.subscribeToAllTagsByActivityId(practiceMathActivity.id));
         Assert.assertEquals(3, practicePianoTags.size());
         Assert.assertEquals(1, practiceMathTags.size());
     }
@@ -329,10 +329,10 @@ public class RoomDatabaseTest {
                 studyTag.id
         ));
         activityDao.deleteActivity(practiceMathActivity);
-        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practiceMathActivity.id));
+        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.subscribeToAllTagsByActivityId(practiceMathActivity.id));
         Assert.assertEquals(0, practiceMathTags.size());
         activityDao.deleteActivity(practicePianoActivity);
-        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practicePianoActivity.id));
+        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.subscribeToAllTagsByActivityId(practicePianoActivity.id));
         Assert.assertEquals(0, practicePianoTags.size());
     }
 
@@ -360,9 +360,9 @@ public class RoomDatabaseTest {
                 studyTag.id
         ));
         tagDao.deleteTag(studyTag);
-        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practiceMathActivity.id));
+        final List<Tag> practiceMathTags = liveDataTestUtils.getValueSync(activityTagJoinDao.subscribeToAllTagsByActivityId(practiceMathActivity.id));
         Assert.assertEquals(0, practiceMathTags.size());
-        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practicePianoActivity.id));
+        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.subscribeToAllTagsByActivityId(practicePianoActivity.id));
         Assert.assertEquals(2, practicePianoTags.size());
     }
 
@@ -389,7 +389,7 @@ public class RoomDatabaseTest {
                 exerciseTag.id
         ));
         Assert.assertEquals(1, removedRows);
-        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.getAllTagsByActivityId(practicePianoActivity.id));
+        final List<Tag> practicePianoTags = liveDataTestUtils.getValueSync(activityTagJoinDao.subscribeToAllTagsByActivityId(practicePianoActivity.id));
         Assert.assertEquals(2, practicePianoTags.size());
     }
 

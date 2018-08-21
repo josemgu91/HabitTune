@@ -39,13 +39,13 @@ public interface ActivityDao {
     long insertActivity(final Activity activity);
 
     @Query("SELECT * FROM activities ORDER BY name ASC")
-    LiveData<List<Activity>> getAllActivities();
+    LiveData<List<Activity>> subscribeToAllActivities();
 
     @Query("SELECT * FROM activities WHERE id = :activityId")
-    LiveData<Activity> getActivityById(final long activityId);
+    LiveData<Activity> subscribeToActivityById(final long activityId);
 
     @Query("SELECT * FROM activities WHERE name = :activityName")
-    LiveData<Activity> getActivityByName(@NonNull final String activityName);
+    LiveData<Activity> subscribeToActivityByName(@NonNull final String activityName);
 
     @Query("DELETE FROM activities WHERE name = :activityName")
     int deleteActivityByName(final String activityName);

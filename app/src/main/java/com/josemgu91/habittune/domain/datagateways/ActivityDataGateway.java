@@ -29,10 +29,10 @@ import java.util.List;
 public interface ActivityDataGateway {
 
     @NonNull
-    LiveData<List<Activity>> getActivities() throws DataGatewayException;
+    LiveData<List<Activity>> subscribeToAllActivities() throws DataGatewayException;
 
     @NonNull
-    LiveData<List<Activity>> getActivitiesWithoutTags() throws DataGatewayException;
+    LiveData<List<Activity>> subscribeToAllActivitiesButWithoutTags() throws DataGatewayException;
 
     boolean deleteActivityByName(final String name) throws DataGatewayException;
 

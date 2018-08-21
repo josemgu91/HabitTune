@@ -41,7 +41,7 @@ public class GetActivities {
     public void execute() {
         output.showInProgress();
         try {
-            final LiveData<List<Activity>> result = activityDataGateway.getActivities();
+            final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivities();
             if (result.getValue().size() == 0) {
                 output.showNoResult();
             } else {

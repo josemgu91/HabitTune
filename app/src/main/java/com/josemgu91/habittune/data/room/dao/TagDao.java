@@ -38,7 +38,7 @@ public interface TagDao {
     long insertTag(final Tag tag);
 
     @Query("SELECT * FROM tags ORDER BY name ASC")
-    LiveData<List<Tag>> getAllTags();
+    LiveData<List<Tag>> subscribeToAllTags();
 
     @Query("SELECT * FROM tags WHERE name = :name")
     Tag getTagByName(final String name);
