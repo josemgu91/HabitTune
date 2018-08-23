@@ -23,7 +23,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.josemgu91.habittune.adapter.ui.UseCaseExecutorWrapper;
@@ -58,7 +58,7 @@ public class ViewModelActivities extends AndroidViewModel {
                         new UseCaseOutputExecutorWrapper<>(
                                 new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
                                     @Override
-                                    public void onSuccess(@NonNull LiveData<List<GetActivities.Output>> listLiveData) {
+                                    public void onSuccess(@Nullable LiveData<List<GetActivities.Output>> listLiveData) {
                                         Log.d("ViewModelActivities", "onSuccess");
                                         activities = listLiveData;
                                         isInProgress.setValue(false);
@@ -86,9 +86,9 @@ public class ViewModelActivities extends AndroidViewModel {
                 habitTuneApplication.getDefaultThreadPoolExecutor(),
                 new CreateActivity(
                         new UseCaseOutputExecutorWrapper<>(
-                                new UseCaseOutput<Boolean>() {
+                                new UseCaseOutput<Void>() {
                                     @Override
-                                    public void onSuccess(@NonNull Boolean aBoolean) {
+                                    public void onSuccess(@Nullable Void unused) {
 
                                     }
 

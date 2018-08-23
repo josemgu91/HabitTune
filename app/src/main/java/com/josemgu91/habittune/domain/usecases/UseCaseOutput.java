@@ -19,11 +19,11 @@
 
 package com.josemgu91.habittune.domain.usecases;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public interface UseCaseOutput<Output> {
 
-    void onSuccess(@NonNull final Output output);
+    void onSuccess(@Nullable final Output output);
 
     void inProgress();
 

@@ -32,10 +32,10 @@ import java.util.Objects;
 
 public class CreateActivity implements UseCase<CreateActivity.Input> {
 
-    private final UseCaseOutput<Boolean> output;
+    private final UseCaseOutput<Void> output;
     private final ActivityDataGateway activityDataGateway;
 
-    public CreateActivity(@NonNull final UseCaseOutput<Boolean> output, @NonNull final ActivityDataGateway activityDataGateway) {
+    public CreateActivity(@NonNull final UseCaseOutput<Void> output, @NonNull final ActivityDataGateway activityDataGateway) {
         this.output = output;
         this.activityDataGateway = activityDataGateway;
     }
@@ -49,7 +49,11 @@ public class CreateActivity implements UseCase<CreateActivity.Input> {
                     input.color,
                     new ListMapper<>(Tag::new).apply(input.tags)
             ));
-            output.onSuccess(activityCreated);
+            if (activityCreated) {
+                output.onSuccess(null);
+            } else {
+                output.onError();
+            }
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.onError();
