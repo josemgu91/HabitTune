@@ -23,9 +23,9 @@ import android.support.annotation.NonNull;
 
 public interface UseCaseOutput<Output> {
 
-    void showResult(@NonNull final Output output);
+    void onSuccess(@NonNull final Output output);
 
-    void showInProgress();
+    void inProgress();
 
-    void showError();
+    void onError();
 }

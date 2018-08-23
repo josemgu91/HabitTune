@@ -36,17 +36,17 @@ public class UseCaseOutputExecutorWrapper<Output> implements UseCaseOutput<Outpu
     }
 
     @Override
-    public void showResult(@NonNull Output output) {
-        viewExecutor.execute(() -> useCaseOutput.showResult(output));
+    public void onSuccess(@NonNull Output output) {
+        viewExecutor.execute(() -> useCaseOutput.onSuccess(output));
     }
 
     @Override
-    public void showInProgress() {
-        viewExecutor.execute(useCaseOutput::showInProgress);
+    public void inProgress() {
+        viewExecutor.execute(useCaseOutput::inProgress);
     }
 
     @Override
-    public void showError() {
-        viewExecutor.execute(useCaseOutput::showError);
+    public void onError() {
+        viewExecutor.execute(useCaseOutput::onError);
     }
 }

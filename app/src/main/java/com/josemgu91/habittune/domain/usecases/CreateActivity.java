@@ -41,7 +41,7 @@ public class CreateActivity implements UseCase<CreateActivity.Input> {
     }
 
     public void execute(final Input input) {
-        output.showInProgress();
+        output.inProgress();
         try {
             final boolean activityCreated = activityDataGateway.createActivity(new Activity(
                     input.name,
@@ -49,10 +49,10 @@ public class CreateActivity implements UseCase<CreateActivity.Input> {
                     input.color,
                     new ListMapper<>(Tag::new).apply(input.tags)
             ));
-            output.showResult(activityCreated);
+            output.onSuccess(activityCreated);
         } catch (DataGatewayException e) {
             e.printStackTrace();
-            output.showError();
+            output.onError();
         }
     }
 

@@ -58,23 +58,23 @@ public class ViewModelActivities extends AndroidViewModel {
                         new UseCaseOutputExecutorWrapper<>(
                                 new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
                                     @Override
-                                    public void showResult(@NonNull LiveData<List<GetActivities.Output>> listLiveData) {
-                                        Log.d("ViewModelActivities", "showResult");
+                                    public void onSuccess(@NonNull LiveData<List<GetActivities.Output>> listLiveData) {
+                                        Log.d("ViewModelActivities", "onSuccess");
                                         activities = listLiveData;
                                         isInProgress.setValue(false);
                                         hasError.setValue(false);
                                     }
 
                                     @Override
-                                    public void showInProgress() {
-                                        Log.d("ViewModelActivities", "showInProgress");
+                                    public void inProgress() {
+                                        Log.d("ViewModelActivities", "inProgress");
                                         isInProgress.setValue(true);
                                         hasError.setValue(false);
                                     }
 
                                     @Override
-                                    public void showError() {
-                                        Log.d("ViewModelActivities", "showError");
+                                    public void onError() {
+                                        Log.d("ViewModelActivities", "onError");
                                         isInProgress.setValue(false);
                                         hasError.setValue(true);
                                     }
@@ -88,17 +88,17 @@ public class ViewModelActivities extends AndroidViewModel {
                         new UseCaseOutputExecutorWrapper<>(
                                 new UseCaseOutput<Boolean>() {
                                     @Override
-                                    public void showResult(@NonNull Boolean aBoolean) {
+                                    public void onSuccess(@NonNull Boolean aBoolean) {
 
                                     }
 
                                     @Override
-                                    public void showInProgress() {
+                                    public void inProgress() {
 
                                     }
 
                                     @Override
-                                    public void showError() {
+                                    public void onError() {
 
                                     }
                                 }, habitTuneApplication.getUiThreadExecutor())

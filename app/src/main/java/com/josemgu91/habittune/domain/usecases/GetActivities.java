@@ -46,14 +46,14 @@ public class GetActivities implements UseCase<Void> {
     }
 
     public void execute(@Nullable Void input) {
-        output.showInProgress();
+        output.inProgress();
         try {
             final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivitiesButWithoutTags();
             final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
-            output.showResult(outputLiveData);
+            output.onSuccess(outputLiveData);
         } catch (DataGatewayException e) {
             e.printStackTrace();
-            output.showError();
+            output.onError();
         }
     }
 
