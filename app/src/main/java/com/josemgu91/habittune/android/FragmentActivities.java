@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
+import com.josemgu91.habittune.domain.usecases.GetActivities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,7 @@ import java.util.List;
 public class FragmentActivities extends Fragment {
 
     private FragmentInteractionListener fragmentInteractionListener;
+    private ViewModelActivities viewModelActivities;
 
     private RecyclerView recyclerViewActivities;
     private FloatingActionButton floatingActionButtonAdd;
@@ -54,6 +57,13 @@ public class FragmentActivities extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
+        viewModelActivities = ViewModelProviders.of(this).get(ViewModelActivities.class);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModelActivities.fetchActivities();
     }
 
     @Nullable
@@ -70,13 +80,22 @@ public class FragmentActivities extends Fragment {
     public void onStart() {
         super.onStart();
         final RecyclerViewAdapterActivities recyclerViewAdapterActivities = new RecyclerViewAdapterActivities(getContext(), LayoutInflater.from(getContext()));
-        recyclerViewAdapterActivities.setActivities(generateActivityTestData(20));
-        recyclerViewAdapterActivities.setOnActivitySelectedListener(new RecyclerViewAdapterActivities.OnActivitySelectedListener() {
-            @Override
-            public void onActivitySelected(String activityName) {
-                Toast.makeText(getContext(), activityName, Toast.LENGTH_SHORT).show();
+        viewModelActivities.getIsInProgress().observe(this, aBoolean -> {
+            if (aBoolean != null && aBoolean) {
+                return;
             }
+            viewModelActivities.getActivities().observe(FragmentActivities.this, outputs -> {
+                if (outputs == null) {
+                    return;
+                }
+                final List<String> activities = new ArrayList<>();
+                for (final GetActivities.Output output : outputs) {
+                    activities.add(output.getName());
+                }
+                recyclerViewAdapterActivities.setActivities(activities);
+            });
         });
+        recyclerViewAdapterActivities.setOnActivitySelectedListener(activityName -> Toast.makeText(getContext(), activityName, Toast.LENGTH_SHORT).show());
         recyclerViewAdapterActivities.setOnMultiSelectionModeListener(new RecyclerViewAdapterActivities.OnMultiSelectionModeListener() {
 
             private ActionMode actionMode;
@@ -127,11 +146,9 @@ public class FragmentActivities extends Fragment {
         });
         recyclerViewActivities.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewActivities.setAdapter(recyclerViewAdapterActivities);
-        floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentInteractionListener.navigateToFragmentNewActivity();
-            }
+        floatingActionButtonAdd.setOnClickListener(v -> {
+            //fragmentInteractionListener.navigateToFragmentNewActivity();
+            viewModelActivities.addTestActivity();
         });
     }
 
@@ -144,11 +161,4 @@ public class FragmentActivities extends Fragment {
         }
     }
 
-    private List<String> generateActivityTestData(final int size) {
-        final List<String> activityList = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            activityList.add("Activity " + (i + 1));
-        }
-        return activityList;
-    }
 }

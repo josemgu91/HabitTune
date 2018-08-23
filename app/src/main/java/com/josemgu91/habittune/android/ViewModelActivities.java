@@ -24,20 +24,23 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.josemgu91.habittune.adapter.ui.UseCaseExecutorWrapper;
 import com.josemgu91.habittune.adapter.ui.UseCaseOutputExecutorWrapper;
-import com.josemgu91.habittune.android.executors.DefaultThreadPoolExecutor;
-import com.josemgu91.habittune.android.executors.UiThreadExecutor;
+import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.UseCase;
 import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ViewModelActivities extends AndroidViewModel {
 
     private final UseCase<Void> getActivities;
+    private final UseCase<CreateActivity.Input> createActivity;
 
     private final MutableLiveData<Boolean> isInProgress;
     private final MutableLiveData<Boolean> hasError;
@@ -47,31 +50,60 @@ public class ViewModelActivities extends AndroidViewModel {
         super(application);
         isInProgress = new MutableLiveData<>();
         hasError = new MutableLiveData<>();
-        activities = new MutableLiveData<>();
+        //activities = new MutableLiveData<>();
+        final com.josemgu91.habittune.android.Application habitTuneApplication = ((com.josemgu91.habittune.android.Application) application);
         this.getActivities = new UseCaseExecutorWrapper<>(
-                new DefaultThreadPoolExecutor(),
-                new GetActivities(new UseCaseOutputExecutorWrapper<>(
-                        new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
-                            @Override
-                            public void showResult(@NonNull LiveData<List<GetActivities.Output>> listLiveData) {
-                                isInProgress.setValue(false);
-                                hasError.setValue(false);
-                                activities = listLiveData;
-                            }
+                habitTuneApplication.getDefaultThreadPoolExecutor(),
+                new GetActivities(
+                        new UseCaseOutputExecutorWrapper<>(
+                                new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
+                                    @Override
+                                    public void showResult(@NonNull LiveData<List<GetActivities.Output>> listLiveData) {
+                                        Log.d("ViewModelActivities", "showResult");
+                                        activities = listLiveData;
+                                        isInProgress.setValue(false);
+                                        hasError.setValue(false);
+                                    }
 
-                            @Override
-                            public void showInProgress() {
-                                isInProgress.setValue(true);
-                                hasError.setValue(false);
-                            }
+                                    @Override
+                                    public void showInProgress() {
+                                        Log.d("ViewModelActivities", "showInProgress");
+                                        isInProgress.setValue(true);
+                                        hasError.setValue(false);
+                                    }
 
-                            @Override
-                            public void showError() {
-                                isInProgress.setValue(false);
-                                hasError.setValue(true);
-                            }
-                        }, new UiThreadExecutor()),
-                        ((com.josemgu91.habittune.android.Application) application).getRoomRepository()
+                                    @Override
+                                    public void showError() {
+                                        Log.d("ViewModelActivities", "showError");
+                                        isInProgress.setValue(false);
+                                        hasError.setValue(true);
+                                    }
+                                }, habitTuneApplication.getUiThreadExecutor()),
+                        habitTuneApplication.getRoomRepository()
+                )
+        );
+        this.createActivity = new UseCaseExecutorWrapper<>(
+                habitTuneApplication.getDefaultThreadPoolExecutor(),
+                new CreateActivity(
+                        new UseCaseOutputExecutorWrapper<>(
+                                new UseCaseOutput<Boolean>() {
+                                    @Override
+                                    public void showResult(@NonNull Boolean aBoolean) {
+
+                                    }
+
+                                    @Override
+                                    public void showInProgress() {
+
+                                    }
+
+                                    @Override
+                                    public void showError() {
+
+                                    }
+                                }, habitTuneApplication.getUiThreadExecutor())
+                        ,
+                        habitTuneApplication.getRoomRepository()
                 )
         );
     }
@@ -80,7 +112,24 @@ public class ViewModelActivities extends AndroidViewModel {
         getActivities.execute(null);
     }
 
+    public void addTestActivity() {
+        createActivity.execute(new CreateActivity.Input(
+                "Test Activity " + new Random().nextInt(),
+                "This is the desription",
+                0xFF00FFFF,
+                new ArrayList<>()
+        ));
+    }
+
     public LiveData<List<GetActivities.Output>> getActivities() {
         return activities;
+    }
+
+    public MutableLiveData<Boolean> getIsInProgress() {
+        return isInProgress;
+    }
+
+    public MutableLiveData<Boolean> getHasError() {
+        return hasError;
     }
 }
