@@ -24,6 +24,7 @@ import android.arch.persistence.room.Room;
 import com.josemgu91.habittune.android.executors.DefaultThreadPoolExecutor;
 import com.josemgu91.habittune.android.executors.UiThreadExecutor;
 import com.josemgu91.habittune.data.room.LocalRoomDatabase;
+import com.josemgu91.habittune.data.room.RoomRepository;
 
 import java.util.concurrent.Executor;
 
@@ -33,19 +34,20 @@ public class Application extends android.app.Application {
 
     private Executor uiThreadExecutor;
     private Executor defaultThreadPoolExecutor;
-    private LocalRoomDatabase localRoomDatabase;
+    private RoomRepository roomRepository;
 
     @Override
     public void onCreate() {
         super.onCreate();
         uiThreadExecutor = new UiThreadExecutor();
         defaultThreadPoolExecutor = new DefaultThreadPoolExecutor();
-        localRoomDatabase = Room
+        final LocalRoomDatabase localRoomDatabase = Room
                 .inMemoryDatabaseBuilder(
                         this,
                         LocalRoomDatabase.class)
                 .openHelperFactory(new RequerySQLiteOpenHelperFactory())
                 .build();
+        roomRepository = new RoomRepository(localRoomDatabase);
     }
 
     public Executor getUiThreadExecutor() {
@@ -56,7 +58,7 @@ public class Application extends android.app.Application {
         return defaultThreadPoolExecutor;
     }
 
-    public LocalRoomDatabase getLocalRoomDatabase() {
-        return localRoomDatabase;
+    public RoomRepository getRoomRepository() {
+        return roomRepository;
     }
 }
