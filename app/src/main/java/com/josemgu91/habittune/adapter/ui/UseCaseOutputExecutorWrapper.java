@@ -20,23 +20,33 @@
 package com.josemgu91.habittune.adapter.ui;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.josemgu91.habittune.domain.usecases.UseCase;
+import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
 import java.util.concurrent.Executor;
 
-public class UseCaseExecutor<Input> {
+public class UseCaseOutputExecutorWrapper<Output> implements UseCaseOutput<Output> {
 
-    private final Executor controllerExecutor;
-    private final UseCase<Input> useCase;
+    private final UseCaseOutput<Output> useCaseOutput;
+    private final Executor viewExecutor;
 
-    public UseCaseExecutor(@NonNull final Executor executor, @NonNull final UseCase<Input> useCase) {
-        this.controllerExecutor = executor;
-        this.useCase = useCase;
+    public UseCaseOutputExecutorWrapper(@NonNull final UseCaseOutput<Output> useCaseOutput, @NonNull final Executor viewExecutor) {
+        this.useCaseOutput = useCaseOutput;
+        this.viewExecutor = viewExecutor;
     }
 
-    public final void execute(@Nullable Input input) {
-        controllerExecutor.execute(() -> useCase.execute(input));
+    @Override
+    public void showResult(@NonNull Output output) {
+        viewExecutor.execute(() -> useCaseOutput.showResult(output));
+    }
+
+    @Override
+    public void showInProgress() {
+        viewExecutor.execute(useCaseOutput::showInProgress);
+    }
+
+    @Override
+    public void showError() {
+        viewExecutor.execute(useCaseOutput::showError);
     }
 }
