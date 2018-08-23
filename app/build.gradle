@@ -62,6 +62,8 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
     implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
 
+    def sqLiteSupportLibraryVersion = '3.24.0'
+    implementation "io.requery:sqlite-android:$sqLiteSupportLibraryVersion"
     def eventBusVersion = '3.1.1'
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     def simpleStackVersion = '1.11.2'
