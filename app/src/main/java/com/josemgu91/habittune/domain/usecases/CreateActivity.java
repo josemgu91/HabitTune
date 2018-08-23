@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.domain.usecases;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
@@ -29,18 +30,19 @@ import com.josemgu91.habittune.domain.util.ListMapper;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
-public class CreateActivity implements UseCase<CreateActivity.Input> {
+public class CreateActivity extends AbstractUseCase<CreateActivity.Input, Void> {
 
-    private final UseCaseOutput<Void> output;
     private final ActivityDataGateway activityDataGateway;
 
-    public CreateActivity(@NonNull final UseCaseOutput<Void> output, @NonNull final ActivityDataGateway activityDataGateway) {
-        this.output = output;
+    public CreateActivity(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull UseCaseOutput<Void> useCaseOutput, @NonNull ActivityDataGateway activityDataGateway) {
+        super(outputExecutor, useCaseExecutor, useCaseOutput);
         this.activityDataGateway = activityDataGateway;
     }
 
-    public void execute(final Input input) {
+    @Override
+    protected void executeUseCase(@Nullable Input input) {
         output.inProgress();
         try {
             final boolean activityCreated = activityDataGateway.createActivity(new Activity(

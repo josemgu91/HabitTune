@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android;
+package com.josemgu91.habittune.android.ui.new_activity;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.databinding.FragmentNewActivityBinding;
 
 public class FragmentNewActivity extends Fragment implements ColorPickerDialogListener {

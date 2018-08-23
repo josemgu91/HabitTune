@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android;
+package com.josemgu91.habittune.android.ui.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -39,6 +39,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 

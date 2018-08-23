@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.activities;
+package com.josemgu91.habittune.android;
 
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;

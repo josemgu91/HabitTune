@@ -32,20 +32,21 @@ import com.josemgu91.habittune.domain.util.ListMapper;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
-public class GetActivities implements UseCase<Void> {
+public class GetActivities extends AbstractUseCase<Void, LiveData<List<GetActivities.Output>>> {
 
-    private final UseCaseOutput<LiveData<List<Output>>> output;
     private final ActivityDataGateway activityDataGateway;
     private final Function<List<Activity>, List<Output>> listMapper;
 
-    public GetActivities(@NonNull final UseCaseOutput<LiveData<List<Output>>> output, @NonNull final ActivityDataGateway activityDataGateway) {
-        this.output = output;
+    public GetActivities(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull UseCaseOutput<LiveData<List<Output>>> useCaseOutput, @NonNull ActivityDataGateway activityDataGateway) {
+        super(outputExecutor, useCaseExecutor, useCaseOutput);
         this.activityDataGateway = activityDataGateway;
         this.listMapper = new ListMapper<>(new ActivityMapper());
     }
 
-    public void execute(@Nullable Void input) {
+    @Override
+    protected void executeUseCase(@Nullable Void aVoid) {
         output.inProgress();
         try {
             final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivitiesButWithoutTags();

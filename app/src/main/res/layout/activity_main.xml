@@ -26,13 +26,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".android.activities.ActivityMain">
+        tools:context=".android.ActivityMain">
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".android.activities.ActivityMain">
+            tools:context=".android.ActivityMain">
 
             <include
                 android:id="@+id/includedToolbar"

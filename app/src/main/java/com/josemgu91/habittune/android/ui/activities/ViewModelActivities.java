@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android;
+package com.josemgu91.habittune.android.ui.activities;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -26,8 +26,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.josemgu91.habittune.adapter.ui.UseCaseExecutorWrapper;
-import com.josemgu91.habittune.adapter.ui.UseCaseOutputExecutorWrapper;
+import com.josemgu91.habittune.android.usecases.DefaultUseCaseFactory;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.UseCase;
@@ -52,59 +51,53 @@ public class ViewModelActivities extends AndroidViewModel {
         hasError = new MutableLiveData<>();
         //activities = new MutableLiveData<>();
         final com.josemgu91.habittune.android.Application habitTuneApplication = ((com.josemgu91.habittune.android.Application) application);
-        this.getActivities = new UseCaseExecutorWrapper<>(
+        final DefaultUseCaseFactory defaultUseCaseFactory = new DefaultUseCaseFactory(
+                habitTuneApplication.getUiThreadExecutor(),
                 habitTuneApplication.getDefaultThreadPoolExecutor(),
-                new GetActivities(
-                        new UseCaseOutputExecutorWrapper<>(
-                                new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
-                                    @Override
-                                    public void onSuccess(@Nullable LiveData<List<GetActivities.Output>> listLiveData) {
-                                        Log.d("ViewModelActivities", "onSuccess");
-                                        activities = listLiveData;
-                                        isInProgress.setValue(false);
-                                        hasError.setValue(false);
-                                    }
-
-                                    @Override
-                                    public void inProgress() {
-                                        Log.d("ViewModelActivities", "inProgress");
-                                        isInProgress.setValue(true);
-                                        hasError.setValue(false);
-                                    }
-
-                                    @Override
-                                    public void onError() {
-                                        Log.d("ViewModelActivities", "onError");
-                                        isInProgress.setValue(false);
-                                        hasError.setValue(true);
-                                    }
-                                }, habitTuneApplication.getUiThreadExecutor()),
-                        habitTuneApplication.getRoomRepository()
-                )
+                habitTuneApplication.getRoomRepository()
         );
-        this.createActivity = new UseCaseExecutorWrapper<>(
-                habitTuneApplication.getDefaultThreadPoolExecutor(),
-                new CreateActivity(
-                        new UseCaseOutputExecutorWrapper<>(
-                                new UseCaseOutput<Void>() {
-                                    @Override
-                                    public void onSuccess(@Nullable Void unused) {
+        this.getActivities = defaultUseCaseFactory.createGetActivities(
+                new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
+                    @Override
+                    public void onSuccess(@Nullable LiveData<List<GetActivities.Output>> listLiveData) {
+                        Log.d("ViewModelActivities", "onSuccess");
+                        activities = listLiveData;
+                        isInProgress.setValue(false);
+                        hasError.setValue(false);
+                    }
 
-                                    }
+                    @Override
+                    public void inProgress() {
+                        Log.d("ViewModelActivities", "inProgress");
+                        isInProgress.setValue(true);
+                        hasError.setValue(false);
+                    }
 
-                                    @Override
-                                    public void inProgress() {
+                    @Override
+                    public void onError() {
+                        Log.d("ViewModelActivities", "onError");
+                        isInProgress.setValue(false);
+                        hasError.setValue(true);
+                    }
+                }
+        );
+        this.createActivity = defaultUseCaseFactory.createCreateActivity(
+                new UseCaseOutput<Void>() {
+                    @Override
+                    public void onSuccess(@Nullable Void aVoid) {
 
-                                    }
+                    }
 
-                                    @Override
-                                    public void onError() {
+                    @Override
+                    public void inProgress() {
 
-                                    }
-                                }, habitTuneApplication.getUiThreadExecutor())
-                        ,
-                        habitTuneApplication.getRoomRepository()
-                )
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                }
         );
     }
 

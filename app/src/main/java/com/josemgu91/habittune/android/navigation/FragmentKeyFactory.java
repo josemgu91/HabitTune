@@ -21,9 +21,9 @@ package com.josemgu91.habittune.android.navigation;
 
 import android.support.v4.app.Fragment;
 
-import com.josemgu91.habittune.android.FragmentActivities;
+import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
 import com.josemgu91.habittune.android.FragmentHelp;
-import com.josemgu91.habittune.android.FragmentNewActivity;
+import com.josemgu91.habittune.android.ui.new_activity.FragmentNewActivity;
 import com.josemgu91.habittune.android.FragmentRoutines;
 import com.josemgu91.habittune.android.FragmentSchedule;
 import com.josemgu91.habittune.android.FragmentSettings;
