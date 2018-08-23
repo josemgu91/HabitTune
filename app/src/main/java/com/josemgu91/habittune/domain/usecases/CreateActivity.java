@@ -30,19 +30,17 @@ import com.josemgu91.habittune.domain.util.ListMapper;
 import java.util.List;
 import java.util.Objects;
 
-public class CreateActivity {
+public class CreateActivity implements UseCase<CreateActivity.Input> {
 
     private final UseCaseOutput<Boolean> output;
     private final ActivityDataGateway activityDataGateway;
-    private final Input input;
 
-    public CreateActivity(@NonNull final UseCaseOutput<Boolean> output, @NonNull final ActivityDataGateway activityDataGateway, @NonNull final Input input) {
+    public CreateActivity(@NonNull final UseCaseOutput<Boolean> output, @NonNull final ActivityDataGateway activityDataGateway) {
         this.output = output;
         this.activityDataGateway = activityDataGateway;
-        this.input = input;
     }
 
-    public void execute() {
+    public void execute(final Input input) {
         output.showInProgress();
         try {
             final boolean activityCreated = activityDataGateway.createActivity(new Activity(

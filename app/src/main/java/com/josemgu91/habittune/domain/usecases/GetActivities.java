@@ -22,6 +22,7 @@ package com.josemgu91.habittune.domain.usecases;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
@@ -32,7 +33,7 @@ import com.josemgu91.habittune.domain.util.ListMapper;
 import java.util.List;
 import java.util.Objects;
 
-public class GetActivities {
+public class GetActivities implements UseCase<Void> {
 
     private final UseCaseOutput<LiveData<List<Output>>> output;
     private final ActivityDataGateway activityDataGateway;
@@ -44,7 +45,7 @@ public class GetActivities {
         this.listMapper = new ListMapper<>(new ActivityMapper());
     }
 
-    public void execute() {
+    public void execute(@Nullable Void input) {
         output.showInProgress();
         try {
             final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivitiesButWithoutTags();

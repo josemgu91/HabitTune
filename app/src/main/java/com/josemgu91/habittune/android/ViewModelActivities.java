@@ -17,15 +17,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.domain.usecases;
+package com.josemgu91.habittune.android;
 
-import android.support.annotation.NonNull;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModel;
 
-public interface UseCaseOutput<Output> {
+import com.josemgu91.habittune.domain.usecases.GetActivities;
 
-    void showResult(@NonNull final Output output);
+import java.util.List;
 
-    void showInProgress();
+public class ViewModelActivities extends ViewModel {
 
-    void showError();
+    private final GetActivities getActivities;
+    private LiveData<List<GetActivities.Output>> activities;
+
+    public ViewModelActivities(final GetActivities getActivities){
+        this.getActivities = getActivities;
+    }
+
+    public void init(){
+        //getActivities.execute();
+    }
+
+    public LiveData<List<GetActivities.Output>> getActivities() {
+        return activities;
+    }
 }

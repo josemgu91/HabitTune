@@ -19,13 +19,9 @@
 
 package com.josemgu91.habittune.domain.usecases;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-public interface UseCaseOutput<Output> {
+public interface UseCase<Input> {
 
-    void showResult(@NonNull final Output output);
-
-    void showInProgress();
-
-    void showError();
+    void execute(@Nullable Input input);
 }

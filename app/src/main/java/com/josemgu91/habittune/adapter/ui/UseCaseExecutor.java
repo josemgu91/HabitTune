@@ -17,15 +17,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.domain.usecases;
+package com.josemgu91.habittune.adapter.ui;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-public interface UseCaseOutput<Output> {
+import com.josemgu91.habittune.domain.usecases.UseCase;
 
-    void showResult(@NonNull final Output output);
+import java.util.concurrent.Executor;
 
-    void showInProgress();
+public class UseCaseExecutor<Input> {
 
-    void showError();
+    private final Executor controllerExecutor;
+    private final UseCase<Input> useCase;
+
+    public UseCaseExecutor(@NonNull final Executor executor, @NonNull final UseCase<Input> useCase) {
+        this.controllerExecutor = executor;
+        this.useCase = useCase;
+    }
+
+    public final void execute(@Nullable Input input) {
+        controllerExecutor.execute(() -> useCase.execute(input));
+    }
 }
