@@ -24,7 +24,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.android.ui.activities.ViewModelActivities;
-import com.josemgu91.habittune.android.ui.new_activity.ViewModelCreateActivity;
+import com.josemgu91.habittune.android.ui.new_activity.ViewModelNewActivity;
 import com.josemgu91.habittune.android.usecases.UseCaseFactory;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
@@ -42,8 +42,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(ViewModelActivities.class)) {
             return (T) new ViewModelActivities(useCaseFactory.createGetActivities());
         }
-        if (modelClass.isAssignableFrom(ViewModelCreateActivity.class)) {
-            return (T) new ViewModelCreateActivity(useCaseFactory.createCreateActivity());
+        if (modelClass.isAssignableFrom(ViewModelNewActivity.class)) {
+            return (T) new ViewModelNewActivity(useCaseFactory.createCreateActivity());
         }
         throw new RuntimeException("Unknown ViewModel class");
     }

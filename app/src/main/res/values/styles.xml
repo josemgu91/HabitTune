@@ -35,6 +35,7 @@
         <item name="titleTextColor">@color/primaryText</item>
         <item name="subtitleTextColor">@color/primaryText</item>
         <item name="colorControlNormal">@color/primaryText</item>
+        <item name="android:actionMenuTextColor">@color/primaryText</item>
     </style>
 
     <style name="AppTheme.AppBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

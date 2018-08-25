@@ -28,7 +28,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,7 +48,7 @@ import java.util.ArrayList;
 
 public class FragmentNewActivity extends Fragment implements ColorPickerDialogListener {
 
-    private ViewModelCreateActivity viewModelCreateActivity;
+    private ViewModelNewActivity viewModelNewActivity;
     private FragmentNewActivityBinding fragmentNewActivityBinding;
     private FragmentInteractionListener fragmentInteractionListener;
     private ColorPickerDialog colorPickerDialog;
@@ -68,7 +67,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         defaultColor = ContextCompat.getColor(context, R.color.secondary);
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
-        viewModelCreateActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelCreateActivity.class);
+        viewModelNewActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelNewActivity.class);
     }
 
     @Override
@@ -154,6 +153,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
                 activityColor,
                 new ArrayList<>()
         );
-        viewModelCreateActivity.createActivity(input);
+        viewModelNewActivity.createActivity(input);
+        getActivity().onBackPressed();
     }
 }

@@ -19,13 +19,45 @@
 
 package com.josemgu91.habittune.android.ui.new_activity;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.support.annotation.NonNull;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
 
-public class ViewModelNewActivity extends AndroidViewModel {
+import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.usecases.CreateActivity;
+import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
-    public ViewModelNewActivity(@NonNull Application application) {
-        super(application);
+public class ViewModelNewActivity extends ViewModel {
+
+    private final CreateActivity createActivity;
+
+    private final MutableLiveData<Response<Void, Void>> response;
+
+    public ViewModelNewActivity(final CreateActivity createActivity) {
+        this.createActivity = createActivity;
+        this.response = new MutableLiveData<>();
+    }
+
+    public void createActivity(final CreateActivity.Input activity) {
+        createActivity.execute(activity, new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+                response.setValue(new Response<>(Response.Status.SUCCESS, null, null));
+            }
+
+            @Override
+            public void inProgress() {
+                response.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                response.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
+    public MutableLiveData<Response<Void, Void>> getResponse() {
+        return response;
     }
 }
