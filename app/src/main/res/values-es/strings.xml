@@ -42,4 +42,6 @@
     <string name="new_activity_label_activity_color">Color</string>
     <string name="new_activity_hint_activity_color">Color</string>
     <string name="new_activity_hint_activity_tags">Etiquetas&#8230;</string>
+    <string name="new_activity_create">Crear</string>
+
 </resources>

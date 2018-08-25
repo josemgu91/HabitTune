@@ -17,35 +17,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui.activities;
+package com.josemgu91.habittune.android.ui.new_activity;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
-import com.josemgu91.habittune.domain.usecases.GetActivities;
+import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
-import java.util.List;
+public class ViewModelCreateActivity extends ViewModel {
 
-public class ViewModelActivities extends ViewModel {
+    private final CreateActivity createActivity;
 
-    private final GetActivities getActivities;
+    private final MutableLiveData<Response<Void, Void>> response;
 
-    private final MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> response;
-
-    public ViewModelActivities(final GetActivities getActivities) {
-        this.getActivities = getActivities;
+    public ViewModelCreateActivity(final CreateActivity createActivity) {
+        this.createActivity = createActivity;
         this.response = new MutableLiveData<>();
     }
 
-    public void fetchActivities() {
-        getActivities.execute(null, new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
+    public void createActivity(final CreateActivity.Input activity) {
+        createActivity.execute(activity, new UseCaseOutput<Void>() {
             @Override
-            public void onSuccess(@Nullable LiveData<List<GetActivities.Output>> listLiveData) {
-                response.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
+            public void onSuccess(@Nullable Void aVoid) {
+                response.setValue(new Response<>(Response.Status.SUCCESS, null, null));
             }
 
             @Override
@@ -60,7 +57,7 @@ public class ViewModelActivities extends ViewModel {
         });
     }
 
-    public MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> getResponse() {
+    public MutableLiveData<Response<Void, Void>> getResponse() {
         return response;
     }
 }

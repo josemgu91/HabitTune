@@ -44,4 +44,6 @@
     <string name="new_activity_label_activity_color">Color</string>
     <string name="new_activity_hint_activity_color">Color</string>
     <string name="new_activity_hint_activity_tags">Tags&#8230;</string>
+    <string name="new_activity_create">Save</string>
+
 </resources>

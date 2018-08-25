@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android.ui.new_activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -27,26 +28,33 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
+import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.databinding.FragmentNewActivityBinding;
+import com.josemgu91.habittune.domain.usecases.CreateActivity;
+
+import java.util.ArrayList;
 
 public class FragmentNewActivity extends Fragment implements ColorPickerDialogListener {
 
-    private FragmentInteractionListener fragmentInteractionListener;
-
+    private ViewModelCreateActivity viewModelCreateActivity;
     private FragmentNewActivityBinding fragmentNewActivityBinding;
-
+    private FragmentInteractionListener fragmentInteractionListener;
     private ColorPickerDialog colorPickerDialog;
 
     private final static String FRAGMENT_TAG_COLOR_PICKER = "color-picker-dialog";
-
     private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
 
     @ColorInt
@@ -59,11 +67,14 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
         super.onAttach(context);
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         defaultColor = ContextCompat.getColor(context, R.color.secondary);
+        final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
+        viewModelCreateActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelCreateActivity.class);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (savedInstanceState == null) {
             selectedColor = defaultColor;
         } else {
@@ -76,6 +87,21 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
         colorPickerDialog.setColorPickerDialogListener(this);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.new_activity, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.actionCreateActivity) {
+            createActivity();
+            return true;
+        }
+        return false;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -85,14 +111,9 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        fragmentNewActivityBinding.viewColor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
-            }
-        });
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        fragmentNewActivityBinding.viewColor.setOnClickListener(v -> colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER));
     }
 
     @Override
@@ -121,5 +142,18 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     @Override
     public void onDialogDismissed(int dialogId) {
 
+    }
+
+    private void createActivity() {
+        final String activityName = fragmentNewActivityBinding.editTextActivityName.getText().toString();
+        final String activityDescription = fragmentNewActivityBinding.editTextActivityDescription.getText().toString();
+        final int activityColor = selectedColor;
+        final CreateActivity.Input input = new CreateActivity.Input(
+                activityName,
+                activityDescription,
+                activityColor,
+                new ArrayList<>()
+        );
+        viewModelCreateActivity.createActivity(input);
     }
 }
