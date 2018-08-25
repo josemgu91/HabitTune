@@ -36,13 +36,13 @@ public class CreateActivity extends AbstractUseCase<CreateActivity.Input, Void> 
 
     private final ActivityDataGateway activityDataGateway;
 
-    public CreateActivity(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull UseCaseOutput<Void> useCaseOutput, @NonNull ActivityDataGateway activityDataGateway) {
-        super(outputExecutor, useCaseExecutor, useCaseOutput);
+    public CreateActivity(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull ActivityDataGateway activityDataGateway) {
+        super(outputExecutor, useCaseExecutor);
         this.activityDataGateway = activityDataGateway;
     }
 
     @Override
-    protected void executeUseCase(@Nullable Input input) {
+    protected void executeUseCase(@Nullable final Input input, @NonNull final UseCaseOutput<Void> output) {
         output.inProgress();
         try {
             final boolean activityCreated = activityDataGateway.createActivity(new Activity(

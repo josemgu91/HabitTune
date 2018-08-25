@@ -21,6 +21,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="showProgress"
+            type="boolean" />
+    </data>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -34,6 +43,7 @@
             android:paddingEnd="@dimen/layoutMarginEnd"
             android:paddingStart="@dimen/layoutMarginStart"
             android:paddingTop="@dimen/layoutMarginTop"
+            android:visibility="@{showProgress ? View.GONE : View.VISIBLE}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/element_activity" />
 
@@ -44,9 +54,18 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/floating_action_button_margin"
             android:src="@drawable/ic_action_add_white_24dp"
+            android:visibility="@{showProgress ? View.GONE : View.VISIBLE}"
             app:fabSize="normal"
             app:layout_anchor="@id/recyclerView"
             app:layout_anchorGravity="bottom|end" />
+
+        <ProgressBar
+            android:id="@+id/progressbar_recipes_retrieving_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{showProgress ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

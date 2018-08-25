@@ -24,33 +24,36 @@ import android.support.annotation.Nullable;
 
 import java.util.concurrent.Executor;
 
-public abstract class AbstractUseCase<Input, Output> implements UseCase<Input> {
+public abstract class AbstractUseCase<Input, Output> implements UseCase<Input, Output> {
 
     @NonNull
     private final Executor useCaseExecutor;
     @NonNull
-    protected final UseCaseOutput<Output> output;
+    private final Executor outputExecutor;
 
-    public AbstractUseCase(@NonNull final Executor outputExecutor, @NonNull final Executor useCaseExecutor, @NonNull final UseCaseOutput<Output> useCaseOutput) {
+    public AbstractUseCase(@NonNull final Executor outputExecutor, @NonNull final Executor useCaseExecutor) {
         this.useCaseExecutor = useCaseExecutor;
-        output = new DefaultUseCaseOutputExecutor<>(outputExecutor, useCaseOutput);
+        this.outputExecutor = outputExecutor;
     }
 
     @Override
-    public void execute(@Nullable Input input) {
-        useCaseExecutor.execute(() -> executeUseCase(input));
+    public void execute(@Nullable final Input input, @NonNull final UseCaseOutput<Output> output) {
+        useCaseExecutor.execute(() -> executeUseCase(
+                input,
+                new DefaultUseCaseOutputExecutor<>(outputExecutor, output)
+        ));
     }
 
-    protected abstract void executeUseCase(@Nullable Input input);
+    protected abstract void executeUseCase(@Nullable final Input input, @NonNull final UseCaseOutput<Output> output);
 
-    private static class DefaultUseCaseOutputExecutor<Output> implements UseCaseOutput<Output>{
+    private static class DefaultUseCaseOutputExecutor<Output> implements UseCaseOutput<Output> {
 
         @NonNull
         private final Executor outputExecutor;
         @NonNull
         private final UseCaseOutput<Output> useCaseOutput;
 
-        public DefaultUseCaseOutputExecutor(@NonNull Executor outputExecutor, @NonNull UseCaseOutput<Output> useCaseOutput) {
+        public DefaultUseCaseOutputExecutor(@NonNull final Executor outputExecutor, @NonNull final UseCaseOutput<Output> useCaseOutput) {
             this.outputExecutor = outputExecutor;
             this.useCaseOutput = useCaseOutput;
         }

@@ -39,14 +39,14 @@ public class GetActivities extends AbstractUseCase<Void, LiveData<List<GetActivi
     private final ActivityDataGateway activityDataGateway;
     private final Function<List<Activity>, List<Output>> listMapper;
 
-    public GetActivities(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull UseCaseOutput<LiveData<List<Output>>> useCaseOutput, @NonNull ActivityDataGateway activityDataGateway) {
-        super(outputExecutor, useCaseExecutor, useCaseOutput);
+    public GetActivities(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull ActivityDataGateway activityDataGateway) {
+        super(outputExecutor, useCaseExecutor);
         this.activityDataGateway = activityDataGateway;
         this.listMapper = new ListMapper<>(new ActivityMapper());
     }
 
     @Override
-    protected void executeUseCase(@Nullable Void aVoid) {
+    protected void executeUseCase(@Nullable Void aVoid, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
         output.inProgress();
         try {
             final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivitiesButWithoutTags();

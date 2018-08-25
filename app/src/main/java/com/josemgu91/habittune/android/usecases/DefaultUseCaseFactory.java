@@ -19,14 +19,10 @@
 
 package com.josemgu91.habittune.android.usecases;
 
-import android.arch.lifecycle.LiveData;
-
 import com.josemgu91.habittune.data.room.RoomRepository;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
-import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
-import java.util.List;
 import java.util.concurrent.Executor;
 
 public class DefaultUseCaseFactory implements UseCaseFactory {
@@ -42,21 +38,19 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     }
 
     @Override
-    public GetActivities createGetActivities(UseCaseOutput<LiveData<List<GetActivities.Output>>> output) {
+    public GetActivities createGetActivities() {
         return new GetActivities(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
-                output,
                 roomRepository
         );
     }
 
     @Override
-    public CreateActivity createCreateActivity(UseCaseOutput<Void> output) {
+    public CreateActivity createCreateActivity() {
         return new CreateActivity(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
-                output,
                 roomRepository
         );
     }

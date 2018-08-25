@@ -23,6 +23,9 @@ import android.arch.persistence.room.Room;
 
 import com.josemgu91.habittune.android.executors.DefaultThreadPoolExecutor;
 import com.josemgu91.habittune.android.executors.UiThreadExecutor;
+import com.josemgu91.habittune.android.ui.ViewModelFactory;
+import com.josemgu91.habittune.android.usecases.DefaultUseCaseFactory;
+import com.josemgu91.habittune.android.usecases.UseCaseFactory;
 import com.josemgu91.habittune.data.room.LocalRoomDatabase;
 import com.josemgu91.habittune.data.room.RoomRepository;
 
@@ -35,6 +38,8 @@ public class Application extends android.app.Application {
     private Executor uiThreadExecutor;
     private Executor defaultThreadPoolExecutor;
     private RoomRepository roomRepository;
+    private UseCaseFactory useCaseFactory;
+    private ViewModelFactory viewModelFactory;
 
     @Override
     public void onCreate() {
@@ -48,6 +53,8 @@ public class Application extends android.app.Application {
                 .openHelperFactory(new RequerySQLiteOpenHelperFactory())
                 .build();
         roomRepository = new RoomRepository(localRoomDatabase);
+        useCaseFactory = new DefaultUseCaseFactory(uiThreadExecutor, defaultThreadPoolExecutor, roomRepository);
+        viewModelFactory = new ViewModelFactory(useCaseFactory);
     }
 
     public Executor getUiThreadExecutor() {
@@ -60,5 +67,13 @@ public class Application extends android.app.Application {
 
     public RoomRepository getRoomRepository() {
         return roomRepository;
+    }
+
+    public UseCaseFactory getUseCaseFactory() {
+        return useCaseFactory;
+    }
+
+    public ViewModelFactory getViewModelFactory() {
+        return viewModelFactory;
     }
 }

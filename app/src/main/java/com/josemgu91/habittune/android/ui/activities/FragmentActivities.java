@@ -25,7 +25,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -39,7 +38,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
+import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 
@@ -51,14 +52,16 @@ public class FragmentActivities extends Fragment {
     private FragmentInteractionListener fragmentInteractionListener;
     private ViewModelActivities viewModelActivities;
 
-    private RecyclerView recyclerViewActivities;
-    private FloatingActionButton floatingActionButtonAdd;
+    private FragmentActivitiesBinding fragmentActivitiesBinding;
+
+    private RecyclerViewAdapterActivities recyclerViewAdapterActivities;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
-        viewModelActivities = ViewModelProviders.of(this).get(ViewModelActivities.class);
+        final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
+        viewModelActivities = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivities.class);
     }
 
     @Override
@@ -70,31 +73,31 @@ public class FragmentActivities extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final FragmentActivitiesBinding fragmentActivitiesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_activities, container, false);
+        fragmentActivitiesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_activities, container, false);
         final View view = fragmentActivitiesBinding.getRoot();
-        recyclerViewActivities = fragmentActivitiesBinding.recyclerView;
-        floatingActionButtonAdd = fragmentActivitiesBinding.floatingActionButtonAdd;
+        fragmentActivitiesBinding.floatingActionButtonAdd.setOnClickListener((v) -> onFloatingActionButtonClick());
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        final RecyclerViewAdapterActivities recyclerViewAdapterActivities = new RecyclerViewAdapterActivities(getContext(), LayoutInflater.from(getContext()));
-        viewModelActivities.getIsInProgress().observe(this, aBoolean -> {
-            if (aBoolean != null && aBoolean) {
-                return;
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final RecyclerView recyclerViewActivities = fragmentActivitiesBinding.recyclerView;
+        recyclerViewAdapterActivities = new RecyclerViewAdapterActivities(getContext(), LayoutInflater.from(getContext()));
+        fragmentActivitiesBinding.setShowProgress(true);
+        viewModelActivities.getResponse().observe(this, response -> {
+            switch (response.status) {
+                case LOADING:
+                    fragmentActivitiesBinding.setShowProgress(true);
+                    break;
+                case ERROR:
+                    fragmentActivitiesBinding.setShowProgress(false);
+                    break;
+                case SUCCESS:
+                    fragmentActivitiesBinding.setShowProgress(false);
+                    response.successData.observe(FragmentActivities.this, this::showActivities);
+                    break;
             }
-            viewModelActivities.getActivities().observe(FragmentActivities.this, outputs -> {
-                if (outputs == null) {
-                    return;
-                }
-                final List<String> activities = new ArrayList<>();
-                for (final GetActivities.Output output : outputs) {
-                    activities.add(output.getName());
-                }
-                recyclerViewAdapterActivities.setActivities(activities);
-            });
         });
         recyclerViewAdapterActivities.setOnActivitySelectedListener(activityName -> Toast.makeText(getContext(), activityName, Toast.LENGTH_SHORT).show());
         recyclerViewAdapterActivities.setOnMultiSelectionModeListener(new RecyclerViewAdapterActivities.OnMultiSelectionModeListener() {
@@ -147,19 +150,25 @@ public class FragmentActivities extends Fragment {
         });
         recyclerViewActivities.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewActivities.setAdapter(recyclerViewAdapterActivities);
-        floatingActionButtonAdd.setOnClickListener(v -> {
-            //fragmentInteractionListener.navigateToFragmentNewActivity();
-            viewModelActivities.addTestActivity();
-        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateToolbar(getString(R.string.activities_title), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
-            fragmentInteractionListener.updateNavigationDrawer(true);
+        fragmentInteractionListener.updateToolbar(getString(R.string.activities_title), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
+        fragmentInteractionListener.updateNavigationDrawer(true);
+    }
+
+    private void showActivities(List<GetActivities.Output> outputs) {
+        final List<String> activities = new ArrayList<>();
+        for (final GetActivities.Output output : outputs) {
+            activities.add(output.getName());
         }
+        recyclerViewAdapterActivities.setActivities(activities);
+    }
+
+    private void onFloatingActionButtonClick() {
+        fragmentInteractionListener.navigateToFragmentNewActivity();
     }
 
 }

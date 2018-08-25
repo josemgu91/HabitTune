@@ -17,15 +17,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.usecases;
+package com.josemgu91.habittune.android.ui;
 
-import com.josemgu91.habittune.domain.usecases.CreateActivity;
-import com.josemgu91.habittune.domain.usecases.GetActivities;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-public interface UseCaseFactory {
+public class Response<SuccessData, ErrorData> {
 
-    GetActivities createGetActivities();
+    @NonNull
+    public final Status status;
+    @Nullable
+    public final SuccessData successData;
+    @Nullable
+    public final ErrorData errorData;
 
-    CreateActivity createCreateActivity();
+    public Response(@NonNull final Status status, @Nullable final SuccessData successData, @Nullable final ErrorData errorData) {
+        this.status = status;
+        this.successData = successData;
+        this.errorData = errorData;
+    }
+
+    public enum Status {
+        LOADING,
+        ERROR,
+        SUCCESS
+    }
 
 }
