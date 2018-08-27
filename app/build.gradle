@@ -70,6 +70,8 @@ dependencies {
     implementation "com.github.Zhuinden:simple-stack:$simpleStackVersion"
     def colorPickerVersion = '1.0.2'
     implementation "com.jaredrummler:colorpicker:$colorPickerVersion"
+    def flexibleAdapterVersion = '5.0.5'
+    implementation "eu.davidea:flexible-adapter:$flexibleAdapterVersion"
 
     def jUnitVersion = '4.12'
     def testRunnerVersion = '1.0.2'
