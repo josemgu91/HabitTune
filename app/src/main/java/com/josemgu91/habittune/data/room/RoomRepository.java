@@ -27,13 +27,14 @@ import android.support.annotation.NonNull;
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
+import com.josemgu91.habittune.domain.datagateways.TagDataGateway;
 import com.josemgu91.habittune.domain.entities.Activity;
 import com.josemgu91.habittune.domain.entities.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomRepository implements ActivityDataGateway {
+public class RoomRepository implements ActivityDataGateway, TagDataGateway {
 
     private final LocalRoomDatabase localRoomDatabase;
 
@@ -105,6 +106,11 @@ public class RoomRepository implements ActivityDataGateway {
 
     @Override
     public boolean updateActivity(@NonNull Activity oldActivity, @NonNull Activity newActivity) throws DataGatewayException {
+        return false;
+    }
+
+    @Override
+    public boolean createTag(@NonNull Tag tag) throws DataGatewayException {
         return false;
     }
 
