@@ -45,7 +45,7 @@
             android:paddingTop="@dimen/layoutMarginTop"
             android:visibility="@{showProgress ? View.GONE : View.VISIBLE}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/element_activity" />
+            tools:listitem="@layout/element_tag" />
 
         <ProgressBar
             android:id="@+id/progressBar"
