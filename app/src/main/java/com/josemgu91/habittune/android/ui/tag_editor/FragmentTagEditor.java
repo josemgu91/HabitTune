@@ -19,7 +19,26 @@
 
 package com.josemgu91.habittune.android.ui.tag_editor;
 
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.databinding.FragmentTagEditorBinding;
 
 public class FragmentTagEditor extends Fragment {
+
+    private FragmentTagEditorBinding fragmentTagEditorBinding;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        fragmentTagEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_activity, container, false);
+        return fragmentTagEditorBinding.getRoot();
+    }
 }
