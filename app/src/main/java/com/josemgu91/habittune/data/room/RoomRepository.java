@@ -111,7 +111,15 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
 
     @Override
     public boolean createTag(@NonNull Tag tag) throws DataGatewayException {
-        return false;
+        try {
+            final long insertedTagId = localRoomDatabase.getTagDao().insertTag(new com.josemgu91.habittune.data.room.model.Tag(
+                    0,
+                    tag.getName()
+            ));
+            return insertedTagId != -1;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
     }
 
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
