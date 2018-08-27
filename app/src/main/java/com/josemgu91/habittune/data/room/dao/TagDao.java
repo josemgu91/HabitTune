@@ -48,4 +48,7 @@ public interface TagDao {
 
     @Delete
     int deleteTag(final Tag tag);
+
+    @Query("DELETE FROM tags WHERE name = :tagName")
+    int deleteTagByName(final String tagName);
 }

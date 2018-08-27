@@ -19,12 +19,22 @@
 
 package com.josemgu91.habittune.domain.datagateways;
 
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.domain.entities.Tag;
 
+import java.util.List;
+
 public interface TagDataGateway {
 
+    @NonNull
+    LiveData<List<Tag>> subscribeToAllTags() throws DataGatewayException;
+
     boolean createTag(@NonNull final Tag tag) throws DataGatewayException;
+
+    boolean deleteTagByName(final String name) throws DataGatewayException;
+
+    boolean updateTag(@NonNull final Tag oldTag, @NonNull final Tag newTag) throws DataGatewayException;
 
 }

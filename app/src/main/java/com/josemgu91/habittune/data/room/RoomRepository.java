@@ -109,6 +109,16 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
         return false;
     }
 
+    @NonNull
+    @Override
+    public LiveData<List<Tag>> subscribeToAllTags() throws DataGatewayException {
+        try {
+            return Transformations.map(localRoomDatabase.getTagDao().subscribeToAllTags(), input -> mapList(input, RoomRepository::mapToEntityTag));
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
     @Override
     public boolean createTag(@NonNull Tag tag) throws DataGatewayException {
         try {
@@ -120,6 +130,20 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
+    }
+
+    @Override
+    public boolean deleteTagByName(String name) throws DataGatewayException {
+        try {
+            return localRoomDatabase.getTagDao().deleteTagByName(name) != 0;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateTag(@NonNull Tag oldTag, @NonNull Tag newTag) throws DataGatewayException {
+        return false;
     }
 
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
