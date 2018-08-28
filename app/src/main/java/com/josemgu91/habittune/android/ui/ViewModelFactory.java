@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.android.ui.activities.ViewModelActivities;
 import com.josemgu91.habittune.android.ui.new_activity.ViewModelNewActivity;
+import com.josemgu91.habittune.android.ui.tag_editor.ViewModelTagEditor;
 import com.josemgu91.habittune.android.usecases.UseCaseFactory;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
@@ -44,6 +45,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(ViewModelNewActivity.class)) {
             return (T) new ViewModelNewActivity(useCaseFactory.createCreateActivity());
+        }
+        if (modelClass.isAssignableFrom(ViewModelTagEditor.class)) {
+            return (T) new ViewModelTagEditor(useCaseFactory.createGetTags());
         }
         throw new RuntimeException("Unknown ViewModel class");
     }
