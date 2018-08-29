@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,10 +37,12 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.databinding.FragmentTagEditorBinding;
+import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -71,6 +74,9 @@ public class FragmentTagEditor extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentTagEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tag_editor, container, false);
         recyclerViewTagsAdapter = new FlexibleAdapter<>(null);
+        //TEMP
+        viewModelTagEditor.createTag(new CreateTag.Input("Test " + new Random().nextInt()));
+        //
         fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fragmentTagEditorBinding.recyclerView.setAdapter(recyclerViewTagsAdapter);
         return fragmentTagEditorBinding.getRoot();
@@ -80,7 +86,7 @@ public class FragmentTagEditor extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         fragmentTagEditorBinding.setShowProgress(true);
-        viewModelTagEditor.getResponse().observe(this, response -> {
+        viewModelTagEditor.getGetTagsResponse().observe(this, response -> {
             switch (response.status) {
                 case LOADING:
                     fragmentTagEditorBinding.setShowProgress(true);
@@ -91,6 +97,19 @@ public class FragmentTagEditor extends Fragment {
                 case SUCCESS:
                     fragmentTagEditorBinding.setShowProgress(false);
                     response.successData.observe(this, this::showTags);
+                    break;
+            }
+        });
+        viewModelTagEditor.getCreateTagResponse().observe(this, response -> {
+            switch (response.status) {
+                case LOADING:
+                    Log.d("FragmentTagEditor", "LOADING");
+                    break;
+                case ERROR:
+                    Log.d("FragmentTagEditor", "ERROR");
+                    break;
+                case SUCCESS:
+                    Log.d("FragmentTagEditor", "SUCCESS");
                     break;
             }
         });

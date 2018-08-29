@@ -25,6 +25,7 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
@@ -33,34 +34,61 @@ import java.util.List;
 public class ViewModelTagEditor extends ViewModel {
 
     private final GetTags getTags;
+    private final CreateTag createTag;
 
-    private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> response;
+    private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getTagsResponse;
+    private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> createTagResponse;
 
-    public ViewModelTagEditor(GetTags getTags) {
+    public ViewModelTagEditor(GetTags getTags, CreateTag createTag) {
         this.getTags = getTags;
-        this.response = new MutableLiveData<>();
+        this.createTag = createTag;
+        this.getTagsResponse = new MutableLiveData<>();
+        this.createTagResponse = new MutableLiveData<>();
     }
 
     public void fetchTags() {
         getTags.execute(null, new UseCaseOutput<LiveData<List<GetTags.Output>>>() {
             @Override
             public void onSuccess(@Nullable LiveData<List<GetTags.Output>> listLiveData) {
-                response.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
+                getTagsResponse.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
             }
 
             @Override
             public void inProgress() {
-                response.setValue(new Response<>(Response.Status.LOADING, null, null));
+                getTagsResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
             }
 
             @Override
             public void onError() {
-                response.setValue(new Response<>(Response.Status.ERROR, null, null));
+                getTagsResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
             }
         });
     }
 
-    public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getResponse() {
-        return response;
+    public void createTag(CreateTag.Input tag) {
+        createTag.execute(tag, new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+                createTagResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
+            }
+
+            @Override
+            public void inProgress() {
+                createTagResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                createTagResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
+    public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getGetTagsResponse() {
+        return getTagsResponse;
+    }
+
+    public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getCreateTagResponse() {
+        return createTagResponse;
     }
 }
