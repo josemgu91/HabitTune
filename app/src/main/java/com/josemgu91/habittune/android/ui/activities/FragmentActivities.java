@@ -95,7 +95,7 @@ public class FragmentActivities extends Fragment {
                     break;
                 case SUCCESS:
                     fragmentActivitiesBinding.setShowProgress(false);
-                    response.successData.observe(FragmentActivities.this, this::showActivities);
+                    response.successData.observe(this, this::showActivities);
                     break;
             }
         });

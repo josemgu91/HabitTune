@@ -26,21 +26,32 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
-import com.josemgu91.habittune.databinding.ElementTagBinding;
 import com.josemgu91.habittune.databinding.FragmentTagEditorBinding;
+import com.josemgu91.habittune.domain.usecases.GetTags;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+import eu.davidea.flexibleadapter.items.IFlexible;
+import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class FragmentTagEditor extends Fragment {
 
     private FragmentTagEditorBinding fragmentTagEditorBinding;
     private ViewModelTagEditor viewModelTagEditor;
+
+    private FlexibleAdapter<TagItem> recyclerViewTagsAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -49,26 +60,103 @@ public class FragmentTagEditor extends Fragment {
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModelTagEditor.fetchTags();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentTagEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_activity, container, false);
+        recyclerViewTagsAdapter = new FlexibleAdapter<>(null);
+        fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        fragmentTagEditorBinding.recyclerView.setAdapter(recyclerViewTagsAdapter);
         return fragmentTagEditorBinding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        fragmentTagEditorBinding.setShowProgress(true);
+        viewModelTagEditor.getResponse().observe(this, response -> {
+            switch (response.status) {
+                case LOADING:
+                    fragmentTagEditorBinding.setShowProgress(true);
+                    break;
+                case ERROR:
+                    fragmentTagEditorBinding.setShowProgress(false);
+                    break;
+                case SUCCESS:
+                    fragmentTagEditorBinding.setShowProgress(false);
+                    response.successData.observe(this, this::showTags);
+                    break;
+            }
+        });
     }
 
-    private static class TagViewHolder extends RecyclerView.ViewHolder {
+    private void showTags(List<GetTags.Output> outputs) {
+        final List<TagItem> tagItems = new ArrayList<>();
+        for (final GetTags.Output output : outputs) {
+            tagItems.add(new TagItem(output.getName()));
+        }
+        recyclerViewTagsAdapter.clear();
+        recyclerViewTagsAdapter.addItems(0, tagItems);
+    }
 
-        private final ElementTagBinding elementTagBinding;
+    private static class TagItem extends AbstractFlexibleItem<TagItem.TagViewHolder> {
 
-        public TagViewHolder(ElementTagBinding elementTagBinding) {
-            super(elementTagBinding.getRoot());
-            this.elementTagBinding = elementTagBinding;
+        private final String tagName;
+
+        public TagItem(String tagName) {
+            this.tagName = tagName;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof TagItem) {
+                return tagName.equals(((TagItem) o).tagName);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return tagName.hashCode();
+        }
+
+        @Override
+        public int getLayoutRes() {
+            return R.layout.element_tag;
+        }
+
+        @Override
+        public TagItem.TagViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
+            return new TagViewHolder(view, adapter);
+        }
+
+        @Override
+        public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, TagItem.TagViewHolder holder, int position, List<Object> payloads) {
+            holder.textViewTagName.setText(tagName);
+            holder.textViewTagName.setEnabled(isEnabled());
+        }
+
+        public static class TagViewHolder extends FlexibleViewHolder {
+
+            /*private final ElementTagBinding elementTagBinding;
+
+            public TagViewHolder(ElementTagBinding elementTagBinding) {
+                super(elementTagBinding.getRoot());
+                this.elementTagBinding = elementTagBinding;
+            }*/
+
+            public final TextView textViewTagName;
+
+            public TagViewHolder(View view, FlexibleAdapter adapter) {
+                super(view, adapter);
+                textViewTagName = view.findViewById(R.id.textViewTagName);
+            }
+        }
     }
 }

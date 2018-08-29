@@ -41,7 +41,7 @@ public class ViewModelTagEditor extends ViewModel {
         this.response = new MutableLiveData<>();
     }
 
-    public void fetchActivities() {
+    public void fetchTags() {
         getTags.execute(null, new UseCaseOutput<LiveData<List<GetTags.Output>>>() {
             @Override
             public void onSuccess(@Nullable LiveData<List<GetTags.Output>> listLiveData) {
