@@ -34,7 +34,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.josemgu91.habittune.R;
-import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.navigation.FragmentKey;
 import com.josemgu91.habittune.android.navigation.FragmentKeyFactory;
 import com.josemgu91.habittune.android.navigation.FragmentStateChanger;
@@ -135,7 +134,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createActivitiesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToStatistics:
-                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createActivitiesKey()), StateChange.REPLACE);
+                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createStatisticsKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToSettings:
                 backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createSettingsKey());
@@ -217,5 +216,10 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public void navigateToFragmentNewActivity() {
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createNewActivityKey());
+    }
+
+    @Override
+    public void navigateToFragmentTagEditor() {
+        backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createTagEditorKey());
     }
 }

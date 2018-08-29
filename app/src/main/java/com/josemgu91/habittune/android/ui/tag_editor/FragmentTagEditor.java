@@ -69,7 +69,7 @@ public class FragmentTagEditor extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentTagEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_activity, container, false);
+        fragmentTagEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tag_editor, container, false);
         recyclerViewTagsAdapter = new FlexibleAdapter<>(null);
         fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fragmentTagEditorBinding.recyclerView.setAdapter(recyclerViewTagsAdapter);

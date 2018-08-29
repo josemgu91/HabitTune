@@ -106,6 +106,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentNewActivityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_activity, container, false);
         fragmentNewActivityBinding.viewColor.setBackgroundColor(selectedColor);
+        fragmentNewActivityBinding.editTextActivityTags.setOnClickListener(v -> fragmentInteractionListener.navigateToFragmentTagEditor());
         return fragmentNewActivityBinding.getRoot();
     }
 
