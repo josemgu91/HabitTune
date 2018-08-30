@@ -20,19 +20,20 @@
 package com.josemgu91.habittune.android;
 
 import android.support.annotation.IntDef;
+import android.widget.EditText;
 
 public interface FragmentInteractionListener {
 
-    public static final int IC_NAVIGATION_HAMBURGUER = 0;
-    public static final int IC_NAVIGATION_UP = 1;
-    public static final int IC_NAVIGATION_CLOSE = 2;
+    int IC_NAVIGATION_HAMBURGUER = 0;
+    int IC_NAVIGATION_UP = 1;
+    int IC_NAVIGATION_CLOSE = 2;
 
     @IntDef({
             IC_NAVIGATION_HAMBURGUER,
             IC_NAVIGATION_UP,
             IC_NAVIGATION_CLOSE
     })
-    public @interface NavigationIcon {
+    @interface NavigationIcon {
     }
 
     void updateToolbar(final String title, @NavigationIcon final int toolbarToggleIcon);
@@ -42,5 +43,11 @@ public interface FragmentInteractionListener {
     void navigateToFragmentNewActivity();
 
     void navigateToFragmentTagEditor();
+
+    void showToolbarTextInput();
+
+    EditText getToolbarTextInput();
+
+    void hideToolbarTextInput();
 
 }

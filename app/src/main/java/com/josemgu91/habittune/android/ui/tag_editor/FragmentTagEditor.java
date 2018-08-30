@@ -26,17 +26,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.databinding.FragmentTagEditorBinding;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
@@ -54,6 +55,7 @@ import eu.davidea.viewholders.FlexibleViewHolder;
 public class FragmentTagEditor extends Fragment {
 
     private FragmentTagEditorBinding fragmentTagEditorBinding;
+    private FragmentInteractionListener fragmentInteractionListener;
     private ViewModelTagEditor viewModelTagEditor;
 
     private FlexibleAdapter<TagItem> recyclerViewTagsAdapter;
@@ -61,6 +63,7 @@ public class FragmentTagEditor extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
     }
@@ -115,7 +118,21 @@ public class FragmentTagEditor extends Fragment {
                     break;
             }
         });
-        setupToolbar();
+        fragmentInteractionListener.updateToolbar(getString(R.string.tag_editor_title), FragmentInteractionListener.IC_NAVIGATION_UP);
+        fragmentInteractionListener.updateNavigationDrawer(false);
+        fragmentInteractionListener.showToolbarTextInput();
+        final EditText toolbarEditText = fragmentInteractionListener.getToolbarTextInput();
+        toolbarEditText.requestFocus();
+        toolbarEditText.setOnEditorActionListener((v, actionId, event) -> {
+            Toast.makeText(getContext(), v.getText().toString(), Toast.LENGTH_SHORT).show();
+            return true;
+        });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        fragmentInteractionListener.hideToolbarTextInput();
     }
 
     private void showTags(List<GetTags.Output> outputs) {
@@ -125,13 +142,6 @@ public class FragmentTagEditor extends Fragment {
         }
         recyclerViewTagsAdapter.clear();
         recyclerViewTagsAdapter.addItems(0, tagItems);
-    }
-
-    private void setupToolbar() {
-        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(R.layout.toolbar_tag_editor);
-        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     private static class TagItem extends AbstractFlexibleItem<TagItem.TagViewHolder> {

@@ -44,6 +44,7 @@
     <string name="new_activity_hint_activity_tags">Etiquetas&#8230;</string>
     <string name="new_activity_create">Crear</string>
 
+    <string name="tag_editor_title">Etiquetas</string>
     <string name="tag_editor_tag_hint">Ingresa el nombre de la etiqueta</string>
 
 </resources>
