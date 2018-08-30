@@ -89,7 +89,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.new_activity, menu);
+        inflater.inflate(R.menu.fragment_new_activity, menu);
     }
 
     @Override

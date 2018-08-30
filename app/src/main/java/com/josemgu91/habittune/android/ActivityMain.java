@@ -81,12 +81,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
         fragmentStateChanger = new FragmentStateChanger(getSupportFragmentManager(), R.id.fragmentContainer, new FragmentKeyFactory.FragmentFactory());
         backstackDelegate.setStateChanger(this);
-        actionBarDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        actionBarDrawerToggle.setToolbarNavigationClickListener(v -> onBackPressed());
     }
 
     @Override
