@@ -30,37 +30,27 @@
         android:paddingTop="@dimen/listElementMarginTop">
 
         <ImageView
-            android:id="@+id/imageViewLabelIcon"
+            android:id="@+id/imageViewAddIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textViewTagName"
+            app:layout_constraintEnd_toStartOf="@+id/textViewCreate"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_label_black_24dp"
+            app:srcCompat="@drawable/ic_add_black_24dp"
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/textViewTagName"
+            android:id="@+id/textViewCreate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
             android:layout_marginStart="32dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/checkBox"
-            app:layout_constraintStart_toEndOf="@+id/imageViewLabelIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Tag name" />
-
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewTagName"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/imageViewAddIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Create &quot;New tag name&quot;" />
 
     </android.support.constraint.ConstraintLayout>
 

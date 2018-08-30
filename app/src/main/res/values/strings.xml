@@ -48,5 +48,6 @@
 
     <string name="tag_editor_title">Tags</string>
     <string name="tag_editor_tag_hint">Enter tag name</string>
+    <string name="tag_editor_tag_create">Create "%s"</string>
 
 </resources>
