@@ -26,6 +26,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -113,6 +115,7 @@ public class FragmentTagEditor extends Fragment {
                     break;
             }
         });
+        setupToolbar();
     }
 
     private void showTags(List<GetTags.Output> outputs) {
@@ -122,6 +125,13 @@ public class FragmentTagEditor extends Fragment {
         }
         recyclerViewTagsAdapter.clear();
         recyclerViewTagsAdapter.addItems(0, tagItems);
+    }
+
+    private void setupToolbar() {
+        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(R.layout.toolbar_tag_editor);
+        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     private static class TagItem extends AbstractFlexibleItem<TagItem.TagViewHolder> {
@@ -162,13 +172,6 @@ public class FragmentTagEditor extends Fragment {
         }
 
         public static class TagViewHolder extends FlexibleViewHolder {
-
-            /*private final ElementTagBinding elementTagBinding;
-
-            public TagViewHolder(ElementTagBinding elementTagBinding) {
-                super(elementTagBinding.getRoot());
-                this.elementTagBinding = elementTagBinding;
-            }*/
 
             public final TextView textViewTagName;
 

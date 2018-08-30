@@ -46,4 +46,6 @@
     <string name="new_activity_hint_activity_tags">Tags&#8230;</string>
     <string name="new_activity_create">Save</string>
 
+    <string name="tag_editor_tag_hint">Enter tag name</string>
+
 </resources>
