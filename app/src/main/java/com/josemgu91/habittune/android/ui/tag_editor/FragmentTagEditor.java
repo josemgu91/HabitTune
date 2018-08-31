@@ -32,6 +32,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +63,7 @@ public class FragmentTagEditor extends Fragment {
     private TagEditorFlexibleAdapter recyclerViewTagsAdapter;
 
     private EditText toolbarEditText;
+    private InputMethodManager inputMethodManager;
 
     @Override
     public void onAttach(Context context) {
@@ -69,6 +71,7 @@ public class FragmentTagEditor extends Fragment {
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
+        inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -166,6 +169,7 @@ public class FragmentTagEditor extends Fragment {
     private void createTag(final String tagName) {
         viewModelTagEditor.createTag(new CreateTag.Input(tagName));
         toolbarEditText.getText().clear();
+        inputMethodManager.hideSoftInputFromWindow(toolbarEditText.getWindowToken(), 0);
     }
 
     private static class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
