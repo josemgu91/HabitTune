@@ -19,14 +19,19 @@
 
 package com.josemgu91.habittune.android.ui.tag_editor;
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -66,6 +71,12 @@ public class FragmentTagEditor extends Fragment {
     private EditText toolbarEditText;
     private InputMethodManager inputMethodManager;
 
+    private DeletionConfirmationDialog deletionConfirmationDialog;
+
+    private FragmentManager fragmentManager;
+
+    private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletion_dialog";
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -79,6 +90,23 @@ public class FragmentTagEditor extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModelTagEditor.fetchTags();
+        fragmentManager = getFragmentManager();
+        deletionConfirmationDialog = (DeletionConfirmationDialog) fragmentManager.findFragmentByTag(FRAGMENT_TAG_DELETION_DIALOG);
+        if (deletionConfirmationDialog == null) {
+            deletionConfirmationDialog = new DeletionConfirmationDialog();
+        }
+        deletionConfirmationDialog.setOnCancelClickListener(new DeletionConfirmationDialog.OnCancelClickListener() {
+            @Override
+            public void onCancelClick() {
+                Toast.makeText(getContext(), "Cancel!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        deletionConfirmationDialog.setOnDeleteClickListener(new DeletionConfirmationDialog.OnDeleteClickListener() {
+            @Override
+            public void onDeleteClick() {
+                Toast.makeText(getContext(), "Delete!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Nullable
@@ -153,6 +181,23 @@ public class FragmentTagEditor extends Fragment {
             return true;
         });
         recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTag(toolbarEditText.getText().toString()));
+        recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemSwipeListener() {
+            @Override
+            public void onItemSwipe(int position, int direction) {
+                deletionConfirmationDialog.show(fragmentManager, FRAGMENT_TAG_DELETION_DIALOG);
+                deletionConfirmationDialog.setOnDeleteClickListener(() -> {
+                    //TODO: Handle state restoration (maybe saving the item to delete position in the heap?).
+                    final TagItem tagItem = (TagItem) recyclerViewTagsAdapter.getItem(position);
+                    viewModelTagEditor.deleteTag(tagItem.tagName);
+                });
+                //recyclerViewTagsAdapter.notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onActionStateChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+
+            }
+        });
     }
 
     @Override
@@ -162,6 +207,7 @@ public class FragmentTagEditor extends Fragment {
     }
 
     private void showTags(List<GetTags.Output> outputs) {
+        //TODO: Only update the diff in the list (maybe with DiffUtil or with the FlexibleAdapter built in options?).
         final List<IFlexible> tagItems = new ArrayList<>();
         for (final GetTags.Output output : outputs) {
             final TagItem tagItem = new TagItem(output.getName());
@@ -337,6 +383,51 @@ public class FragmentTagEditor extends Fragment {
                 super(view, adapter);
                 textViewTagName = view.findViewById(R.id.textViewTagName);
             }
+        }
+    }
+
+    public static class DeletionConfirmationDialog extends DialogFragment {
+
+        private OnDeleteClickListener onDeleteClickListener;
+        private OnCancelClickListener onCancelClickListener;
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final AlertDialog alertDialog = new AlertDialog
+                    .Builder(getContext())
+                    .setTitle(R.string.tag_editor_delete_dialog_title)
+                    .setMessage(R.string.tag_editor_delete_dialog_content)
+                    .setPositiveButton(R.string.action_delete, (dialog, which) -> {
+                        if (onDeleteClickListener != null) {
+                            onDeleteClickListener.onDeleteClick();
+                        }
+                    })
+                    .setNegativeButton(R.string.action_cancel, (dialog, which) -> {
+                        if (onCancelClickListener != null) {
+                            onCancelClickListener.onCancelClick();
+                        }
+                    })
+                    .create();
+            return alertDialog;
+        }
+
+        public void setOnDeleteClickListener(OnDeleteClickListener onDeleteClickListener) {
+            this.onDeleteClickListener = onDeleteClickListener;
+        }
+
+        public void setOnCancelClickListener(OnCancelClickListener onCancelClickListener) {
+            this.onCancelClickListener = onCancelClickListener;
+        }
+
+        public interface OnDeleteClickListener {
+
+            void onDeleteClick();
+        }
+
+        public interface OnCancelClickListener {
+
+            void onCancelClick();
         }
     }
 }
