@@ -27,6 +27,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +60,7 @@ public class FragmentTagEditor extends Fragment {
     private FragmentInteractionListener fragmentInteractionListener;
     private ViewModelTagEditor viewModelTagEditor;
 
-    private FlexibleAdapter<TagItem> recyclerViewTagsAdapter;
+    private TagEditorFlexibleAdapter recyclerViewTagsAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -78,7 +80,14 @@ public class FragmentTagEditor extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentTagEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tag_editor, container, false);
-        recyclerViewTagsAdapter = new FlexibleAdapter<>(null);
+        recyclerViewTagsAdapter = new TagEditorFlexibleAdapter(getContext());
+        recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position) {
+                Toast.makeText(getContext(), "Click!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
         //TEMP
         viewModelTagEditor.createTag(new CreateTag.Input("Test " + new Random().nextInt()));
         //
@@ -123,6 +132,27 @@ public class FragmentTagEditor extends Fragment {
         fragmentInteractionListener.showToolbarTextInput();
         final EditText toolbarEditText = fragmentInteractionListener.getToolbarTextInput();
         toolbarEditText.requestFocus();
+        toolbarEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String text = s.toString();
+                if (text.length() > 0) {
+                    recyclerViewTagsAdapter.showCreateTagItem();
+                } else {
+                    recyclerViewTagsAdapter.dismissCreateTagItem();
+                }
+            }
+        });
         toolbarEditText.setOnEditorActionListener((v, actionId, event) -> {
             Toast.makeText(getContext(), v.getText().toString(), Toast.LENGTH_SHORT).show();
             return true;
@@ -136,12 +166,105 @@ public class FragmentTagEditor extends Fragment {
     }
 
     private void showTags(List<GetTags.Output> outputs) {
-        final List<TagItem> tagItems = new ArrayList<>();
+        final List<IFlexible> tagItems = new ArrayList<>();
         for (final GetTags.Output output : outputs) {
             tagItems.add(new TagItem(output.getName()));
         }
         recyclerViewTagsAdapter.clear();
         recyclerViewTagsAdapter.addItems(0, tagItems);
+    }
+
+    private static class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
+
+        private boolean isShowingCreateTagItem;
+        private CreateTagItem createTagItem;
+
+        public TagEditorFlexibleAdapter(final Context context) {
+            super(null, null, true);
+            this.isShowingCreateTagItem = false;
+            this.createTagItem = new CreateTagItem(context);
+        }
+
+        public void showCreateTagItem() {
+            if (isShowingCreateTagItem) {
+                return;
+            }
+            addItem(0, createTagItem);
+            isShowingCreateTagItem = true;
+        }
+
+        public void updateCreateTagItem(final String tagName) {
+            if (isShowingCreateTagItem) {
+
+            }
+        }
+
+        public boolean isShowingCreateTagItem() {
+            return isShowingCreateTagItem;
+        }
+
+        public void dismissCreateTagItem() {
+            if (!isShowingCreateTagItem) {
+                return;
+            }
+            removeItem(0);
+            isShowingCreateTagItem = false;
+        }
+
+    }
+
+    private static class CreateTagItem extends AbstractFlexibleItem<CreateTagItem.CreateTagViewHolder> {
+
+        private String tagName;
+        private String tagCreationText;
+
+        private final Context context;
+
+        public CreateTagItem(final Context context) {
+            tagName = "";
+            tagCreationText = context.getString(R.string.tag_editor_tag_create, tagName);
+            this.context = context;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof CreateTagItem) {
+                return tagCreationText.equals(((CreateTagItem) o).tagCreationText);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return tagCreationText.hashCode();
+        }
+
+
+        @Override
+        public int getLayoutRes() {
+            return R.layout.element_tag_create;
+        }
+
+        @Override
+        public CreateTagViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
+            return new CreateTagViewHolder(view, adapter);
+        }
+
+        @Override
+        public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, CreateTagViewHolder holder, int position, List<Object> payloads) {
+            holder.textViewCreate.setText(tagCreationText);
+            holder.textViewCreate.setEnabled(isEnabled());
+        }
+
+        public static class CreateTagViewHolder extends FlexibleViewHolder {
+
+            public final TextView textViewCreate;
+
+            public CreateTagViewHolder(View view, FlexibleAdapter adapter) {
+                super(view, adapter);
+                textViewCreate = view.findViewById(R.id.textViewCreate);
+            }
+        }
     }
 
     private static class TagItem extends AbstractFlexibleItem<TagItem.TagViewHolder> {
