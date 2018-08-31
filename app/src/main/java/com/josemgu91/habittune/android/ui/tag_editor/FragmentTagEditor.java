@@ -27,7 +27,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -162,6 +161,12 @@ public class FragmentTagEditor extends Fragment {
             Toast.makeText(getContext(), v.getText().toString(), Toast.LENGTH_SHORT).show();
             return true;
         });
+        recyclerViewTagsAdapter.setOnCreateTagItemClickListener(new TagEditorFlexibleAdapter.OnCreateTagItemClickListener() {
+            @Override
+            public void onCreateTagItemClick() {
+                Toast.makeText(getContext(), "Create item", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -184,6 +189,12 @@ public class FragmentTagEditor extends Fragment {
         private boolean isShowingCreateTagItem;
         private CreateTagItem createTagItem;
 
+        private OnCreateTagItemClickListener onCreateTagItemClickListener;
+
+        public void setOnCreateTagItemClickListener(TagEditorFlexibleAdapter.OnCreateTagItemClickListener onCreateTagItemClickListener) {
+            this.onCreateTagItemClickListener = onCreateTagItemClickListener;
+        }
+
         public TagEditorFlexibleAdapter(final Context context) {
             super(null, null, true);
             this.isShowingCreateTagItem = false;
@@ -205,11 +216,6 @@ public class FragmentTagEditor extends Fragment {
             }
         }
 
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List payloads) {
-            super.onBindViewHolder(holder, position, payloads);
-        }
-
         public boolean isShowingCreateTagItem() {
             return isShowingCreateTagItem;
         }
@@ -220,6 +226,12 @@ public class FragmentTagEditor extends Fragment {
             }
             removeItemsOfType(createTagItem.getItemViewType());
             isShowingCreateTagItem = false;
+        }
+
+        public interface OnCreateTagItemClickListener {
+
+            void onCreateTagItemClick();
+
         }
 
     }
@@ -273,6 +285,13 @@ public class FragmentTagEditor extends Fragment {
 
             public CreateTagViewHolder(View view, FlexibleAdapter adapter) {
                 super(view, adapter);
+                view.setOnClickListener(v -> {
+                    final TagEditorFlexibleAdapter.OnCreateTagItemClickListener onCreateTagItemClickListener =
+                            ((TagEditorFlexibleAdapter) adapter).onCreateTagItemClickListener;
+                    if (onCreateTagItemClickListener != null) {
+                        onCreateTagItemClickListener.onCreateTagItemClick();
+                    }
+                });
                 textViewCreate = view.findViewById(R.id.textViewCreate);
             }
         }
