@@ -47,5 +47,10 @@
     <string name="tag_editor_title">Etiquetas</string>
     <string name="tag_editor_tag_hint">Ingresa el nombre de la etiqueta</string>
     <string name="tag_editor_tag_create">Crear \"%s\"</string>
+    <string name="tag_editor_delete_dialog_title">¿Eliminar etiqueta?</string>
+    <string name="tag_editor_delete_dialog_content">Vamos a eliminar esta etiqueta y removerla de todas tus actividades. Tus actividades no serán eliminadas.</string>
+
+    <string name="action_delete">Eliminar</string>
+    <string name="action_cancel">Cancelar</string>
 
 </resources>

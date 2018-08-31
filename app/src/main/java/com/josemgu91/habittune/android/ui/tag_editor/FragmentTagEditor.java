@@ -27,6 +27,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -50,6 +52,7 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.Payload;
+import eu.davidea.flexibleadapter.helpers.ItemTouchHelperCallback;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.viewholders.FlexibleViewHolder;
@@ -85,6 +88,8 @@ public class FragmentTagEditor extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentTagEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tag_editor, container, false);
         recyclerViewTagsAdapter = new TagEditorFlexibleAdapter(getContext());
+        fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        fragmentTagEditorBinding.recyclerView.setAdapter(recyclerViewTagsAdapter);
         recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(View view, int position) {
@@ -92,8 +97,9 @@ public class FragmentTagEditor extends Fragment {
                 return true;
             }
         });
-        fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        fragmentTagEditorBinding.recyclerView.setAdapter(recyclerViewTagsAdapter);
+        recyclerViewTagsAdapter.setSwipeEnabled(true);
+        final ItemTouchHelperCallback itemTouchHelperCallback = recyclerViewTagsAdapter.getItemTouchHelperCallback();
+        itemTouchHelperCallback.setSwipeFlags(ItemTouchHelper.RIGHT);
         return fragmentTagEditorBinding.getRoot();
     }
 
@@ -160,7 +166,9 @@ public class FragmentTagEditor extends Fragment {
     private void showTags(List<GetTags.Output> outputs) {
         final List<IFlexible> tagItems = new ArrayList<>();
         for (final GetTags.Output output : outputs) {
-            tagItems.add(new TagItem(output.getName()));
+            final TagItem tagItem = new TagItem(output.getName());
+            tagItem.setSwipeable(true);
+            tagItems.add(tagItem);
         }
         recyclerViewTagsAdapter.clear();
         recyclerViewTagsAdapter.updateDataSet(tagItems);
@@ -194,6 +202,7 @@ public class FragmentTagEditor extends Fragment {
                 return;
             }
             addItem(0, createTagItem);
+            createTagItem.setSwipeable(false);
             isShowingCreateTagItem = true;
         }
 

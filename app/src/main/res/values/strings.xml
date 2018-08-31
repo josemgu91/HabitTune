@@ -49,5 +49,10 @@
     <string name="tag_editor_title">Tags</string>
     <string name="tag_editor_tag_hint">Enter tag name</string>
     <string name="tag_editor_tag_create">Create \"%s\"</string>
+    <string name="tag_editor_delete_dialog_title">Delete tag?</string>
+    <string name="tag_editor_delete_dialog_content">We\'ll delete this tag and remove it from all of your activities. Your activities won\'t be deleted.</string>
+
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
 
 </resources>
