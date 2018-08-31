@@ -26,6 +26,7 @@ import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
+import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
@@ -35,15 +36,19 @@ public class ViewModelTagEditor extends ViewModel {
 
     private final GetTags getTags;
     private final CreateTag createTag;
+    private final DeleteTag deleteTag;
 
     private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getTagsResponse;
     private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> createTagResponse;
+    private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> deleteTagResponse;
 
-    public ViewModelTagEditor(GetTags getTags, CreateTag createTag) {
+    public ViewModelTagEditor(GetTags getTags, CreateTag createTag, DeleteTag deleteTag) {
         this.getTags = getTags;
         this.createTag = createTag;
+        this.deleteTag = deleteTag;
         this.getTagsResponse = new MutableLiveData<>();
         this.createTagResponse = new MutableLiveData<>();
+        this.deleteTagResponse = new MutableLiveData<>();
     }
 
     public void fetchTags() {
@@ -65,8 +70,8 @@ public class ViewModelTagEditor extends ViewModel {
         });
     }
 
-    public void createTag(CreateTag.Input tag) {
-        createTag.execute(tag, new UseCaseOutput<Void>() {
+    public void createTag(final String tagName) {
+        createTag.execute(new CreateTag.Input(tagName), new UseCaseOutput<Void>() {
             @Override
             public void onSuccess(@Nullable Void aVoid) {
                 createTagResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
@@ -84,11 +89,34 @@ public class ViewModelTagEditor extends ViewModel {
         });
     }
 
+    public void deleteTag(final String tagName) {
+        deleteTag.execute(new DeleteTag.Input(tagName), new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+                deleteTagResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
+            }
+
+            @Override
+            public void inProgress() {
+                deleteTagResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                deleteTagResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
     public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getGetTagsResponse() {
         return getTagsResponse;
     }
 
     public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getCreateTagResponse() {
         return createTagResponse;
+    }
+
+    public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getDeleteTagResponse() {
+        return deleteTagResponse;
     }
 }

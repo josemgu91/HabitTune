@@ -22,6 +22,7 @@ package com.josemgu91.habittune.android.usecases;
 import com.josemgu91.habittune.data.room.RoomRepository;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
+import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 
@@ -69,6 +70,15 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     @Override
     public CreateTag createCreateTag() {
         return new CreateTag(
+                uiThreadExecutor,
+                defaultThreadPoolExecutor,
+                roomRepository
+        );
+    }
+
+    @Override
+    public DeleteTag createDeleteTag() {
+        return new DeleteTag(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
                 roomRepository

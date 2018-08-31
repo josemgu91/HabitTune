@@ -27,7 +27,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,7 +43,6 @@ import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.databinding.FragmentTagEditorBinding;
-import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 
 import java.util.ArrayList;
@@ -175,7 +173,7 @@ public class FragmentTagEditor extends Fragment {
     }
 
     private void createTag(final String tagName) {
-        viewModelTagEditor.createTag(new CreateTag.Input(tagName));
+        viewModelTagEditor.createTag(tagName);
         toolbarEditText.getText().clear();
         inputMethodManager.hideSoftInputFromWindow(toolbarEditText.getWindowToken(), 0);
     }
