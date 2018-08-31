@@ -46,6 +46,6 @@
 
     <string name="tag_editor_title">Etiquetas</string>
     <string name="tag_editor_tag_hint">Ingresa el nombre de la etiqueta</string>
-    <string name="tag_editor_tag_create">Crear "%s"</string>
+    <string name="tag_editor_tag_create">Crear \"%s\"</string>
 
 </resources>

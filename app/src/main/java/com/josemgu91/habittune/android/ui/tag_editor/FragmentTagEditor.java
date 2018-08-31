@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -50,6 +51,7 @@ import java.util.List;
 import java.util.Random;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.Payload;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.viewholders.FlexibleViewHolder;
@@ -147,7 +149,10 @@ public class FragmentTagEditor extends Fragment {
             public void afterTextChanged(Editable s) {
                 final String text = s.toString();
                 if (text.length() > 0) {
-                    recyclerViewTagsAdapter.showCreateTagItem();
+                    if (!recyclerViewTagsAdapter.isShowingCreateTagItem()) {
+                        recyclerViewTagsAdapter.showCreateTagItem();
+                    }
+                    recyclerViewTagsAdapter.updateCreateTagItem(text);
                 } else {
                     recyclerViewTagsAdapter.dismissCreateTagItem();
                 }
@@ -171,7 +176,7 @@ public class FragmentTagEditor extends Fragment {
             tagItems.add(new TagItem(output.getName()));
         }
         recyclerViewTagsAdapter.clear();
-        recyclerViewTagsAdapter.addItems(0, tagItems);
+        recyclerViewTagsAdapter.updateDataSet(tagItems);
     }
 
     private static class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
@@ -195,8 +200,14 @@ public class FragmentTagEditor extends Fragment {
 
         public void updateCreateTagItem(final String tagName) {
             if (isShowingCreateTagItem) {
-
+                createTagItem.updateTagName(tagName);
+                updateItem(createTagItem, Payload.CHANGE);
             }
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List payloads) {
+            super.onBindViewHolder(holder, position, payloads);
         }
 
         public boolean isShowingCreateTagItem() {
@@ -207,7 +218,7 @@ public class FragmentTagEditor extends Fragment {
             if (!isShowingCreateTagItem) {
                 return;
             }
-            removeItem(0);
+            removeItemsOfType(createTagItem.getItemViewType());
             isShowingCreateTagItem = false;
         }
 
@@ -215,30 +226,22 @@ public class FragmentTagEditor extends Fragment {
 
     private static class CreateTagItem extends AbstractFlexibleItem<CreateTagItem.CreateTagViewHolder> {
 
-        private String tagName;
         private String tagCreationText;
 
         private final Context context;
 
         public CreateTagItem(final Context context) {
-            tagName = "";
-            tagCreationText = context.getString(R.string.tag_editor_tag_create, tagName);
+            tagCreationText = context.getString(R.string.tag_editor_tag_create, "");
             this.context = context;
         }
 
         @Override
         public boolean equals(Object o) {
             if (o instanceof CreateTagItem) {
-                return tagCreationText.equals(((CreateTagItem) o).tagCreationText);
+                return true;
             }
             return false;
         }
-
-        @Override
-        public int hashCode() {
-            return tagCreationText.hashCode();
-        }
-
 
         @Override
         public int getLayoutRes() {
@@ -250,10 +253,18 @@ public class FragmentTagEditor extends Fragment {
             return new CreateTagViewHolder(view, adapter);
         }
 
+        public void updateTagName(final String tagName) {
+            tagCreationText = context.getString(R.string.tag_editor_tag_create, tagName);
+        }
+
         @Override
         public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, CreateTagViewHolder holder, int position, List<Object> payloads) {
-            holder.textViewCreate.setText(tagCreationText);
-            holder.textViewCreate.setEnabled(isEnabled());
+            if (payloads.size() == 1 && payloads.get(0) == Payload.CHANGE) {
+                holder.textViewCreate.setText(tagCreationText);
+            } else {
+                holder.textViewCreate.setText(tagCreationText);
+                holder.textViewCreate.setEnabled(isEnabled());
+            }
         }
 
         public static class CreateTagViewHolder extends FlexibleViewHolder {
