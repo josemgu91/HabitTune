@@ -29,7 +29,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +46,6 @@ import com.josemgu91.habittune.domain.usecases.GetTags;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.Payload;
@@ -62,6 +60,8 @@ public class FragmentTagEditor extends Fragment {
     private ViewModelTagEditor viewModelTagEditor;
 
     private TagEditorFlexibleAdapter recyclerViewTagsAdapter;
+
+    private EditText toolbarEditText;
 
     @Override
     public void onAttach(Context context) {
@@ -89,9 +89,6 @@ public class FragmentTagEditor extends Fragment {
                 return true;
             }
         });
-        //TEMP
-        viewModelTagEditor.createTag(new CreateTag.Input("Test " + new Random().nextInt()));
-        //
         fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fragmentTagEditorBinding.recyclerView.setAdapter(recyclerViewTagsAdapter);
         return fragmentTagEditorBinding.getRoot();
@@ -115,23 +112,10 @@ public class FragmentTagEditor extends Fragment {
                     break;
             }
         });
-        viewModelTagEditor.getCreateTagResponse().observe(this, response -> {
-            switch (response.status) {
-                case LOADING:
-                    Log.d("FragmentTagEditor", "LOADING");
-                    break;
-                case ERROR:
-                    Log.d("FragmentTagEditor", "ERROR");
-                    break;
-                case SUCCESS:
-                    Log.d("FragmentTagEditor", "SUCCESS");
-                    break;
-            }
-        });
         fragmentInteractionListener.updateToolbar(getString(R.string.tag_editor_title), FragmentInteractionListener.IC_NAVIGATION_UP);
         fragmentInteractionListener.updateNavigationDrawer(false);
         fragmentInteractionListener.showToolbarTextInput();
-        final EditText toolbarEditText = fragmentInteractionListener.getToolbarTextInput();
+        toolbarEditText = fragmentInteractionListener.getToolbarTextInput();
         toolbarEditText.requestFocus();
         toolbarEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -158,15 +142,10 @@ public class FragmentTagEditor extends Fragment {
             }
         });
         toolbarEditText.setOnEditorActionListener((v, actionId, event) -> {
-            Toast.makeText(getContext(), v.getText().toString(), Toast.LENGTH_SHORT).show();
+            createTag(toolbarEditText.getText().toString());
             return true;
         });
-        recyclerViewTagsAdapter.setOnCreateTagItemClickListener(new TagEditorFlexibleAdapter.OnCreateTagItemClickListener() {
-            @Override
-            public void onCreateTagItemClick() {
-                Toast.makeText(getContext(), "Create item", Toast.LENGTH_SHORT).show();
-            }
-        });
+        recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTag(toolbarEditText.getText().toString()));
     }
 
     @Override
@@ -182,6 +161,11 @@ public class FragmentTagEditor extends Fragment {
         }
         recyclerViewTagsAdapter.clear();
         recyclerViewTagsAdapter.updateDataSet(tagItems);
+    }
+
+    private void createTag(final String tagName) {
+        viewModelTagEditor.createTag(new CreateTag.Input(tagName));
+        toolbarEditText.getText().clear();
     }
 
     private static class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
