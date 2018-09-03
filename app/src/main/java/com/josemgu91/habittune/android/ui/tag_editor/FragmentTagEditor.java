@@ -190,7 +190,7 @@ public class FragmentTagEditor extends Fragment {
                     final TagItem tagItem = (TagItem) recyclerViewTagsAdapter.getItem(position);
                     viewModelTagEditor.deleteTag(tagItem.tagName);
                 });
-                //recyclerViewTagsAdapter.notifyItemRemoved(position);
+                deletionConfirmationDialog.setOnCancelClickListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
             }
 
             @Override
