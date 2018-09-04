@@ -143,7 +143,11 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
 
     @Override
     public boolean updateTag(@NonNull Tag oldTag, @NonNull Tag newTag) throws DataGatewayException {
-        return false;
+        try {
+            return localRoomDatabase.getTagDao().updateTagByName(oldTag.getName(), newTag.getName()) != 0;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
     }
 
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
