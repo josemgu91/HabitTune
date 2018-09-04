@@ -73,6 +73,10 @@ public class FragmentTagEditor extends Fragment {
 
     private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletion_dialog";
 
+    private final static String SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE = "tag_name_to_delete";
+
+    private String tagNameToDelete;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -85,12 +89,25 @@ public class FragmentTagEditor extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            tagNameToDelete = savedInstanceState.getString(SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE);
+        }
         viewModelTagEditor.fetchTags();
         fragmentManager = getFragmentManager();
         tagDeletionConfirmationDialog = (TagDeletionConfirmationDialog) fragmentManager.findFragmentByTag(FRAGMENT_TAG_DELETION_DIALOG);
         if (tagDeletionConfirmationDialog == null) {
             tagDeletionConfirmationDialog = new TagDeletionConfirmationDialog();
         }
+        tagDeletionConfirmationDialog.setOnDeleteClickListener(() -> {
+            viewModelTagEditor.deleteTag(tagNameToDelete);
+            tagNameToDelete = null;
+        });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE, tagNameToDelete);
     }
 
     @Nullable
@@ -173,11 +190,8 @@ public class FragmentTagEditor extends Fragment {
             @Override
             public void onItemSwipe(int position, int direction) {
                 tagDeletionConfirmationDialog.show(fragmentManager, FRAGMENT_TAG_DELETION_DIALOG);
-                tagDeletionConfirmationDialog.setOnDeleteClickListener(() -> {
-                    //TODO: Handle state restoration (maybe saving the item to delete position in the heap?).
-                    final TagEditorFlexibleAdapter.TagItem tagItem = (TagEditorFlexibleAdapter.TagItem) recyclerViewTagsAdapter.getItem(position);
-                    viewModelTagEditor.deleteTag(tagItem.getTagName());
-                });
+                final TagEditorFlexibleAdapter.TagItem tagItem = (TagEditorFlexibleAdapter.TagItem) recyclerViewTagsAdapter.getItem(position);
+                tagNameToDelete = tagItem.getTagName();
                 tagDeletionConfirmationDialog.setOnCancelClickListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
             }
 
