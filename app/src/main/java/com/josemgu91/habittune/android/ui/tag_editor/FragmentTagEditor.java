@@ -40,7 +40,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
@@ -53,11 +52,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
-import eu.davidea.flexibleadapter.Payload;
 import eu.davidea.flexibleadapter.helpers.ItemTouchHelperCallback;
-import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.flexibleadapter.items.IFlexible;
-import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class FragmentTagEditor extends Fragment {
 
@@ -175,8 +171,8 @@ public class FragmentTagEditor extends Fragment {
                 deletionConfirmationDialog.show(fragmentManager, FRAGMENT_TAG_DELETION_DIALOG);
                 deletionConfirmationDialog.setOnDeleteClickListener(() -> {
                     //TODO: Handle state restoration (maybe saving the item to delete position in the heap?).
-                    final TagItem tagItem = (TagItem) recyclerViewTagsAdapter.getItem(position);
-                    viewModelTagEditor.deleteTag(tagItem.tagName);
+                    final TagEditorFlexibleAdapter.TagItem tagItem = (TagEditorFlexibleAdapter.TagItem) recyclerViewTagsAdapter.getItem(position);
+                    viewModelTagEditor.deleteTag(tagItem.getTagName());
                 });
                 deletionConfirmationDialog.setOnCancelClickListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
             }
@@ -198,7 +194,7 @@ public class FragmentTagEditor extends Fragment {
         //TODO: Only update the diff in the list (maybe with DiffUtil or with the FlexibleAdapter built in options?).
         final List<IFlexible> tagItems = new ArrayList<>();
         for (final GetTags.Output output : outputs) {
-            final TagItem tagItem = new TagItem(output.getName());
+            final TagEditorFlexibleAdapter.TagItem tagItem = new TagEditorFlexibleAdapter.TagItem(output.getName());
             tagItem.setSwipeable(true);
             tagItems.add(tagItem);
         }
@@ -210,200 +206,6 @@ public class FragmentTagEditor extends Fragment {
         viewModelTagEditor.createTag(tagName);
         toolbarEditText.getText().clear();
         inputMethodManager.hideSoftInputFromWindow(toolbarEditText.getWindowToken(), 0);
-    }
-
-    private static class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
-
-        private boolean isShowingCreateTagItem;
-        private CreateTagItem createTagItem;
-
-        private OnCreateTagItemClickListener onCreateTagItemClickListener;
-        private OnTagNameEditionFinishedListener onTagNameEditionFinishedListener;
-
-        public void setOnCreateTagItemClickListener(TagEditorFlexibleAdapter.OnCreateTagItemClickListener onCreateTagItemClickListener) {
-            this.onCreateTagItemClickListener = onCreateTagItemClickListener;
-        }
-
-        public void setOnTagNameEditionFinishedListener(OnTagNameEditionFinishedListener onTagNameEditionFinishedListener) {
-            this.onTagNameEditionFinishedListener = onTagNameEditionFinishedListener;
-        }
-
-        public TagEditorFlexibleAdapter(final Context context) {
-            super(null, null, true);
-            this.isShowingCreateTagItem = false;
-            this.createTagItem = new CreateTagItem(context);
-        }
-
-        public void showCreateTagItem() {
-            if (isShowingCreateTagItem) {
-                return;
-            }
-            addItem(0, createTagItem);
-            createTagItem.setSwipeable(false);
-            isShowingCreateTagItem = true;
-        }
-
-        public void updateCreateTagItem(final String tagName) {
-            if (isShowingCreateTagItem) {
-                createTagItem.updateTagName(tagName);
-                updateItem(createTagItem, Payload.CHANGE);
-            }
-        }
-
-        public boolean isShowingCreateTagItem() {
-            return isShowingCreateTagItem;
-        }
-
-        public void dismissCreateTagItem() {
-            if (!isShowingCreateTagItem) {
-                return;
-            }
-            removeItemsOfType(createTagItem.getItemViewType());
-            isShowingCreateTagItem = false;
-        }
-
-        public interface OnCreateTagItemClickListener {
-
-            void onCreateTagItemClick();
-
-        }
-
-        public interface OnTagNameEditionFinishedListener {
-
-            void onTagNameUpdated(final View view, final String oldName, final String newName);
-        }
-
-    }
-
-    private static class CreateTagItem extends AbstractFlexibleItem<CreateTagItem.CreateTagViewHolder> {
-
-        private String tagCreationText;
-
-        private final Context context;
-
-        public CreateTagItem(final Context context) {
-            tagCreationText = context.getString(R.string.tag_editor_tag_create, "");
-            this.context = context;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof CreateTagItem) {
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public int getLayoutRes() {
-            return R.layout.element_tag_create;
-        }
-
-        @Override
-        public CreateTagViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-            return new CreateTagViewHolder(view, (TagEditorFlexibleAdapter) adapter);
-        }
-
-        public void updateTagName(final String tagName) {
-            tagCreationText = context.getString(R.string.tag_editor_tag_create, tagName);
-        }
-
-        @Override
-        public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, CreateTagViewHolder holder, int position, List<Object> payloads) {
-            if (payloads.size() == 1 && payloads.get(0) == Payload.CHANGE) {
-                holder.textViewCreate.setText(tagCreationText);
-            } else {
-                holder.textViewCreate.setText(tagCreationText);
-                holder.textViewCreate.setEnabled(isEnabled());
-            }
-        }
-
-        public static class CreateTagViewHolder extends FlexibleViewHolder {
-
-            public final TextView textViewCreate;
-
-            public CreateTagViewHolder(View view, TagEditorFlexibleAdapter tagEditorFlexibleAdapter) {
-                super(view, tagEditorFlexibleAdapter);
-                view.setOnClickListener(v -> {
-                    final TagEditorFlexibleAdapter.OnCreateTagItemClickListener onCreateTagItemClickListener =
-                            tagEditorFlexibleAdapter.onCreateTagItemClickListener;
-                    if (onCreateTagItemClickListener != null) {
-                        onCreateTagItemClickListener.onCreateTagItemClick();
-                    }
-                });
-                textViewCreate = view.findViewById(R.id.textViewCreate);
-            }
-        }
-    }
-
-    private static class TagItem extends AbstractFlexibleItem<TagItem.TagViewHolder> {
-
-        private final String tagName;
-
-        public TagItem(String tagName) {
-            this.tagName = tagName;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof TagItem) {
-                return tagName.equals(((TagItem) o).tagName);
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return tagName.hashCode();
-        }
-
-        @Override
-        public int getLayoutRes() {
-            return R.layout.element_tag;
-        }
-
-        @Override
-        public TagItem.TagViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-            return new TagViewHolder(view, (TagEditorFlexibleAdapter) adapter);
-        }
-
-        @Override
-        public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, TagItem.TagViewHolder holder, int position, List<Object> payloads) {
-            holder.setText(tagName);
-            holder.editTextTagName.setEnabled(isEnabled());
-        }
-
-        public static class TagViewHolder extends FlexibleViewHolder {
-
-            private final EditText editTextTagName;
-            private String originalText;
-
-            public TagViewHolder(View view, TagEditorFlexibleAdapter tagEditorFlexibleAdapter) {
-                super(view, tagEditorFlexibleAdapter);
-                editTextTagName = view.findViewById(R.id.editTextTagName);
-                editTextTagName.setOnFocusChangeListener((v, hasFocus) -> {
-                    if (hasFocus) {
-                        return;
-                    }
-                    final TagEditorFlexibleAdapter.OnTagNameEditionFinishedListener onTagNameUpdatedListener =
-                            tagEditorFlexibleAdapter.onTagNameEditionFinishedListener;
-                    if (onTagNameUpdatedListener != null) {
-                        final String newText = editTextTagName.getText().toString();
-                        onTagNameUpdatedListener.onTagNameUpdated(editTextTagName, originalText, newText);
-                        originalText = newText;
-                    }
-                });
-                editTextTagName.setOnEditorActionListener((v, actionId, event) -> {
-                    v.clearFocus();
-                    return true;
-                });
-            }
-
-            public void setText(final String text) {
-                editTextTagName.setText(text);
-                originalText = text;
-            }
-        }
     }
 
     public static class DeletionConfirmationDialog extends DialogFragment {
