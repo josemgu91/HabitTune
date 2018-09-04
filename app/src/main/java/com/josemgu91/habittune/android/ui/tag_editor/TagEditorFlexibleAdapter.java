@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.android.ui.tag_editor;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,6 +36,8 @@ import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
+
+    private final static String SAVED_INSTANCE_STATE_KEY_IS_SHOWING_CREATE_TAG_ITEM = "isShowingCreateTagItem";
 
     private boolean isShowingCreateTagItem;
     private CreateTagItem createTagItem;
@@ -82,6 +85,16 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         }
         removeItemsOfType(createTagItem.getItemViewType());
         isShowingCreateTagItem = false;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     public interface OnCreateTagItemClickListener {

@@ -32,15 +32,15 @@ import com.josemgu91.habittune.android.ui.tag_editor.FragmentTagEditor;
 
 public class FragmentKeyFactory {
 
-    public static final String FRAGMENT_TAG_SCHEDULE = "fragment_schedule";
-    public static final String FRAGMENT_TAG_ROUTINES = "fragment_routines";
-    public static final String FRAGMENT_TAG_ACTIVITIES = "fragment_activities";
-    public static final String FRAGMENT_TAG_STATISTICS = "fragment_statistics";
-    public static final String FRAGMENT_TAG_SETTINGS = "fragment_settings";
-    public static final String FRAGMENT_TAG_HELP = "fragment_help";
+    public static final String FRAGMENT_TAG_SCHEDULE = "fragmentSchedule";
+    public static final String FRAGMENT_TAG_ROUTINES = "fragmentRoutines";
+    public static final String FRAGMENT_TAG_ACTIVITIES = "fragmentActivities";
+    public static final String FRAGMENT_TAG_STATISTICS = "fragmentStatistics";
+    public static final String FRAGMENT_TAG_SETTINGS = "fragmentSettings";
+    public static final String FRAGMENT_TAG_HELP = "fragmentHelp";
 
-    public static final String FRAGMENT_TAG_NEW_ACTIVITY = "fragment_new_activity";
-    public static final String FRAGMENT_TAG_TAG_EDITOR = "fragment_tag_editor";
+    public static final String FRAGMENT_TAG_NEW_ACTIVITY = "fragmentNewActivity";
+    public static final String FRAGMENT_TAG_TAG_EDITOR = "fragmentTagEditor";
 
     public FragmentKey createScheduleKey() {
         return new FragmentKey(FRAGMENT_TAG_SCHEDULE, null);

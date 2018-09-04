@@ -73,7 +73,7 @@ public class FragmentTagEditor extends Fragment {
 
     private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletion_dialog";
 
-    private final static String SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE = "tag_name_to_delete";
+    private final static String SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE = "tagNameToDelete";
 
     private String tagNameToDelete;
 

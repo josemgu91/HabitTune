@@ -53,7 +53,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     private FragmentInteractionListener fragmentInteractionListener;
     private ColorPickerDialog colorPickerDialog;
 
-    private final static String FRAGMENT_TAG_COLOR_PICKER = "color-picker-dialog";
+    private final static String FRAGMENT_TAG_COLOR_PICKER = "colorPickerDialog";
     private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
 
     @ColorInt
