@@ -77,6 +77,8 @@ public class FragmentTagEditor extends Fragment {
 
     private String tagNameToDelete;
 
+    private List<GetTags.Output> tags;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -137,7 +139,10 @@ public class FragmentTagEditor extends Fragment {
                     break;
                 case SUCCESS:
                     fragmentTagEditorBinding.setShowProgress(false);
-                    response.successData.observe(this, this::showTags);
+                    response.successData.observe(this, outputs -> {
+                        tags = outputs;
+                        showTags(outputs);
+                    });
                     break;
             }
         });
@@ -174,17 +179,20 @@ public class FragmentTagEditor extends Fragment {
             if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
                 return false;
             }
-            createTag(toolbarEditText.getText().toString());
+            createTagAndClearAndDismissKeyboard(toolbarEditText.getText().toString());
             return true;
         });
-        recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTag(toolbarEditText.getText().toString()));
-        recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener((view, oldName, newName) -> {
+        recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTagAndClearAndDismissKeyboard(toolbarEditText.getText().toString()));
+        recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener((position, view, oldName, newName) -> {
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             if (oldName.equals(newName)) {
                 return;
             }
+            if (tags.contains(new GetTags.Output(newName))) {
+                recyclerViewTagsAdapter.notifyItemChanged(position);
+                return;
+            }
             viewModelTagEditor.updateTag(oldName, newName);
-            //TODO: Handle update failure (e.g. UNIQUE name constraint failure).
         });
         recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemSwipeListener() {
             @Override
@@ -220,7 +228,7 @@ public class FragmentTagEditor extends Fragment {
         recyclerViewTagsAdapter.updateDataSet(tagItems);
     }
 
-    private void createTag(final String tagName) {
+    private void createTagAndClearAndDismissKeyboard(final String tagName) {
         viewModelTagEditor.createTag(tagName);
         toolbarEditText.getText().clear();
         inputMethodManager.hideSoftInputFromWindow(toolbarEditText.getWindowToken(), 0);
@@ -234,7 +242,7 @@ public class FragmentTagEditor extends Fragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final AlertDialog alertDialog = new AlertDialog
+            return new AlertDialog
                     .Builder(getContext())
                     .setTitle(R.string.tag_editor_delete_dialog_title)
                     .setMessage(R.string.tag_editor_delete_dialog_content)
@@ -249,7 +257,6 @@ public class FragmentTagEditor extends Fragment {
                         }
                     })
                     .create();
-            return alertDialog;
         }
 
         public void setOnDeleteClickListener(OnDeleteClickListener onDeleteClickListener) {

@@ -29,7 +29,7 @@ import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 import com.josemgu91.habittune.domain.usecases.UpdateTag;
-import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
+import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 import java.util.List;
 

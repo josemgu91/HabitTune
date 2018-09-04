@@ -25,6 +25,8 @@ import android.support.annotation.Nullable;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.TagDataGateway;
 import com.josemgu91.habittune.domain.entities.Tag;
+import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
+import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;

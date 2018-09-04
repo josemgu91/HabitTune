@@ -92,7 +92,7 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
 
     public interface OnTagNameEditionFinishedListener {
 
-        void onTagNameUpdated(final View view, final String oldName, final String newName);
+        void onTagNameUpdated(final int position, final View view, final String oldName, final String newName);
     }
 
     public static class CreateTagItem extends AbstractFlexibleItem<CreateTagItem.CreateTagViewHolder> {
@@ -213,7 +213,7 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
                             tagEditorFlexibleAdapter.onTagNameEditionFinishedListener;
                     if (onTagNameUpdatedListener != null) {
                         final String newText = editTextTagName.getText().toString();
-                        onTagNameUpdatedListener.onTagNameUpdated(editTextTagName, originalText, newText);
+                        onTagNameUpdatedListener.onTagNameUpdated(getAdapterPosition(), editTextTagName, originalText, newText);
                         originalText = newText;
                     }
                 });

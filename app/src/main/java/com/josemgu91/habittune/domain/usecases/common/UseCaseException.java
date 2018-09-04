@@ -17,15 +17,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.domain.usecases;
+package com.josemgu91.habittune.domain.usecases.common;
 
-import android.support.annotation.Nullable;
+import com.josemgu91.habittune.domain.DomainException;
 
-public interface UseCaseOutput<Output> {
+public class UseCaseException extends DomainException {
 
-    void onSuccess(@Nullable final Output output);
-
-    void inProgress();
-
-    void onError();
+    public UseCaseException(String message) {
+        super(message);
+    }
 }

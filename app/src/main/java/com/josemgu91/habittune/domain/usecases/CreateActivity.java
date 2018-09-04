@@ -26,6 +26,8 @@ import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.entities.Activity;
 import com.josemgu91.habittune.domain.entities.Tag;
+import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
+import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 import com.josemgu91.habittune.domain.util.ListMapper;
 
 import java.util.List;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.domain.usecases;
+package com.josemgu91.habittune.domain.usecases.common;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

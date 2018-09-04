@@ -26,7 +26,7 @@ import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
-import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
+import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 import java.util.List;
 
