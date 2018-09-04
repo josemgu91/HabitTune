@@ -25,6 +25,7 @@ import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.GetTags;
+import com.josemgu91.habittune.domain.usecases.UpdateTag;
 
 import java.util.concurrent.Executor;
 
@@ -79,6 +80,15 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     @Override
     public DeleteTag createDeleteTag() {
         return new DeleteTag(
+                uiThreadExecutor,
+                defaultThreadPoolExecutor,
+                roomRepository
+        );
+    }
+
+    @Override
+    public UpdateTag createUpdateTag() {
+        return new UpdateTag(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
                 roomRepository

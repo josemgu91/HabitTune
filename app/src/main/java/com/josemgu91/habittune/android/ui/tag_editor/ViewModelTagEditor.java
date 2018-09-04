@@ -28,6 +28,7 @@ import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetTags;
+import com.josemgu91.habittune.domain.usecases.UpdateTag;
 import com.josemgu91.habittune.domain.usecases.UseCaseOutput;
 
 import java.util.List;
@@ -37,18 +38,22 @@ public class ViewModelTagEditor extends ViewModel {
     private final GetTags getTags;
     private final CreateTag createTag;
     private final DeleteTag deleteTag;
+    private final UpdateTag updateTag;
 
     private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getTagsResponse;
     private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> createTagResponse;
     private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> deleteTagResponse;
+    private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> updateTagResponse;
 
-    public ViewModelTagEditor(GetTags getTags, CreateTag createTag, DeleteTag deleteTag) {
+    public ViewModelTagEditor(GetTags getTags, CreateTag createTag, DeleteTag deleteTag, UpdateTag updateTag) {
         this.getTags = getTags;
         this.createTag = createTag;
         this.deleteTag = deleteTag;
+        this.updateTag = updateTag;
         this.getTagsResponse = new MutableLiveData<>();
         this.createTagResponse = new MutableLiveData<>();
         this.deleteTagResponse = new MutableLiveData<>();
+        this.updateTagResponse = new MutableLiveData<>();
     }
 
     public void fetchTags() {
@@ -108,6 +113,25 @@ public class ViewModelTagEditor extends ViewModel {
         });
     }
 
+    public void updateTag(final String currentTagName, final String updatedTagName) {
+        updateTag.execute(new UpdateTag.Input(currentTagName, updatedTagName), new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+                updateTagResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
+            }
+
+            @Override
+            public void inProgress() {
+                updateTagResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                updateTagResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
     public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getGetTagsResponse() {
         return getTagsResponse;
     }
@@ -118,5 +142,9 @@ public class ViewModelTagEditor extends ViewModel {
 
     public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getDeleteTagResponse() {
         return deleteTagResponse;
+    }
+
+    public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getUpdateTagResponse() {
+        return updateTagResponse;
     }
 }

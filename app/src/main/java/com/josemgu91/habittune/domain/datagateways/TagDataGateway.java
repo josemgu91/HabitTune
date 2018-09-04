@@ -35,6 +35,6 @@ public interface TagDataGateway {
 
     boolean deleteTagByName(final String name) throws DataGatewayException;
 
-    boolean updateTag(@NonNull final Tag oldTag, @NonNull final Tag newTag) throws DataGatewayException;
+    boolean updateTag(@NonNull final Tag currentTag, @NonNull final Tag updatedTag) throws DataGatewayException;
 
 }

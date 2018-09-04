@@ -142,9 +142,9 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
     }
 
     @Override
-    public boolean updateTag(@NonNull Tag oldTag, @NonNull Tag newTag) throws DataGatewayException {
+    public boolean updateTag(@NonNull Tag currentTag, @NonNull Tag updatedTag) throws DataGatewayException {
         try {
-            return localRoomDatabase.getTagDao().updateTagByName(oldTag.getName(), newTag.getName()) != 0;
+            return localRoomDatabase.getTagDao().updateTagByName(currentTag.getName(), updatedTag.getName()) != 0;
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }

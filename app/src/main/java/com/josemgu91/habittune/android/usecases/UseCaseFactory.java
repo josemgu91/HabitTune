@@ -24,6 +24,7 @@ import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.GetTags;
+import com.josemgu91.habittune.domain.usecases.UpdateTag;
 
 public interface UseCaseFactory {
 
@@ -36,5 +37,7 @@ public interface UseCaseFactory {
     CreateTag createCreateTag();
 
     DeleteTag createDeleteTag();
+
+    UpdateTag createUpdateTag();
 
 }
