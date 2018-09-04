@@ -22,6 +22,8 @@ package com.josemgu91.habittune.android;
 import android.support.annotation.IntDef;
 import android.widget.EditText;
 
+import java.util.List;
+
 public interface FragmentInteractionListener {
 
     int IC_NAVIGATION_HAMBURGUER = 0;
@@ -42,7 +44,7 @@ public interface FragmentInteractionListener {
 
     void navigateToFragmentNewActivity();
 
-    void navigateToFragmentTagEditor();
+    void navigateToFragmentTagEditor(final List<String> selectedTags);
 
     void showToolbarTextInput();
 

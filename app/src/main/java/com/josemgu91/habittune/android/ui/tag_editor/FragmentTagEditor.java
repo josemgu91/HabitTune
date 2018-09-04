@@ -71,7 +71,7 @@ public class FragmentTagEditor extends Fragment {
 
     private FragmentManager fragmentManager;
 
-    private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletion_dialog";
+    private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletionDialog";
 
     private final static String SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE = "tagNameToDelete";
 
@@ -79,9 +79,21 @@ public class FragmentTagEditor extends Fragment {
 
     private List<GetTags.Output> tags;
 
+    public final static String ARGUMENT_SELECTED_TAGS = "selectedTags";
+    private List<String> selectedTags;
+
+    public static FragmentTagEditor newInstance(final List<String> selectedTags) {
+        Bundle args = new Bundle();
+        args.putStringArrayList(ARGUMENT_SELECTED_TAGS, new ArrayList<>(selectedTags));
+        FragmentTagEditor fragment = new FragmentTagEditor();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        selectedTags = getArguments().getStringArrayList(ARGUMENT_SELECTED_TAGS);
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
