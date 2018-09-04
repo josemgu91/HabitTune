@@ -116,13 +116,6 @@ public class FragmentTagEditor extends Fragment {
         recyclerViewTagsAdapter = new TagEditorFlexibleAdapter(getContext());
         fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fragmentTagEditorBinding.recyclerView.setAdapter(recyclerViewTagsAdapter);
-        recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemClickListener() {
-            @Override
-            public boolean onItemClick(View view, int position) {
-                Toast.makeText(getContext(), "Click!", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
         recyclerViewTagsAdapter.setSwipeEnabled(true);
         final ItemTouchHelperCallback itemTouchHelperCallback = recyclerViewTagsAdapter.getItemTouchHelperCallback();
         itemTouchHelperCallback.setSwipeFlags(ItemTouchHelper.RIGHT);
@@ -181,6 +174,7 @@ public class FragmentTagEditor extends Fragment {
             return true;
         });
         recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTag(toolbarEditText.getText().toString()));
+        recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener(((v, oldName, newName) -> Toast.makeText(getContext(), String.format("Old name: %s, new name: %s", oldName, newName), Toast.LENGTH_SHORT).show()));
         recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemSwipeListener() {
             @Override
             public void onItemSwipe(int position, int direction) {
@@ -230,9 +224,14 @@ public class FragmentTagEditor extends Fragment {
         private CreateTagItem createTagItem;
 
         private OnCreateTagItemClickListener onCreateTagItemClickListener;
+        private OnTagNameEditionFinishedListener onTagNameEditionFinishedListener;
 
         public void setOnCreateTagItemClickListener(TagEditorFlexibleAdapter.OnCreateTagItemClickListener onCreateTagItemClickListener) {
             this.onCreateTagItemClickListener = onCreateTagItemClickListener;
+        }
+
+        public void setOnTagNameEditionFinishedListener(OnTagNameEditionFinishedListener onTagNameEditionFinishedListener) {
+            this.onTagNameEditionFinishedListener = onTagNameEditionFinishedListener;
         }
 
         public TagEditorFlexibleAdapter(final Context context) {
@@ -275,6 +274,11 @@ public class FragmentTagEditor extends Fragment {
 
         }
 
+        public interface OnTagNameEditionFinishedListener {
+
+            void onTagNameUpdated(final View view, final String oldName, final String newName);
+        }
+
     }
 
     private static class CreateTagItem extends AbstractFlexibleItem<CreateTagItem.CreateTagViewHolder> {
@@ -303,7 +307,7 @@ public class FragmentTagEditor extends Fragment {
 
         @Override
         public CreateTagViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-            return new CreateTagViewHolder(view, adapter);
+            return new CreateTagViewHolder(view, (TagEditorFlexibleAdapter) adapter);
         }
 
         public void updateTagName(final String tagName) {
@@ -324,11 +328,11 @@ public class FragmentTagEditor extends Fragment {
 
             public final TextView textViewCreate;
 
-            public CreateTagViewHolder(View view, FlexibleAdapter adapter) {
-                super(view, adapter);
+            public CreateTagViewHolder(View view, TagEditorFlexibleAdapter tagEditorFlexibleAdapter) {
+                super(view, tagEditorFlexibleAdapter);
                 view.setOnClickListener(v -> {
                     final TagEditorFlexibleAdapter.OnCreateTagItemClickListener onCreateTagItemClickListener =
-                            ((TagEditorFlexibleAdapter) adapter).onCreateTagItemClickListener;
+                            tagEditorFlexibleAdapter.onCreateTagItemClickListener;
                     if (onCreateTagItemClickListener != null) {
                         onCreateTagItemClickListener.onCreateTagItemClick();
                     }
@@ -366,22 +370,44 @@ public class FragmentTagEditor extends Fragment {
 
         @Override
         public TagItem.TagViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-            return new TagViewHolder(view, adapter);
+            return new TagViewHolder(view, (TagEditorFlexibleAdapter) adapter);
         }
 
         @Override
         public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, TagItem.TagViewHolder holder, int position, List<Object> payloads) {
-            holder.textViewTagName.setText(tagName);
-            holder.textViewTagName.setEnabled(isEnabled());
+            holder.setText(tagName);
+            holder.editTextTagName.setEnabled(isEnabled());
         }
 
         public static class TagViewHolder extends FlexibleViewHolder {
 
-            public final TextView textViewTagName;
+            private final EditText editTextTagName;
+            private String originalText;
 
-            public TagViewHolder(View view, FlexibleAdapter adapter) {
-                super(view, adapter);
-                textViewTagName = view.findViewById(R.id.textViewTagName);
+            public TagViewHolder(View view, TagEditorFlexibleAdapter tagEditorFlexibleAdapter) {
+                super(view, tagEditorFlexibleAdapter);
+                editTextTagName = view.findViewById(R.id.editTextTagName);
+                editTextTagName.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (hasFocus) {
+                        return;
+                    }
+                    final TagEditorFlexibleAdapter.OnTagNameEditionFinishedListener onTagNameUpdatedListener =
+                            tagEditorFlexibleAdapter.onTagNameEditionFinishedListener;
+                    if (onTagNameUpdatedListener != null) {
+                        final String newText = editTextTagName.getText().toString();
+                        onTagNameUpdatedListener.onTagNameUpdated(editTextTagName, originalText, newText);
+                        originalText = newText;
+                    }
+                });
+                editTextTagName.setOnEditorActionListener((v, actionId, event) -> {
+                    v.clearFocus();
+                    return true;
+                });
+            }
+
+            public void setText(final String text) {
+                editTextTagName.setText(text);
+                originalText = text;
             }
         }
     }
