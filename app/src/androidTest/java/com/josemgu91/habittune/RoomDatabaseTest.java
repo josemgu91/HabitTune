@@ -227,6 +227,20 @@ public class RoomDatabaseTest {
     }
 
     @Test
+    public void updateTagByName() throws Exception {
+        final String originalTagName = "My Tag";
+        final Tag testTag = new Tag(0, originalTagName);
+        tagDao.insertTag(testTag);
+        final String newTagName = "Study";
+        final int rowsUpdated = tagDao.updateTagByName(originalTagName, newTagName);
+        final Tag updatedTag = tagDao.getTagByName(newTagName);
+        final Tag oldTag = tagDao.getTagByName(originalTagName);
+        Assert.assertEquals(1, rowsUpdated);
+        Assert.assertNull(oldTag);
+        Assert.assertEquals(newTagName, updatedTag.name);
+    }
+
+    @Test
     public void assertUniqueTagName() {
         final String originalTagName = "Tag 1";
         final String duplicatedTagName = "Tag 1";

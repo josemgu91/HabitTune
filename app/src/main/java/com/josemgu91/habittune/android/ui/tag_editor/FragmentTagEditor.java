@@ -41,7 +41,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
@@ -95,18 +94,6 @@ public class FragmentTagEditor extends Fragment {
         if (deletionConfirmationDialog == null) {
             deletionConfirmationDialog = new DeletionConfirmationDialog();
         }
-        deletionConfirmationDialog.setOnCancelClickListener(new DeletionConfirmationDialog.OnCancelClickListener() {
-            @Override
-            public void onCancelClick() {
-                Toast.makeText(getContext(), "Cancel!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        deletionConfirmationDialog.setOnDeleteClickListener(new DeletionConfirmationDialog.OnDeleteClickListener() {
-            @Override
-            public void onDeleteClick() {
-                Toast.makeText(getContext(), "Delete!", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Nullable
@@ -174,7 +161,14 @@ public class FragmentTagEditor extends Fragment {
             return true;
         });
         recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTag(toolbarEditText.getText().toString()));
-        recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener(((v, oldName, newName) -> Toast.makeText(getContext(), String.format("Old name: %s, new name: %s", oldName, newName), Toast.LENGTH_SHORT).show()));
+        recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener((view, oldName, newName) -> {
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            if (oldName.equals(newName)) {
+                return;
+            }
+            viewModelTagEditor.updateTag(oldName, newName);
+            //TODO: Handle update failure (e.g. UNIQUE name constraint failure).
+        });
         recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemSwipeListener() {
             @Override
             public void onItemSwipe(int position, int direction) {

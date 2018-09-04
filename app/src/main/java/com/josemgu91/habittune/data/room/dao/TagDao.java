@@ -46,7 +46,7 @@ public interface TagDao {
     @Update(onConflict = OnConflictStrategy.ABORT)
     int updateTag(final Tag tag);
 
-    @Query("UPDATE tags SET name=:currentTagName WHERE name = :updatedTagName")
+    @Query("UPDATE tags SET name=:updatedTagName WHERE name = :currentTagName")
     int updateTagByName(final String currentTagName, final String updatedTagName);
 
     @Delete
