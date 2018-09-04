@@ -35,6 +35,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,7 @@ public class FragmentTagEditor extends Fragment {
     private EditText toolbarEditText;
     private InputMethodManager inputMethodManager;
 
-    private DeletionConfirmationDialog deletionConfirmationDialog;
+    private TagDeletionConfirmationDialog tagDeletionConfirmationDialog;
 
     private FragmentManager fragmentManager;
 
@@ -86,9 +87,9 @@ public class FragmentTagEditor extends Fragment {
         super.onCreate(savedInstanceState);
         viewModelTagEditor.fetchTags();
         fragmentManager = getFragmentManager();
-        deletionConfirmationDialog = (DeletionConfirmationDialog) fragmentManager.findFragmentByTag(FRAGMENT_TAG_DELETION_DIALOG);
-        if (deletionConfirmationDialog == null) {
-            deletionConfirmationDialog = new DeletionConfirmationDialog();
+        tagDeletionConfirmationDialog = (TagDeletionConfirmationDialog) fragmentManager.findFragmentByTag(FRAGMENT_TAG_DELETION_DIALOG);
+        if (tagDeletionConfirmationDialog == null) {
+            tagDeletionConfirmationDialog = new TagDeletionConfirmationDialog();
         }
     }
 
@@ -153,6 +154,9 @@ public class FragmentTagEditor extends Fragment {
             }
         });
         toolbarEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
+                return false;
+            }
             createTag(toolbarEditText.getText().toString());
             return true;
         });
@@ -168,13 +172,13 @@ public class FragmentTagEditor extends Fragment {
         recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemSwipeListener() {
             @Override
             public void onItemSwipe(int position, int direction) {
-                deletionConfirmationDialog.show(fragmentManager, FRAGMENT_TAG_DELETION_DIALOG);
-                deletionConfirmationDialog.setOnDeleteClickListener(() -> {
+                tagDeletionConfirmationDialog.show(fragmentManager, FRAGMENT_TAG_DELETION_DIALOG);
+                tagDeletionConfirmationDialog.setOnDeleteClickListener(() -> {
                     //TODO: Handle state restoration (maybe saving the item to delete position in the heap?).
                     final TagEditorFlexibleAdapter.TagItem tagItem = (TagEditorFlexibleAdapter.TagItem) recyclerViewTagsAdapter.getItem(position);
                     viewModelTagEditor.deleteTag(tagItem.getTagName());
                 });
-                deletionConfirmationDialog.setOnCancelClickListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
+                tagDeletionConfirmationDialog.setOnCancelClickListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
             }
 
             @Override
@@ -208,7 +212,7 @@ public class FragmentTagEditor extends Fragment {
         inputMethodManager.hideSoftInputFromWindow(toolbarEditText.getWindowToken(), 0);
     }
 
-    public static class DeletionConfirmationDialog extends DialogFragment {
+    public static class TagDeletionConfirmationDialog extends DialogFragment {
 
         private OnDeleteClickListener onDeleteClickListener;
         private OnCancelClickListener onCancelClickListener;
