@@ -22,6 +22,7 @@ package com.josemgu91.habittune.android.ui.tag_editor;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
 
     private OnCreateTagItemClickListener onCreateTagItemClickListener;
     private OnTagNameEditionFinishedListener onTagNameEditionFinishedListener;
+    private OnTagSelectionChangeListener onTagSelectionChangeListener;
 
     public void setOnCreateTagItemClickListener(TagEditorFlexibleAdapter.OnCreateTagItemClickListener onCreateTagItemClickListener) {
         this.onCreateTagItemClickListener = onCreateTagItemClickListener;
@@ -51,6 +53,10 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
 
     public void setOnTagNameEditionFinishedListener(OnTagNameEditionFinishedListener onTagNameEditionFinishedListener) {
         this.onTagNameEditionFinishedListener = onTagNameEditionFinishedListener;
+    }
+
+    public void setOnTagSelectionChangeListener(OnTagSelectionChangeListener onTagSelectionChangeListener) {
+        this.onTagSelectionChangeListener = onTagSelectionChangeListener;
     }
 
     public TagEditorFlexibleAdapter(final Context context) {
@@ -65,6 +71,7 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         }
         addItem(0, createTagItem);
         createTagItem.setSwipeable(false);
+        createTagItem.setSelectable(false);
         isShowingCreateTagItem = true;
     }
 
@@ -87,6 +94,17 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         isShowingCreateTagItem = false;
     }
 
+    /*private void onTagItemSelectionChange(final int position, final boolean selected, final View view) {
+        if (selected) {
+            addSelection(position);
+        } else {
+            removeSelection(position);
+        }
+        if (onTagSelectionChangeListener != null) {
+            onTagSelectionChangeListener.onTagSelectionChange(selected, position, view);
+        }
+    }*/
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -100,12 +118,16 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
     public interface OnCreateTagItemClickListener {
 
         void onCreateTagItemClick();
-
     }
 
     public interface OnTagNameEditionFinishedListener {
 
         void onTagNameUpdated(final int position, final View view, final String oldName, final String newName);
+    }
+
+    public interface OnTagSelectionChangeListener {
+
+        void onTagSelectionChange(final boolean selected, final int position, final View view);
     }
 
     public static class CreateTagItem extends AbstractFlexibleItem<CreateTagItem.CreateTagViewHolder> {
@@ -207,16 +229,23 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         @Override
         public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, TagItem.TagViewHolder holder, int position, List<Object> payloads) {
             holder.setText(tagName);
-            holder.editTextTagName.setEnabled(isEnabled());
+            holder.checkBoxTagSelection.setChecked(adapter.isSelected(position));
         }
 
         public static class TagViewHolder extends FlexibleViewHolder {
 
             private final EditText editTextTagName;
+            private final CheckBox checkBoxTagSelection;
             private String originalText;
 
             public TagViewHolder(View view, TagEditorFlexibleAdapter tagEditorFlexibleAdapter) {
                 super(view, tagEditorFlexibleAdapter);
+                checkBoxTagSelection = view.findViewById(R.id.checkBox);
+                checkBoxTagSelection.setOnClickListener(v -> {
+                    mAdapter.toggleSelection(getAdapterPosition());
+                    toggleActivation();
+                    //tagEditorFlexibleAdapter.onTagItemSelectionChange(getAdapterPosition(), checkBoxTagSelection.isSelected(), v);
+                });
                 editTextTagName = view.findViewById(R.id.editTextTagName);
                 editTextTagName.setOnFocusChangeListener((v, hasFocus) -> {
                     if (hasFocus) {
@@ -234,6 +263,13 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
                     v.clearFocus();
                     return true;
                 });
+            }
+
+            @Override
+            public void toggleActivation() {
+                super.toggleActivation();
+                final boolean isSelected = mAdapter.isSelected(getAdapterPosition());
+                checkBoxTagSelection.setChecked(isSelected);
             }
 
             public void setText(final String text) {

@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.SelectableAdapter;
 import eu.davidea.flexibleadapter.helpers.ItemTouchHelperCallback;
 import eu.davidea.flexibleadapter.items.IFlexible;
 
@@ -132,6 +133,7 @@ public class FragmentTagEditor extends Fragment {
         fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fragmentTagEditorBinding.recyclerView.setAdapter(recyclerViewTagsAdapter);
         recyclerViewTagsAdapter.setSwipeEnabled(true);
+        recyclerViewTagsAdapter.setMode(SelectableAdapter.Mode.MULTI);
         final ItemTouchHelperCallback itemTouchHelperCallback = recyclerViewTagsAdapter.getItemTouchHelperCallback();
         itemTouchHelperCallback.setSwipeFlags(ItemTouchHelper.RIGHT);
         return fragmentTagEditorBinding.getRoot();
@@ -234,6 +236,7 @@ public class FragmentTagEditor extends Fragment {
         for (final GetTags.Output output : outputs) {
             final TagEditorFlexibleAdapter.TagItem tagItem = new TagEditorFlexibleAdapter.TagItem(output.getName());
             tagItem.setSwipeable(true);
+            tagItem.setSelectable(true);
             tagItems.add(tagItem);
         }
         recyclerViewTagsAdapter.clear();
