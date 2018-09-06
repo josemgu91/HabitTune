@@ -40,6 +40,6 @@ public interface ActivityDataGateway {
 
     boolean createActivity(@NonNull final Activity activity) throws DataGatewayException;
 
-    boolean updateActivity(@NonNull final Activity oldActivity, @NonNull final Activity newActivity) throws DataGatewayException;
+    boolean updateActivity(@NonNull final Activity updatedActivity) throws DataGatewayException;
 
 }

@@ -25,12 +25,9 @@ import android.support.annotation.Nullable;
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.entities.Activity;
-import com.josemgu91.habittune.domain.entities.Tag;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
-import com.josemgu91.habittune.domain.util.ListMapper;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -48,10 +45,11 @@ public class CreateActivity extends AbstractUseCase<CreateActivity.Input, Void> 
         output.inProgress();
         try {
             final boolean activityCreated = activityDataGateway.createActivity(new Activity(
+                    "",
                     input.name,
                     input.description,
                     input.color,
-                    new ListMapper<>(Tag::new).apply(input.tags)
+                    null
             ));
             if (activityCreated) {
                 output.onSuccess(null);
@@ -68,13 +66,23 @@ public class CreateActivity extends AbstractUseCase<CreateActivity.Input, Void> 
         private final String name;
         private final String description;
         private final int color;
-        private final List<String> tags;
 
-        public Input(String name, String description, int color, List<String> tags) {
+        public Input(String name, String description, int color) {
             this.name = name;
             this.description = description;
             this.color = color;
-            this.tags = tags;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public int getColor() {
+            return color;
         }
 
         @Override
@@ -84,13 +92,12 @@ public class CreateActivity extends AbstractUseCase<CreateActivity.Input, Void> 
             Input input = (Input) o;
             return color == input.color &&
                     Objects.equals(name, input.name) &&
-                    Objects.equals(description, input.description) &&
-                    Objects.equals(tags, input.tags);
+                    Objects.equals(description, input.description);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(name, description, color, tags);
+            return Objects.hash(name, description, color);
         }
 
         @Override
@@ -99,7 +106,6 @@ public class CreateActivity extends AbstractUseCase<CreateActivity.Input, Void> 
                     "name='" + name + '\'' +
                     ", description='" + description + '\'' +
                     ", color=" + color +
-                    ", tags=" + tags +
                     '}';
         }
     }

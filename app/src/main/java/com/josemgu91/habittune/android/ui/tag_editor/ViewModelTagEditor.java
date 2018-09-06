@@ -94,8 +94,8 @@ public class ViewModelTagEditor extends ViewModel {
         });
     }
 
-    public void deleteTag(final String tagName) {
-        deleteTag.execute(new DeleteTag.Input(tagName), new UseCaseOutput<Void>() {
+    public void deleteTag(final String tagId) {
+        deleteTag.execute(new DeleteTag.Input(tagId), new UseCaseOutput<Void>() {
             @Override
             public void onSuccess(@Nullable Void aVoid) {
                 deleteTagResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
@@ -113,8 +113,8 @@ public class ViewModelTagEditor extends ViewModel {
         });
     }
 
-    public void updateTag(final String currentTagName, final String updatedTagName) {
-        updateTag.execute(new UpdateTag.Input(currentTagName, updatedTagName), new UseCaseOutput<Void>() {
+    public void updateTag(final String tagId, final String updatedTagName) {
+        updateTag.execute(new UpdateTag.Input(tagId, updatedTagName), new UseCaseOutput<Void>() {
             @Override
             public void onSuccess(@Nullable Void aVoid) {
                 updateTagResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));

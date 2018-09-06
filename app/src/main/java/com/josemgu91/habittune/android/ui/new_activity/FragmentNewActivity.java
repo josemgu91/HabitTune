@@ -152,8 +152,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
         final CreateActivity.Input input = new CreateActivity.Input(
                 activityName,
                 activityDescription,
-                activityColor,
-                new ArrayList<>()
+                activityColor
         );
         viewModelNewActivity.createActivity(input);
         getActivity().onBackPressed();

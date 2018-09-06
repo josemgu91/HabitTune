@@ -23,10 +23,16 @@ import java.util.Objects;
 
 public class Tag {
 
+    private final String id;
     private final String name;
 
-    public Tag(String name) {
+    public Tag(String id, String name) {
+        this.id = id;
         this.name = name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -38,18 +44,20 @@ public class Tag {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return Objects.equals(name, tag.name);
+        return Objects.equals(id, tag.id) &&
+                Objects.equals(name, tag.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id, name);
     }
 
     @Override
     public String toString() {
         return "Tag{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

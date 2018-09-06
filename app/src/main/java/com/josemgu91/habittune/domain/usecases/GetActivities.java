@@ -65,6 +65,7 @@ public class GetActivities extends AbstractUseCase<Void, LiveData<List<GetActivi
         @Override
         public Output apply(Activity input) {
             return new Output(
+                    input.getId(),
                     input.getName(),
                     input.getDescription(),
                     input.getColor()
@@ -74,14 +75,20 @@ public class GetActivities extends AbstractUseCase<Void, LiveData<List<GetActivi
 
     public static final class Output {
 
+        private final String id;
         private final String name;
         private final String description;
         private final int color;
 
-        public Output(String name, String description, int color) {
+        public Output(String id, String name, String description, int color) {
+            this.id = id;
             this.name = name;
             this.description = description;
             this.color = color;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getName() {
@@ -102,19 +109,21 @@ public class GetActivities extends AbstractUseCase<Void, LiveData<List<GetActivi
             if (o == null || getClass() != o.getClass()) return false;
             Output output = (Output) o;
             return color == output.color &&
+                    Objects.equals(id, output.id) &&
                     Objects.equals(name, output.name) &&
                     Objects.equals(description, output.description);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(name, description, color);
+            return Objects.hash(id, name, description, color);
         }
 
         @Override
         public String toString() {
             return "Output{" +
-                    "name='" + name + '\'' +
+                    "id='" + id + '\'' +
+                    ", name='" + name + '\'' +
                     ", description='" + description + '\'' +
                     ", color=" + color +
                     '}';

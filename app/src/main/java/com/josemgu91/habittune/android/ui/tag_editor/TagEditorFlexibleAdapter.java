@@ -111,7 +111,7 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
 
     public interface OnTagNameEditionFinishedListener {
 
-        void onTagNameUpdated(final int position, final View view, final String oldName, final String newName);
+        void onTagNameUpdated(final int position, final View view, final String id, final String newName);
     }
 
     public interface OnTagSelectionChangeListener {
@@ -182,10 +182,16 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
 
     public static class TagItem extends AbstractFlexibleItem<TagItem.TagViewHolder> {
 
+        private final String tagId;
         private final String tagName;
 
-        public TagItem(String tagName) {
+        public TagItem(String tagId, String tagName) {
+            this.tagId = tagId;
             this.tagName = tagName;
+        }
+
+        public String getTagId() {
+            return tagId;
         }
 
         public String getTagName() {
@@ -195,14 +201,14 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         @Override
         public boolean equals(Object o) {
             if (o instanceof TagItem) {
-                return tagName.equals(((TagItem) o).tagName);
+                return tagId.equals(((TagItem) o).tagId);
             }
             return false;
         }
 
         @Override
         public int hashCode() {
-            return tagName.hashCode();
+            return tagId.hashCode();
         }
 
         @Override
@@ -218,6 +224,7 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         @Override
         public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, TagItem.TagViewHolder holder, int position, List<Object> payloads) {
             holder.setText(tagName);
+            holder.tagId = tagId;
             holder.checkBoxTagSelection.setChecked(adapter.isSelected(position));
         }
 
@@ -226,6 +233,7 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
             private final EditText editTextTagName;
             private final CheckBox checkBoxTagSelection;
             private String originalText;
+            private String tagId;
 
             public TagViewHolder(View view, TagEditorFlexibleAdapter tagEditorFlexibleAdapter) {
                 super(view, tagEditorFlexibleAdapter);
@@ -246,11 +254,14 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
                     if (hasFocus) {
                         return;
                     }
+                    if (originalText.equals(editTextTagName.getText().toString())) {
+                        return;
+                    }
                     final TagEditorFlexibleAdapter.OnTagNameEditionFinishedListener onTagNameUpdatedListener =
                             tagEditorFlexibleAdapter.onTagNameEditionFinishedListener;
                     if (onTagNameUpdatedListener != null) {
                         final String newText = editTextTagName.getText().toString();
-                        onTagNameUpdatedListener.onTagNameUpdated(getAdapterPosition(), editTextTagName, originalText, newText);
+                        onTagNameUpdatedListener.onTagNameUpdated(getAdapterPosition(), editTextTagName, tagId, newText);
                         originalText = newText;
                     }
                 });

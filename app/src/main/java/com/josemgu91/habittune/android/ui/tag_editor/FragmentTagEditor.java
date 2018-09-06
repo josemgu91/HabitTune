@@ -75,9 +75,9 @@ public class FragmentTagEditor extends Fragment {
 
     private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletionDialog";
 
-    private final static String SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE = "tagNameToDelete";
+    private final static String SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE = "tagIdToDelete";
 
-    private String tagNameToDelete;
+    private String tagIdToDelete;
 
     private List<GetTags.Output> tags;
 
@@ -106,7 +106,7 @@ public class FragmentTagEditor extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            tagNameToDelete = savedInstanceState.getString(SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE);
+            tagIdToDelete = savedInstanceState.getString(SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE);
         }
         viewModelTagEditor.fetchTags();
         fragmentManager = getFragmentManager();
@@ -115,15 +115,15 @@ public class FragmentTagEditor extends Fragment {
             tagDeletionConfirmationDialog = new TagDeletionConfirmationDialog();
         }
         tagDeletionConfirmationDialog.setOnDeleteClickListener(() -> {
-            viewModelTagEditor.deleteTag(tagNameToDelete);
-            tagNameToDelete = null;
+            viewModelTagEditor.deleteTag(tagIdToDelete);
+            tagIdToDelete = null;
         });
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(SAVED_INSTANCE_STATE_KEY_TAG_NAME_TO_DELETE, tagNameToDelete);
+        outState.putString(SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE, tagIdToDelete);
     }
 
     @Nullable
@@ -198,16 +198,13 @@ public class FragmentTagEditor extends Fragment {
             return true;
         });
         recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTagAndClearAndDismissKeyboard(toolbarEditText.getText().toString()));
-        recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener((position, view, oldName, newName) -> {
+        recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener((position, view, tagId, newName) -> {
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            if (oldName.equals(newName)) {
-                return;
-            }
-            if (tags.contains(new GetTags.Output(newName))) {
+            if (tags.contains(new GetTags.Output(tagId, newName))) {
                 recyclerViewTagsAdapter.notifyItemChanged(position);
                 return;
             }
-            viewModelTagEditor.updateTag(oldName, newName);
+            viewModelTagEditor.updateTag(tagId, newName);
         });
         recyclerViewTagsAdapter.setOnTagSelectionChangeListener(new TagEditorFlexibleAdapter.OnTagSelectionChangeListener() {
             @Override
@@ -220,7 +217,7 @@ public class FragmentTagEditor extends Fragment {
             public void onItemSwipe(int position, int direction) {
                 tagDeletionConfirmationDialog.show(fragmentManager, FRAGMENT_TAG_DELETION_DIALOG);
                 final TagEditorFlexibleAdapter.TagItem tagItem = (TagEditorFlexibleAdapter.TagItem) recyclerViewTagsAdapter.getItem(position);
-                tagNameToDelete = tagItem.getTagName();
+                tagIdToDelete = tagItem.getTagId();
                 tagDeletionConfirmationDialog.setOnCancelClickListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
             }
 
@@ -241,7 +238,7 @@ public class FragmentTagEditor extends Fragment {
         //TODO: Only update the diff in the list (maybe with DiffUtil or with the FlexibleAdapter built in options?).
         final List<IFlexible> tagItems = new ArrayList<>();
         for (final GetTags.Output output : outputs) {
-            final TagEditorFlexibleAdapter.TagItem tagItem = new TagEditorFlexibleAdapter.TagItem(output.getName());
+            final TagEditorFlexibleAdapter.TagItem tagItem = new TagEditorFlexibleAdapter.TagItem(output.getId(), output.getName());
             tagItem.setSwipeable(true);
             tagItem.setSelectable(true);
             tagItems.add(tagItem);

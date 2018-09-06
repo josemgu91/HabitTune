@@ -45,6 +45,7 @@ public class CreateTag extends AbstractUseCase<CreateTag.Input, Void> {
         output.inProgress();
         try {
             final boolean tagCreated = tagDataGateway.createTag(new Tag(
+                    "",
                     input.name
             ));
             if (tagCreated) {

@@ -24,7 +24,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
-import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.TagDataGateway;
@@ -83,29 +82,19 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
     @Override
     public boolean createActivity(@NonNull Activity activity) throws DataGatewayException {
         try {
-            final long insertedActivityId = localRoomDatabase.getActivityDao().insertActivity(new com.josemgu91.habittune.data.room.model.Activity(
+            return localRoomDatabase.getActivityDao().insertActivity(new com.josemgu91.habittune.data.room.model.Activity(
                     0,
                     activity.getName(),
                     activity.getDescription(),
                     activity.getColor()
-            ));
-            if (activity.getTags() != null) {
-                for (Tag tag : activity.getTags()) {
-                    final com.josemgu91.habittune.data.room.model.Tag roomTag = localRoomDatabase.getTagDao().getTagByName(tag.getName());
-                    localRoomDatabase.getActivityTagJoinDao().insertActivityTagJoin(new ActivityTagJoin(
-                            insertedActivityId,
-                            roomTag.id
-                    ));
-                }
-            }
-            return insertedActivityId != 0;
+            )) != 0;
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
     }
 
     @Override
-    public boolean updateActivity(@NonNull Activity oldActivity, @NonNull Activity newActivity) throws DataGatewayException {
+    public boolean updateActivity(@NonNull Activity updatedActivity) {
         return false;
     }
 
@@ -133,18 +122,26 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
     }
 
     @Override
-    public boolean deleteTagByName(String name) throws DataGatewayException {
+    public boolean deleteTagById(String id) throws DataGatewayException {
         try {
-            return localRoomDatabase.getTagDao().deleteTagByName(name) != 0;
+            return localRoomDatabase.getTagDao().deleteTag(
+                    new com.josemgu91.habittune.data.room.model.Tag(
+                            Long.valueOf(id),
+                            ""
+                    )
+            ) != 0;
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
     }
 
     @Override
-    public boolean updateTag(@NonNull Tag currentTag, @NonNull Tag updatedTag) throws DataGatewayException {
+    public boolean updateTag(@NonNull Tag updatedTag) throws DataGatewayException {
         try {
-            return localRoomDatabase.getTagDao().updateTagByName(currentTag.getName(), updatedTag.getName()) != 0;
+            return localRoomDatabase.getTagDao().updateTag(new com.josemgu91.habittune.data.room.model.Tag(
+                    Long.valueOf(updatedTag.getId()),
+                    updatedTag.getName()
+            )) != 0;
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -160,6 +157,7 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
 
     private static Activity mapToEntityActivity(final com.josemgu91.habittune.data.room.model.Activity roomActivity) {
         return new Activity(
+                String.valueOf(roomActivity.id),
                 roomActivity.name,
                 roomActivity.description,
                 roomActivity.color,
@@ -173,6 +171,7 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
             tags.add(mapToEntityTag(roomTag));
         }
         return new Activity(
+                String.valueOf(roomActivity.id),
                 roomActivity.name,
                 roomActivity.description,
                 roomActivity.color,
@@ -181,7 +180,8 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
     }
 
     private static Tag mapToEntityTag(final com.josemgu91.habittune.data.room.model.Tag roomTag) {
-        return new com.josemgu91.habittune.domain.entities.Tag(
+        return new Tag(
+                String.valueOf(roomTag.id),
                 roomTag.name
         );
     }

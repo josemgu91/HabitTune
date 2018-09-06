@@ -44,7 +44,7 @@ public class GetTags extends AbstractUseCase<Void, LiveData<List<GetTags.Output>
     public GetTags(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, TagDataGateway tagDataGateway) {
         super(outputExecutor, useCaseExecutor);
         this.tagDataGateway = tagDataGateway;
-        this.listMapper = new ListMapper<>(input -> new Output(input.getName()));
+        this.listMapper = new ListMapper<>(input -> new Output(input.getId(), input.getName()));
     }
 
     @Override
@@ -62,10 +62,16 @@ public class GetTags extends AbstractUseCase<Void, LiveData<List<GetTags.Output>
 
     public static final class Output {
 
+        private final String id;
         private final String name;
 
-        public Output(String name) {
+        public Output(String id, String name) {
+            this.id = id;
             this.name = name;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getName() {
@@ -77,19 +83,20 @@ public class GetTags extends AbstractUseCase<Void, LiveData<List<GetTags.Output>
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Output output = (Output) o;
-            return Objects.equals(name, output.name);
+            return Objects.equals(id, output.id) &&
+                    Objects.equals(name, output.name);
         }
 
         @Override
         public int hashCode() {
-
-            return Objects.hash(name);
+            return Objects.hash(id, name);
         }
 
         @Override
         public String toString() {
             return "Output{" +
-                    "name='" + name + '\'' +
+                    "id='" + id + '\'' +
+                    ", name='" + name + '\'' +
                     '}';
         }
     }

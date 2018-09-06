@@ -43,7 +43,7 @@ public class DeleteTag extends AbstractUseCase<DeleteTag.Input, Void> {
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Void> output) {
         output.inProgress();
         try {
-            final boolean tagDeleted = tagDataGateway.deleteTagByName(input.name);
+            final boolean tagDeleted = tagDataGateway.deleteTagById(input.id);
             if (tagDeleted) {
                 output.onSuccess(null);
             } else {
@@ -56,14 +56,10 @@ public class DeleteTag extends AbstractUseCase<DeleteTag.Input, Void> {
     }
 
     public static final class Input {
-        private final String name;
+        private final String id;
 
-        public Input(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
+        public Input(String id) {
+            this.id = id;
         }
 
         @Override
@@ -71,18 +67,18 @@ public class DeleteTag extends AbstractUseCase<DeleteTag.Input, Void> {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Input input = (Input) o;
-            return Objects.equals(name, input.name);
+            return Objects.equals(id, input.id);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(name);
+            return Objects.hash(id);
         }
 
         @Override
         public String toString() {
             return "Input{" +
-                    "name='" + name + '\'' +
+                    "id='" + id + '\'' +
                     '}';
         }
     }

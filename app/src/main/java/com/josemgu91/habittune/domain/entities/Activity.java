@@ -24,16 +24,22 @@ import java.util.Objects;
 
 public class Activity {
 
+    private final String id;
     private final String name;
     private final String description;
     private final int color;
     private final List<Tag> tags;
 
-    public Activity(String name, String description, int color, List<Tag> tags) {
+    public Activity(String id, String name, String description, int color, List<Tag> tags) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.color = color;
         this.tags = tags;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -58,6 +64,7 @@ public class Activity {
         if (o == null || getClass() != o.getClass()) return false;
         Activity activity = (Activity) o;
         return color == activity.color &&
+                Objects.equals(id, activity.id) &&
                 Objects.equals(name, activity.name) &&
                 Objects.equals(description, activity.description) &&
                 Objects.equals(tags, activity.tags);
@@ -65,13 +72,14 @@ public class Activity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, color, tags);
+        return Objects.hash(id, name, description, color, tags);
     }
 
     @Override
     public String toString() {
         return "Activity{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", color=" + color +
                 ", tags=" + tags +

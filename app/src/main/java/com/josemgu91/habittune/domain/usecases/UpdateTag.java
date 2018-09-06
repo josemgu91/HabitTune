@@ -45,8 +45,10 @@ public class UpdateTag extends AbstractUseCase<UpdateTag.Input, Void> {
         output.inProgress();
         try {
             final boolean tagUpdated = tagDataGateway.updateTag(
-                    new Tag(input.currentTagName),
-                    new Tag(input.updatedTagName)
+                    new Tag(
+                            input.tagId,
+                            input.tagNewName
+                    )
             );
             if (tagUpdated) {
                 output.onSuccess(null);
@@ -61,20 +63,12 @@ public class UpdateTag extends AbstractUseCase<UpdateTag.Input, Void> {
 
     public static class Input {
 
-        private final String currentTagName;
-        private final String updatedTagName;
+        private final String tagId;
+        private final String tagNewName;
 
-        public Input(String currentTagName, String updatedTagName) {
-            this.currentTagName = currentTagName;
-            this.updatedTagName = updatedTagName;
-        }
-
-        public String getCurrentTagName() {
-            return currentTagName;
-        }
-
-        public String getUpdatedTagName() {
-            return updatedTagName;
+        public Input(String tagId, String tagNewName) {
+            this.tagId = tagId;
+            this.tagNewName = tagNewName;
         }
 
         @Override
@@ -82,21 +76,20 @@ public class UpdateTag extends AbstractUseCase<UpdateTag.Input, Void> {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Input input = (Input) o;
-            return Objects.equals(currentTagName, input.currentTagName) &&
-                    Objects.equals(updatedTagName, input.updatedTagName);
+            return Objects.equals(tagId, input.tagId) &&
+                    Objects.equals(tagNewName, input.tagNewName);
         }
 
         @Override
         public int hashCode() {
-
-            return Objects.hash(currentTagName, updatedTagName);
+            return Objects.hash(tagId, tagNewName);
         }
 
         @Override
         public String toString() {
             return "Input{" +
-                    "currentTagName='" + currentTagName + '\'' +
-                    ", updatedTagName='" + updatedTagName + '\'' +
+                    "tagId='" + tagId + '\'' +
+                    ", tagNewName='" + tagNewName + '\'' +
                     '}';
         }
     }
