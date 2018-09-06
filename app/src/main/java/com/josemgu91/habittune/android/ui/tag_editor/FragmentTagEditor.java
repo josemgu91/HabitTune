@@ -72,28 +72,17 @@ public class FragmentTagEditor extends Fragment {
     private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletionDialog";
 
     private final static String SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE = "tagIdToDelete";
+    public final static String SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS = "selectedTagsIds";
 
     private String tagIdToDelete;
 
     private List<GetTags.Output> tags;
 
-    public final static String ARGUMENT_SELECTED_TAGS = "selectedTags";
-    private List<String> selectedTags;
-
     private SharedViewModelTagEditor sharedViewModelTagEditor;
-
-    public static FragmentTagEditor newInstance(final List<String> selectedTags) {
-        Bundle args = new Bundle();
-        args.putStringArrayList(ARGUMENT_SELECTED_TAGS, new ArrayList<>(selectedTags));
-        FragmentTagEditor fragment = new FragmentTagEditor();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        selectedTags = getArguments().getStringArrayList(ARGUMENT_SELECTED_TAGS);
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
@@ -105,7 +94,7 @@ public class FragmentTagEditor extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            tagIdToDelete = savedInstanceState.getString(SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE);
+            onRestoreInstanceState(savedInstanceState);
         }
         viewModelTagEditor.fetchTags();
         fragmentManager = getFragmentManager();
@@ -119,10 +108,22 @@ public class FragmentTagEditor extends Fragment {
         });
     }
 
+    private void onRestoreInstanceState(Bundle savedInstanceState) {
+        tagIdToDelete = savedInstanceState.getString(SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE);
+        final List<String> lastSelectedTagIds = savedInstanceState.getStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS);
+        if (lastSelectedTagIds != null) {
+            sharedViewModelTagEditor.setSelectedTagIds(lastSelectedTagIds);
+        }
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE, tagIdToDelete);
+        final List<String> lastSelectedTagIds = recyclerViewTagsAdapter.getSelectedTagsIds();
+        if (lastSelectedTagIds != null) {
+            outState.putStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS, new ArrayList<>(lastSelectedTagIds));
+        }
     }
 
     @Nullable

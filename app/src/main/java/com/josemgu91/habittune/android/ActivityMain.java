@@ -44,8 +44,6 @@ import com.zhuinden.simplestack.History;
 import com.zhuinden.simplestack.StateChange;
 import com.zhuinden.simplestack.StateChanger;
 
-import java.util.List;
-
 public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentInteractionListener, StateChanger {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -217,8 +215,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void navigateToFragmentTagEditor(final List<String> selectedTags) {
-        backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createTagEditorKey(selectedTags));
+    public void navigateToFragmentTagEditor() {
+        backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createTagEditorKey());
     }
 
     @Override

@@ -19,7 +19,6 @@
 
 package com.josemgu91.habittune.android.navigation;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.josemgu91.habittune.android.FragmentHelp;
@@ -30,9 +29,6 @@ import com.josemgu91.habittune.android.FragmentStatistics;
 import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
 import com.josemgu91.habittune.android.ui.new_activity.FragmentNewActivity;
 import com.josemgu91.habittune.android.ui.tag_editor.FragmentTagEditor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FragmentKeyFactory {
 
@@ -66,10 +62,8 @@ public class FragmentKeyFactory {
         return new FragmentKey(FRAGMENT_TAG_NEW_ACTIVITY, null);
     }
 
-    public FragmentKey createTagEditorKey(final List<String> selectedTags) {
-        final Bundle arguments = new Bundle();
-        arguments.putStringArrayList(FragmentTagEditor.ARGUMENT_SELECTED_TAGS, new ArrayList<>(selectedTags));
-        return new FragmentKey(FRAGMENT_TAG_TAG_EDITOR, arguments);
+    public FragmentKey createTagEditorKey() {
+        return new FragmentKey(FRAGMENT_TAG_TAG_EDITOR, null);
     }
 
     public FragmentKey createSettingsKey() {
@@ -98,7 +92,7 @@ public class FragmentKeyFactory {
                 case FRAGMENT_TAG_NEW_ACTIVITY:
                     return new FragmentNewActivity();
                 case FRAGMENT_TAG_TAG_EDITOR:
-                    return FragmentTagEditor.newInstance(fragmentKey.getArguments().getStringArrayList(FragmentTagEditor.ARGUMENT_SELECTED_TAGS));
+                    return new FragmentTagEditor();
                 default:
                     throw new RuntimeException("Unknown fragment tag!");
             }

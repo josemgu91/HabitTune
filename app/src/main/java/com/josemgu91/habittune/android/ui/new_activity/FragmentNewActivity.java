@@ -47,7 +47,6 @@ import com.josemgu91.habittune.android.ui.tag_editor.SharedViewModelTagEditor;
 import com.josemgu91.habittune.databinding.FragmentNewActivityBinding;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentNewActivity extends Fragment implements ColorPickerDialogListener {
@@ -116,7 +115,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
         //TODO: Add the selected tags.
         fragmentNewActivityBinding.editTextActivityTags.setOnClickListener(v -> {
             sharedViewModelTagEditor.setSelectedTagIds("1", "2", "3");
-            fragmentInteractionListener.navigateToFragmentTagEditor(new ArrayList<>());
+            fragmentInteractionListener.navigateToFragmentTagEditor();
         });
         return fragmentNewActivityBinding.getRoot();
     }
