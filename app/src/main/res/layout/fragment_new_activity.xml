@@ -57,7 +57,7 @@
             android:padding="4dp"
             android:text="@string/new_activity_label_activity_color"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            app:layout_constraintBottom_toTopOf="@+id/editTextActivityTags"
+            app:layout_constraintBottom_toTopOf="@+id/textViewActivityTags"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextActivityDescription" />
 
@@ -71,18 +71,20 @@
             android:ems="10"
             android:hint="@string/new_activity_hint_activity_color"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/editTextActivityTags"
+            app:layout_constraintBottom_toTopOf="@+id/textViewActivityTags"
             app:layout_constraintStart_toEndOf="@+id/textViewColor"
             app:layout_constraintTop_toBottomOf="@+id/editTextActivityDescription"
             tools:background="@color/secondary" />
 
-        <EditText
-            android:id="@+id/editTextActivityTags"
+        <TextView
+            android:id="@+id/textViewActivityTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="?attr/editTextBackground"
             android:hint="@string/new_activity_hint_activity_tags"
-            android:inputType="textPersonName"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textColor="?attr/editTextColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/barrierColorBottom" />
 

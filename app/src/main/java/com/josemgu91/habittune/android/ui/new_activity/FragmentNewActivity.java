@@ -113,8 +113,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
         fragmentNewActivityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_activity, container, false);
         fragmentNewActivityBinding.viewColor.setBackgroundColor(selectedColor);
         //TODO: Add the selected tags.
-        fragmentNewActivityBinding.editTextActivityTags.setOnClickListener(v -> {
-            sharedViewModelTagEditor.setSelectedTagIds("1", "2", "3");
+        fragmentNewActivityBinding.textViewActivityTags.setOnClickListener(v -> {
             fragmentInteractionListener.navigateToFragmentTagEditor();
         });
         return fragmentNewActivityBinding.getRoot();
