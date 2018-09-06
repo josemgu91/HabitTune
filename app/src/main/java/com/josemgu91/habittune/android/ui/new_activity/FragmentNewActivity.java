@@ -19,7 +19,6 @@
 
 package com.josemgu91.habittune.android.ui.new_activity;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -29,7 +28,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,11 +40,14 @@ import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
+import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.android.ui.tag_editor.SharedViewModelTagEditor;
 import com.josemgu91.habittune.databinding.FragmentNewActivityBinding;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
+import com.josemgu91.habittune.domain.usecases.GetTags;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentNewActivity extends Fragment implements ColorPickerDialogListener {
@@ -66,6 +67,8 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
 
     private SharedViewModelTagEditor sharedViewModelTagEditor;
 
+    public final static String SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS = "selectedTagsIds";
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -83,13 +86,23 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
         if (savedInstanceState == null) {
             selectedColor = defaultColor;
         } else {
-            selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
+            onRestoreInstanceState(savedInstanceState);
         }
         colorPickerDialog = (ColorPickerDialog) getActivity().getFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
         if (colorPickerDialog == null) {
             colorPickerDialog = ColorPickerDialog.newBuilder().setColor(selectedColor).create();
         }
         colorPickerDialog.setColorPickerDialogListener(this);
+    }
+
+    public void onRestoreInstanceState(final Bundle savedInstanceState) {
+        selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, selectedColor);
     }
 
     @Override
@@ -128,22 +141,24 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     @Override
     public void onResume() {
         super.onResume();
-        sharedViewModelTagEditor.getSelectedTagIds().observe(this, new Observer<List<String>>() {
-            @Override
-            public void onChanged(@Nullable List<String> strings) {
-                Log.d("FragmentNewActivity", strings.toString());
-            }
+        sharedViewModelTagEditor.getSelectedTagIds().observe(this, tagIds -> {
+            viewModelNewActivity.getTags(tagIds);
+            viewModelNewActivity.getGetTagsResponse().observe(this, response -> {
+                if (response.status == Response.Status.SUCCESS) {
+                    response.successData.observe(this, outputs -> {
+                        final List<String> tagNames = new ArrayList<>();
+                        for (final GetTags.Output output : outputs) {
+                            tagNames.add(output.getName());
+                        }
+                        showTagNames(tagNames);
+                    });
+                }
+            });
         });
         if (fragmentInteractionListener != null) {
             fragmentInteractionListener.updateToolbar(getString(R.string.new_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
             fragmentInteractionListener.updateNavigationDrawer(false);
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, selectedColor);
     }
 
     @Override
@@ -157,6 +172,18 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     @Override
     public void onDialogDismissed(int dialogId) {
 
+    }
+
+    private void showTagNames(final List<String> tagNames) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (final String tagName : tagNames) {
+            if (stringBuilder.length() == 0) {
+                stringBuilder.append(tagName);
+            } else {
+                stringBuilder.append(", ").append(tagName);
+            }
+        }
+        fragmentNewActivityBinding.textViewActivityTags.setText(stringBuilder.toString());
     }
 
     private void createActivity() {

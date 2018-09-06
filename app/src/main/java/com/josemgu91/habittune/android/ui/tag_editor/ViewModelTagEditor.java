@@ -57,7 +57,7 @@ public class ViewModelTagEditor extends ViewModel {
     }
 
     public void fetchTags() {
-        getTags.execute(null, new UseCaseOutput<LiveData<List<GetTags.Output>>>() {
+        getTags.execute(new GetTags.Input(GetTags.Input.ALL, null), new UseCaseOutput<LiveData<List<GetTags.Output>>>() {
             @Override
             public void onSuccess(@Nullable LiveData<List<GetTags.Output>> listLiveData) {
                 getTagsResponse.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));

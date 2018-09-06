@@ -108,6 +108,20 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
         }
     }
 
+    @NonNull
+    @Override
+    public LiveData<List<Tag>> subscribeToTagsByIds(List<String> tagIds) throws DataGatewayException {
+        final long[] ids = new long[tagIds.size()];
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = Long.valueOf(tagIds.get(i));
+        }
+        try {
+            return Transformations.map(localRoomDatabase.getTagDao().subscribeToTagsByIds(ids), input -> mapList(input, RoomRepository::mapToEntityTag));
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
     @Override
     public boolean createTag(@NonNull Tag tag) throws DataGatewayException {
         try {

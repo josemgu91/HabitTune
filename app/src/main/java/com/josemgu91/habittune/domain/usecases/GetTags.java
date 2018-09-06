@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-public class GetTags extends AbstractUseCase<Void, LiveData<List<GetTags.Output>>> {
+public class GetTags extends AbstractUseCase<GetTags.Input, LiveData<List<GetTags.Output>>> {
 
     private final TagDataGateway tagDataGateway;
     private final Function<List<Tag>, List<Output>> listMapper;
@@ -48,15 +48,59 @@ public class GetTags extends AbstractUseCase<Void, LiveData<List<GetTags.Output>
     }
 
     @Override
-    protected void executeUseCase(@Nullable Void aVoid, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
+    protected void executeUseCase(@Nullable GetTags.Input input, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
         output.inProgress();
         try {
-            final LiveData<List<Tag>> result = tagDataGateway.subscribeToAllTags();
+            final LiveData<List<Tag>> result;
+            if (input.type == Input.ALL) {
+                result = tagDataGateway.subscribeToAllTags();
+            } else if (input.type == Input.BY_IDS) {
+                result = tagDataGateway.subscribeToTagsByIds(input.ids);
+            } else {
+                output.onError();
+                return;
+            }
             final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
             output.onSuccess(outputLiveData);
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.onError();
+        }
+    }
+
+    public static final class Input {
+
+        public final static int ALL = 1;
+        public final static int BY_IDS = 2;
+
+        public Input(int type, @Nullable List<String> ids) {
+            this.type = type;
+            this.ids = ids;
+        }
+
+        private final int type;
+        private final List<String> ids;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Input input = (Input) o;
+            return type == input.type &&
+                    Objects.equals(ids, input.ids);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(type, ids);
+        }
+
+        @Override
+        public String toString() {
+            return "Input{" +
+                    "type=" + type +
+                    ", ids=" + ids +
+                    '}';
         }
     }
 
