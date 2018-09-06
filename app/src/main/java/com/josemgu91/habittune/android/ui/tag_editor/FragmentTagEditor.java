@@ -84,6 +84,8 @@ public class FragmentTagEditor extends Fragment {
     public final static String ARGUMENT_SELECTED_TAGS = "selectedTags";
     private List<String> selectedTags;
 
+    private SharedViewModelTagEditor sharedViewModelTagEditor;
+
     public static FragmentTagEditor newInstance(final List<String> selectedTags) {
         Bundle args = new Bundle();
         args.putStringArrayList(ARGUMENT_SELECTED_TAGS, new ArrayList<>(selectedTags));
@@ -99,6 +101,7 @@ public class FragmentTagEditor extends Fragment {
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
+        sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
         inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -231,6 +234,7 @@ public class FragmentTagEditor extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        sharedViewModelTagEditor.setSelectedTagIds("Test1", "Test2", "Test3");
         fragmentInteractionListener.hideToolbarTextInput();
     }
 

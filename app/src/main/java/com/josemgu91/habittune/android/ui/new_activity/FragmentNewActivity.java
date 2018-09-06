@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android.ui.new_activity;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -28,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,10 +43,12 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
+import com.josemgu91.habittune.android.ui.tag_editor.SharedViewModelTagEditor;
 import com.josemgu91.habittune.databinding.FragmentNewActivityBinding;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FragmentNewActivity extends Fragment implements ColorPickerDialogListener {
 
@@ -61,6 +65,8 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     @ColorInt
     private int selectedColor;
 
+    private SharedViewModelTagEditor sharedViewModelTagEditor;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -68,6 +74,7 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
         defaultColor = ContextCompat.getColor(context, R.color.secondary);
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelNewActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelNewActivity.class);
+        sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
     }
 
     @Override
@@ -120,6 +127,12 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     @Override
     public void onResume() {
         super.onResume();
+        sharedViewModelTagEditor.getSelectedTagIds().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(@Nullable List<String> strings) {
+                Log.d("FragmentNewActivity", strings.toString());
+            }
+        });
         if (fragmentInteractionListener != null) {
             fragmentInteractionListener.updateToolbar(getString(R.string.new_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
             fragmentInteractionListener.updateNavigationDrawer(false);
