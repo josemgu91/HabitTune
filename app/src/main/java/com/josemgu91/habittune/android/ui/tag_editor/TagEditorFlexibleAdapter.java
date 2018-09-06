@@ -94,17 +94,6 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         isShowingCreateTagItem = false;
     }
 
-    /*private void onTagItemSelectionChange(final int position, final boolean selected, final View view) {
-        if (selected) {
-            addSelection(position);
-        } else {
-            removeSelection(position);
-        }
-        if (onTagSelectionChangeListener != null) {
-            onTagSelectionChangeListener.onTagSelectionChange(selected, position, view);
-        }
-    }*/
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -244,7 +233,13 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
                 checkBoxTagSelection.setOnClickListener(v -> {
                     mAdapter.toggleSelection(getAdapterPosition());
                     toggleActivation();
-                    //tagEditorFlexibleAdapter.onTagItemSelectionChange(getAdapterPosition(), checkBoxTagSelection.isSelected(), v);
+                    if (tagEditorFlexibleAdapter.onTagSelectionChangeListener != null) {
+                        tagEditorFlexibleAdapter.onTagSelectionChangeListener.onTagSelectionChange(
+                                checkBoxTagSelection.isChecked(),
+                                getAdapterPosition(),
+                                v
+                        );
+                    }
                 });
                 editTextTagName = view.findViewById(R.id.editTextTagName);
                 editTextTagName.setOnFocusChangeListener((v, hasFocus) -> {
