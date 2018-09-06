@@ -19,17 +19,14 @@
 
 package com.josemgu91.habittune.android.ui.tag_editor;
 
-import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -214,7 +211,7 @@ public class FragmentTagEditor extends Fragment {
                 tagDeletionConfirmationDialog.show(fragmentManager, FRAGMENT_TAG_DELETION_DIALOG);
                 final TagEditorFlexibleAdapter.TagItem tagItem = (TagEditorFlexibleAdapter.TagItem) recyclerViewTagsAdapter.getItem(position);
                 tagIdToDelete = tagItem.getTagId();
-                tagDeletionConfirmationDialog.setOnCancelClickListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
+                tagDeletionConfirmationDialog.setOnCancelListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
             }
 
             @Override
@@ -242,55 +239,12 @@ public class FragmentTagEditor extends Fragment {
         }
         recyclerViewTagsAdapter.clear();
         recyclerViewTagsAdapter.updateDataSet(tagItems);
+        sharedViewModelTagEditor.getSelectedTagIds().observe(this, ids -> recyclerViewTagsAdapter.setSelectedTags(ids));
     }
 
     private void createTagAndClearAndDismissKeyboard(final String tagName) {
         viewModelTagEditor.createTag(tagName);
         toolbarEditText.getText().clear();
         inputMethodManager.hideSoftInputFromWindow(toolbarEditText.getWindowToken(), 0);
-    }
-
-    public static class TagDeletionConfirmationDialog extends DialogFragment {
-
-        private OnDeleteClickListener onDeleteClickListener;
-        private OnCancelClickListener onCancelClickListener;
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog
-                    .Builder(getContext())
-                    .setTitle(R.string.tag_editor_delete_dialog_title)
-                    .setMessage(R.string.tag_editor_delete_dialog_content)
-                    .setPositiveButton(R.string.action_delete, (dialog, which) -> {
-                        if (onDeleteClickListener != null) {
-                            onDeleteClickListener.onDeleteClick();
-                        }
-                    })
-                    .setNegativeButton(R.string.action_cancel, (dialog, which) -> {
-                        if (onCancelClickListener != null) {
-                            onCancelClickListener.onCancelClick();
-                        }
-                    })
-                    .create();
-        }
-
-        public void setOnDeleteClickListener(OnDeleteClickListener onDeleteClickListener) {
-            this.onDeleteClickListener = onDeleteClickListener;
-        }
-
-        public void setOnCancelClickListener(OnCancelClickListener onCancelClickListener) {
-            this.onCancelClickListener = onCancelClickListener;
-        }
-
-        public interface OnDeleteClickListener {
-
-            void onDeleteClick();
-        }
-
-        public interface OnCancelClickListener {
-
-            void onCancelClick();
-        }
     }
 }

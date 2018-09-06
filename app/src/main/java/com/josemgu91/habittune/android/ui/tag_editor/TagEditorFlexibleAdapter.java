@@ -104,6 +104,19 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         return ids;
     }
 
+    public void setSelectedTags(List<String> tagIds) {
+        for (final IFlexible item : getCurrentItems()) {
+            if (!(item instanceof TagItem)) {
+                continue;
+            }
+            final TagItem tagItem = (TagItem) item;
+            if (!tagIds.contains(tagItem.tagId)) {
+                continue;
+            }
+            toggleSelection(getCardinalPositionOf(tagItem));
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
