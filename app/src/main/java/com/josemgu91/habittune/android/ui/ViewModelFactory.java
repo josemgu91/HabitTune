@@ -49,6 +49,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(ViewModelTagEditor.class)) {
             return (T) new ViewModelTagEditor(useCaseFactory.createGetTags(), useCaseFactory.createCreateTag(), useCaseFactory.createDeleteTag(), useCaseFactory.createUpdateTag());
         }
-        throw new RuntimeException("Unknown ViewModel class");
+        try {
+            return modelClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Unknown ViewModel class");
+        }
     }
 }

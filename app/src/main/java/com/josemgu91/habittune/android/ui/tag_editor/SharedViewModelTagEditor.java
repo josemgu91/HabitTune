@@ -20,11 +20,12 @@
 package com.josemgu91.habittune.android.ui.tag_editor;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SharedViewModelTagEditor {
+public class SharedViewModelTagEditor extends ViewModel {
 
     private final MutableLiveData<List<String>> selectedTagIds;
 
