@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
@@ -92,6 +93,15 @@ public class TagEditorFlexibleAdapter extends FlexibleAdapter<IFlexible> {
         }
         removeItemsOfType(createTagItem.getItemViewType());
         isShowingCreateTagItem = false;
+    }
+
+    public List<String> getSelectedTagsIds() {
+        final List<String> ids = new ArrayList<>();
+        for (final int position : getSelectedPositions()) {
+            final TagItem tagItem = (TagItem) getItem(position);
+            ids.add(tagItem.tagId);
+        }
+        return ids;
     }
 
     @Override

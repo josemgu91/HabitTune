@@ -41,7 +41,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
@@ -209,12 +208,6 @@ public class FragmentTagEditor extends Fragment {
             }
             viewModelTagEditor.updateTag(tagId, newName);
         });
-        recyclerViewTagsAdapter.setOnTagSelectionChangeListener(new TagEditorFlexibleAdapter.OnTagSelectionChangeListener() {
-            @Override
-            public void onTagSelectionChange(boolean selected, int position, View view) {
-                Toast.makeText(getContext(), "Selected tag: " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
         recyclerViewTagsAdapter.addListener(new FlexibleAdapter.OnItemSwipeListener() {
             @Override
             public void onItemSwipe(int position, int direction) {
@@ -234,7 +227,7 @@ public class FragmentTagEditor extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        sharedViewModelTagEditor.setSelectedTagIds("Test1", "Test2", "Test3");
+        sharedViewModelTagEditor.setSelectedTagIds(recyclerViewTagsAdapter.getSelectedTagsIds());
         fragmentInteractionListener.hideToolbarTextInput();
     }
 

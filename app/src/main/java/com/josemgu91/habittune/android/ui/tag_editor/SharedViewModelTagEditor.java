@@ -33,6 +33,10 @@ public class SharedViewModelTagEditor extends ViewModel {
         this.selectedTagIds = new MutableLiveData<>();
     }
 
+    public void setSelectedTagIds(List<String> selectedTagIds) {
+        this.selectedTagIds.setValue(selectedTagIds);
+    }
+
     public void setSelectedTagIds(String... selectedTagIds) {
         this.selectedTagIds.setValue(Arrays.asList(selectedTagIds));
     }
