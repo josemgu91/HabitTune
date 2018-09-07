@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +39,7 @@ import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
+import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.android.ui.tag_editor.SharedViewModelTagEditor;
@@ -50,11 +50,10 @@ import com.josemgu91.habittune.domain.usecases.GetTags;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentNewActivity extends Fragment implements ColorPickerDialogListener {
+public class FragmentNewActivity extends BaseFragment implements ColorPickerDialogListener {
 
     private ViewModelNewActivity viewModelNewActivity;
     private FragmentNewActivityBinding fragmentNewActivityBinding;
-    private FragmentInteractionListener fragmentInteractionListener;
     private ColorPickerDialog colorPickerDialog;
 
     private final static String FRAGMENT_TAG_COLOR_PICKER = "colorPickerDialog";
@@ -72,7 +71,6 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         defaultColor = ContextCompat.getColor(context, R.color.secondary);
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelNewActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelNewActivity.class);
@@ -157,10 +155,8 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
                 }
             });
         });
-        if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateToolbar(getString(R.string.new_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
-            fragmentInteractionListener.updateNavigationDrawer(false);
-        }
+        fragmentInteractionListener.updateToolbar(getString(R.string.new_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
+        fragmentInteractionListener.updateNavigationDrawer(false);
     }
 
     @Override

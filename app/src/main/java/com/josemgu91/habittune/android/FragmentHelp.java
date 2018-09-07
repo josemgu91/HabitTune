@@ -19,26 +19,17 @@
 
 package com.josemgu91.habittune.android;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.ui.BaseFragment;
 
-public class FragmentHelp extends Fragment {
-
-    private FragmentInteractionListener fragmentInteractionListener;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        fragmentInteractionListener = (FragmentInteractionListener) getActivity();
-    }
+public class FragmentHelp extends BaseFragment {
 
     @Nullable
     @Override
@@ -49,9 +40,7 @@ public class FragmentHelp extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (fragmentInteractionListener != null) {
-            fragmentInteractionListener.updateToolbar(getString(R.string.help_title), FragmentInteractionListener.IC_NAVIGATION_UP);
-            fragmentInteractionListener.updateNavigationDrawer(false);
-        }
+        fragmentInteractionListener.updateToolbar(getString(R.string.help_title), FragmentInteractionListener.IC_NAVIGATION_UP);
+        fragmentInteractionListener.updateNavigationDrawer(false);
     }
 }

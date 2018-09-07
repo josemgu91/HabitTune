@@ -25,7 +25,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +39,7 @@ import android.widget.Toast;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
+import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
@@ -47,9 +47,8 @@ import com.josemgu91.habittune.domain.usecases.GetActivities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentActivities extends Fragment {
+public class FragmentActivities extends BaseFragment {
 
-    private FragmentInteractionListener fragmentInteractionListener;
     private ViewModelActivities viewModelActivities;
 
     private FragmentActivitiesBinding fragmentActivitiesBinding;
@@ -59,7 +58,6 @@ public class FragmentActivities extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelActivities = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivities.class);
     }

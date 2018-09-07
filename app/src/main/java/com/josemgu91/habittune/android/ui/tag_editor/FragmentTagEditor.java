@@ -25,7 +25,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +41,7 @@ import android.widget.EditText;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
+import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
 import com.josemgu91.habittune.databinding.FragmentTagEditorBinding;
 import com.josemgu91.habittune.domain.usecases.GetTags;
@@ -54,10 +54,9 @@ import eu.davidea.flexibleadapter.SelectableAdapter;
 import eu.davidea.flexibleadapter.helpers.ItemTouchHelperCallback;
 import eu.davidea.flexibleadapter.items.IFlexible;
 
-public class FragmentTagEditor extends Fragment {
+public class FragmentTagEditor extends BaseFragment {
 
     private FragmentTagEditorBinding fragmentTagEditorBinding;
-    private FragmentInteractionListener fragmentInteractionListener;
     private ViewModelTagEditor viewModelTagEditor;
 
     private TagEditorFlexibleAdapter recyclerViewTagsAdapter;
@@ -83,7 +82,6 @@ public class FragmentTagEditor extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         final ViewModelFactory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
         sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
