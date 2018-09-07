@@ -21,11 +21,17 @@ package com.josemgu91.habittune.android.ui.tag_editor;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.os.Bundle;
 
+import com.josemgu91.habittune.android.ui.RestorableViewModel;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SharedViewModelTagEditor extends ViewModel {
+public class SharedViewModelTagEditor extends ViewModel implements RestorableViewModel {
+
+    public final static String SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS = "selectedTagsIds";
 
     private final MutableLiveData<List<String>> selectedTagIds;
 
@@ -43,5 +49,23 @@ public class SharedViewModelTagEditor extends ViewModel {
 
     public MutableLiveData<List<String>> getSelectedTagIds() {
         return selectedTagIds;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (selectedTagIds.getValue() == null) {
+            return;
+        }
+        final ArrayList<String> lastSelectedTagIds = new ArrayList<>(selectedTagIds.getValue());
+        outState.putStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS, new ArrayList<>(lastSelectedTagIds));
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        final List<String> lastSelectedTagIds = savedInstanceState.getStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS);
+        if (lastSelectedTagIds == null) {
+            return;
+        }
+        selectedTagIds.setValue(lastSelectedTagIds);
     }
 }

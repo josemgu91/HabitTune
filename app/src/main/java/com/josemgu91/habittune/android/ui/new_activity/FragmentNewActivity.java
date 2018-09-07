@@ -97,12 +97,14 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
 
     public void onRestoreInstanceState(final Bundle savedInstanceState) {
         selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
+        sharedViewModelTagEditor.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, selectedColor);
+        sharedViewModelTagEditor.onSaveInstanceState(outState);
     }
 
     @Override
@@ -159,6 +161,11 @@ public class FragmentNewActivity extends Fragment implements ColorPickerDialogLi
             fragmentInteractionListener.updateToolbar(getString(R.string.new_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
             fragmentInteractionListener.updateNavigationDrawer(false);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override

@@ -168,6 +168,7 @@ public class FragmentActivities extends Fragment {
     }
 
     private void onFloatingActionButtonClick() {
+
         fragmentInteractionListener.navigateToFragmentNewActivity();
     }
 
