@@ -22,28 +22,36 @@ package com.josemgu91.habittune.android.ui.new_activity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.android.ui.RestorableViewModel;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ViewModelNewActivity extends ViewModel {
+public class ViewModelNewActivity extends ViewModel implements RestorableViewModel {
+
+    private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
+    private final static String SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS = "selectedTagsIds";
 
     private final CreateActivity createActivity;
     private final GetTags getTags;
 
     private final MutableLiveData<Response<Void, Void>> createActivityResponse;
     private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getTagsResponse;
+    private final MutableLiveData<Integer> selectedColor;
 
     public ViewModelNewActivity(final CreateActivity createActivity, final GetTags getTags) {
         this.createActivity = createActivity;
         this.getTags = getTags;
         this.createActivityResponse = new MutableLiveData<>();
         this.getTagsResponse = new MutableLiveData<>();
+        this.selectedColor = new MutableLiveData<>();
     }
 
     public void createActivity(final CreateActivity.Input activity) {
@@ -90,5 +98,39 @@ public class ViewModelNewActivity extends ViewModel {
 
     public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getGetTagsResponse() {
         return getTagsResponse;
+    }
+
+    public MutableLiveData<Integer> getSelectedColor() {
+        return selectedColor;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        final int color = selectedColor.getValue();
+        outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, color);
+        if (getTagsResponse.getValue() == null || getTagsResponse.getValue().successData == null) {
+            return;
+        }
+        final List<GetTags.Output> tags = getTagsResponse.getValue().successData.getValue();
+        if (tags == null) {
+            return;
+        }
+        final ArrayList<String> selectedTagIds = new ArrayList<>();
+        for (final GetTags.Output tag : tags) {
+            selectedTagIds.add(tag.getId());
+        }
+        outState.putStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS, selectedTagIds);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        //TODO: This is called for every rotation but should be applied only after a process kill! I'm going to think a better approach.
+        final int color = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
+        selectedColor.setValue(color);
+        final ArrayList<String> selectedTagIds = savedInstanceState.getStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS);
+        if (selectedTagIds == null) {
+            return;
+        }
+        getTags(selectedTagIds);
     }
 }

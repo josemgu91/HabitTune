@@ -108,20 +108,12 @@ public class FragmentTagEditor extends BaseFragment {
 
     private void onRestoreInstanceState(Bundle savedInstanceState) {
         tagIdToDelete = savedInstanceState.getString(SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE);
-        final List<String> lastSelectedTagIds = savedInstanceState.getStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS);
-        if (lastSelectedTagIds != null) {
-            sharedViewModelTagEditor.setSelectedTagIds(lastSelectedTagIds);
-        }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE, tagIdToDelete);
-        final List<String> lastSelectedTagIds = recyclerViewTagsAdapter.getSelectedTagsIds();
-        if (lastSelectedTagIds != null) {
-            outState.putStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS, new ArrayList<>(lastSelectedTagIds));
-        }
     }
 
     @Nullable
@@ -238,7 +230,8 @@ public class FragmentTagEditor extends BaseFragment {
         }
         recyclerViewTagsAdapter.clear();
         recyclerViewTagsAdapter.updateDataSet(tagItems);
-        sharedViewModelTagEditor.getSelectedTagIds().observe(this, ids -> recyclerViewTagsAdapter.setSelectedTags(ids));
+        //sharedViewModelTagEditor.getSelectedTagIds().observe(this, ids -> recyclerViewTagsAdapter.setSelectedTags(ids));
+
     }
 
     private void createTagAndClearAndDismissKeyboard(final String tagName) {

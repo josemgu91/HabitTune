@@ -24,6 +24,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
+import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.TagDataGateway;
@@ -82,12 +83,21 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
     @Override
     public boolean createActivity(@NonNull Activity activity) throws DataGatewayException {
         try {
-            return localRoomDatabase.getActivityDao().insertActivity(new com.josemgu91.habittune.data.room.model.Activity(
+            final long activityId = localRoomDatabase.getActivityDao().insertActivity(new com.josemgu91.habittune.data.room.model.Activity(
                     0,
                     activity.getName(),
                     activity.getDescription(),
                     activity.getColor()
-            )) != 0;
+            ));
+            if (activityId <= 0) {
+                return false;
+            }
+            for (final Tag tag : activity.getTags()) {
+                localRoomDatabase.getActivityTagJoinDao().insertActivityTagJoin(
+                        new ActivityTagJoin(activityId, Long.valueOf(tag.getId()))
+                );
+            }
+            return true;
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
