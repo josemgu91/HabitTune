@@ -19,6 +19,8 @@
 
 package com.josemgu91.habittune.android.ui.routines;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +33,14 @@ import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 
 public class FragmentRoutines extends BaseFragment {
+
+    private ViewModelRoutines viewModelRoutines;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        viewModelRoutines = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutines.class);
+    }
 
     @Nullable
     @Override

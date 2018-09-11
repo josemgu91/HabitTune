@@ -19,7 +19,6 @@
 
 package com.josemgu91.habittune.android.ui.tag_editor;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -40,7 +39,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.josemgu91.habittune.R;
-import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentTagEditorBinding;
@@ -82,7 +80,6 @@ public class FragmentTagEditor extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        final ViewModelProvider.Factory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
         sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
         inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);

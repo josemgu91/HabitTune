@@ -19,7 +19,6 @@
 
 package com.josemgu91.habittune.android.ui.new_activity;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -38,7 +37,6 @@ import android.view.ViewGroup;
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.josemgu91.habittune.R;
-import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.Response;
@@ -69,7 +67,6 @@ public class FragmentNewActivity extends BaseFragment implements ColorPickerDial
     public void onAttach(Context context) {
         super.onAttach(context);
         defaultColor = ContextCompat.getColor(context, R.color.secondary);
-        final ViewModelProvider.Factory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelNewActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelNewActivity.class);
         sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
     }

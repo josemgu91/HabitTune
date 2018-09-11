@@ -21,5 +21,14 @@ package com.josemgu91.habittune.android.ui.routines;
 
 import android.arch.lifecycle.ViewModel;
 
+import com.josemgu91.habittune.domain.usecases.GetRoutines;
+
 public class ViewModelRoutines extends ViewModel {
+
+    private final GetRoutines getRoutines;
+
+    public ViewModelRoutines(GetRoutines getRoutines) {
+        this.getRoutines = getRoutines;
+    }
+
 }

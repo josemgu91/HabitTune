@@ -19,7 +19,6 @@
 
 package com.josemgu91.habittune.android.ui.activities;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -38,7 +37,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
-import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
@@ -58,7 +56,6 @@ public class FragmentActivities extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        final ViewModelProvider.Factory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelActivities = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivities.class);
     }
 

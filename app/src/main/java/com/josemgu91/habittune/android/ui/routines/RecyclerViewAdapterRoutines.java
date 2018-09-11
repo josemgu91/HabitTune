@@ -17,24 +17,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui;
+package com.josemgu91.habittune.android.ui.routines;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.content.Context;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 
-import com.josemgu91.habittune.android.Application;
-import com.josemgu91.habittune.android.FragmentInteractionListener;
+import java.util.List;
 
-public abstract class BaseFragment extends Fragment {
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.IFlexible;
 
-    protected FragmentInteractionListener fragmentInteractionListener;
-    protected ViewModelProvider.Factory viewModelFactory;
+public class RecyclerViewAdapterRoutines extends FlexibleAdapter<IFlexible> {
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        fragmentInteractionListener = (FragmentInteractionListener) getActivity();
-        viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
+    public RecyclerViewAdapterRoutines(@Nullable List<IFlexible> items, @Nullable Object listeners, boolean stableIds) {
+        super(items, listeners, stableIds);
     }
+
 }
