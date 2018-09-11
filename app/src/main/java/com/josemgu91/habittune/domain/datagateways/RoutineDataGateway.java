@@ -19,5 +19,16 @@
 
 package com.josemgu91.habittune.domain.datagateways;
 
+import android.arch.lifecycle.LiveData;
+import android.support.annotation.NonNull;
+
+import com.josemgu91.habittune.domain.entities.Routine;
+
+import java.util.List;
+
 public interface RoutineDataGateway {
+
+    @NonNull
+    LiveData<List<Routine>> subscribeToAllRoutines() throws DataGatewayException;
 }
+
