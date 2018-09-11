@@ -17,8 +17,56 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:text="Routines" />
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="showProgress"
+            type="boolean" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/listMarginBottom"
+            android:paddingEnd="@dimen/listMarginEnd"
+            android:paddingStart="@dimen/listMarginStart"
+            android:paddingTop="@dimen/listMarginTop"
+            android:visibility="@{showProgress ? View.GONE : View.VISIBLE}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/element_routine" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButtonAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/floating_action_button_margin"
+            android:src="@drawable/ic_action_add_white_24dp"
+            android:visibility="@{showProgress ? View.GONE : View.VISIBLE}"
+            app:fabSize="normal"
+            app:layout_anchor="@id/recyclerView"
+            app:layout_anchorGravity="bottom|end" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{showProgress ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
