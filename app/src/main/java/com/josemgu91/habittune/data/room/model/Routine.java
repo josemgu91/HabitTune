@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
@@ -44,6 +45,7 @@ public class Routine {
     public final int color;
     public final int numberOfDays;
 
+    @Ignore
     public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays) {
         this.id = 0;
         this.name = name;

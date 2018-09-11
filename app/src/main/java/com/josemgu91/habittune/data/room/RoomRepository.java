@@ -25,10 +25,8 @@ import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
-import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
-import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
-import com.josemgu91.habittune.domain.datagateways.TagDataGateway;
+import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.entities.Activity;
 import com.josemgu91.habittune.domain.entities.Routine;
 import com.josemgu91.habittune.domain.entities.Tag;
@@ -36,7 +34,7 @@ import com.josemgu91.habittune.domain.entities.Tag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomRepository implements ActivityDataGateway, TagDataGateway, RoutineDataGateway {
+public class RoomRepository implements Repository {
 
     private final LocalRoomDatabase localRoomDatabase;
 

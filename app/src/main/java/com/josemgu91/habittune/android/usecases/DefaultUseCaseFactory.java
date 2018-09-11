@@ -19,11 +19,12 @@
 
 package com.josemgu91.habittune.android.usecases;
 
-import com.josemgu91.habittune.data.room.RoomRepository;
+import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
+import com.josemgu91.habittune.domain.usecases.GetRoutines;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 import com.josemgu91.habittune.domain.usecases.UpdateTag;
 
@@ -33,12 +34,12 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
 
     private final Executor uiThreadExecutor;
     private final Executor defaultThreadPoolExecutor;
-    private final RoomRepository roomRepository;
+    private final Repository repository;
 
-    public DefaultUseCaseFactory(Executor uiThreadExecutor, Executor defaultThreadPoolExecutor, RoomRepository roomRepository) {
+    public DefaultUseCaseFactory(Executor uiThreadExecutor, Executor defaultThreadPoolExecutor, Repository repository) {
         this.uiThreadExecutor = uiThreadExecutor;
         this.defaultThreadPoolExecutor = defaultThreadPoolExecutor;
-        this.roomRepository = roomRepository;
+        this.repository = repository;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
         return new GetActivities(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
-                roomRepository
+                repository
         );
     }
 
@@ -55,7 +56,7 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
         return new CreateActivity(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
-                roomRepository
+                repository
         );
     }
 
@@ -64,7 +65,7 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
         return new GetTags(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
-                roomRepository
+                repository
         );
     }
 
@@ -73,7 +74,7 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
         return new CreateTag(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
-                roomRepository
+                repository
         );
     }
 
@@ -82,7 +83,7 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
         return new DeleteTag(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
-                roomRepository
+                repository
         );
     }
 
@@ -91,7 +92,16 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
         return new UpdateTag(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
-                roomRepository
+                repository
+        );
+    }
+
+    @Override
+    public GetRoutines createGetRoutines() {
+        return new GetRoutines(
+                uiThreadExecutor,
+                defaultThreadPoolExecutor,
+                repository
         );
     }
 }

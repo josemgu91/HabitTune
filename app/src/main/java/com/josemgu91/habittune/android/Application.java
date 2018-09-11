@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.persistence.room.Room;
 
 import com.josemgu91.habittune.android.executors.DefaultThreadPoolExecutor;
@@ -28,6 +29,7 @@ import com.josemgu91.habittune.android.usecases.DefaultUseCaseFactory;
 import com.josemgu91.habittune.android.usecases.UseCaseFactory;
 import com.josemgu91.habittune.data.room.LocalRoomDatabase;
 import com.josemgu91.habittune.data.room.RoomRepository;
+import com.josemgu91.habittune.domain.datagateways.Repository;
 
 import java.util.concurrent.Executor;
 
@@ -37,9 +39,9 @@ public class Application extends android.app.Application {
 
     private Executor uiThreadExecutor;
     private Executor defaultThreadPoolExecutor;
-    private RoomRepository roomRepository;
+    private Repository repository;
     private UseCaseFactory useCaseFactory;
-    private ViewModelFactory viewModelFactory;
+    private ViewModelProvider.Factory viewModelFactory;
 
     @Override
     public void onCreate() {
@@ -52,8 +54,8 @@ public class Application extends android.app.Application {
                         LocalRoomDatabase.class)
                 .openHelperFactory(new RequerySQLiteOpenHelperFactory())
                 .build();
-        roomRepository = new RoomRepository(localRoomDatabase);
-        useCaseFactory = new DefaultUseCaseFactory(uiThreadExecutor, defaultThreadPoolExecutor, roomRepository);
+        repository = new RoomRepository(localRoomDatabase);
+        useCaseFactory = new DefaultUseCaseFactory(uiThreadExecutor, defaultThreadPoolExecutor, repository);
         viewModelFactory = new ViewModelFactory(useCaseFactory);
     }
 
@@ -65,15 +67,15 @@ public class Application extends android.app.Application {
         return defaultThreadPoolExecutor;
     }
 
-    public RoomRepository getRoomRepository() {
-        return roomRepository;
+    public Repository getRepository() {
+        return repository;
     }
 
     public UseCaseFactory getUseCaseFactory() {
         return useCaseFactory;
     }
 
-    public ViewModelFactory getViewModelFactory() {
+    public ViewModelProvider.Factory getViewModelFactory() {
         return viewModelFactory;
     }
 }

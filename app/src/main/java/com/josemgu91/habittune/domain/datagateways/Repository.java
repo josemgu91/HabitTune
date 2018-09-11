@@ -17,30 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.usecases;
+package com.josemgu91.habittune.domain.datagateways;
 
-import com.josemgu91.habittune.domain.usecases.CreateActivity;
-import com.josemgu91.habittune.domain.usecases.CreateTag;
-import com.josemgu91.habittune.domain.usecases.DeleteTag;
-import com.josemgu91.habittune.domain.usecases.GetActivities;
-import com.josemgu91.habittune.domain.usecases.GetRoutines;
-import com.josemgu91.habittune.domain.usecases.GetTags;
-import com.josemgu91.habittune.domain.usecases.UpdateTag;
-
-public interface UseCaseFactory {
-
-    GetActivities createGetActivities();
-
-    CreateActivity createCreateActivity();
-
-    GetTags createGetTags();
-
-    CreateTag createCreateTag();
-
-    DeleteTag createDeleteTag();
-
-    UpdateTag createUpdateTag();
-
-    GetRoutines createGetRoutines();
-
+public interface Repository extends ActivityDataGateway, RoutineDataGateway, TagDataGateway {
 }

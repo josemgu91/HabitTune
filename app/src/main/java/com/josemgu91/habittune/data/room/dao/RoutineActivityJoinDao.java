@@ -19,12 +19,19 @@
 
 package com.josemgu91.habittune.data.room.dao;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
 
+import com.josemgu91.habittune.data.room.model.Activity;
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
 
+import java.util.List;
+
+@Dao
 public interface RoutineActivityJoinDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
@@ -32,5 +39,8 @@ public interface RoutineActivityJoinDao {
 
     @Delete
     int deleteRoutineActivityJoin(final RoutineActivityJoin routineActivityJoin);
+
+    @Query("SELECT activities.id AS `id`, activities.name AS `name`, activities.description AS `description`, activities.color AS `color` FROM activities INNER JOIN routineActivityJoins ON activities.id = routineActivityJoins.activityId WHERE routineActivityJoins.routineId = :routineId")
+    LiveData<List<Activity>> subscribeToAllActivitiesByRoutineId(final long routineId);
 
 }
