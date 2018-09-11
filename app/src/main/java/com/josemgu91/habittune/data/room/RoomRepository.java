@@ -27,14 +27,16 @@ import android.support.annotation.NonNull;
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
+import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
 import com.josemgu91.habittune.domain.datagateways.TagDataGateway;
 import com.josemgu91.habittune.domain.entities.Activity;
+import com.josemgu91.habittune.domain.entities.Routine;
 import com.josemgu91.habittune.domain.entities.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomRepository implements ActivityDataGateway, TagDataGateway {
+public class RoomRepository implements ActivityDataGateway, TagDataGateway, RoutineDataGateway {
 
     private final LocalRoomDatabase localRoomDatabase;
 
@@ -171,6 +173,16 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
         }
     }
 
+    @NonNull
+    @Override
+    public LiveData<List<Routine>> subscribeToAllRoutines() throws DataGatewayException {
+        try {
+            return Transformations.map(localRoomDatabase.getRoutineDao().subscribeToAllRoutines(), input -> mapList(input, RoomRepository::mapToEntityRoutine));
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
         final List<O> outList = new ArrayList<>();
         for (final I element : inList) {
@@ -207,6 +219,16 @@ public class RoomRepository implements ActivityDataGateway, TagDataGateway {
         return new Tag(
                 String.valueOf(roomTag.id),
                 roomTag.name
+        );
+    }
+
+    private static Routine mapToEntityRoutine(final com.josemgu91.habittune.data.room.model.Routine roomRoutine) {
+        return new Routine(
+                String.valueOf(roomRoutine.id),
+                roomRoutine.name,
+                roomRoutine.description,
+                roomRoutine.color,
+                roomRoutine.numberOfDays
         );
     }
 }
