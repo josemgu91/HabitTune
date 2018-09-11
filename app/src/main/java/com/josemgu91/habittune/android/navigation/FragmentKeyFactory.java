@@ -22,7 +22,7 @@ package com.josemgu91.habittune.android.navigation;
 import android.support.v4.app.Fragment;
 
 import com.josemgu91.habittune.android.FragmentHelp;
-import com.josemgu91.habittune.android.FragmentRoutines;
+import com.josemgu91.habittune.android.ui.routines.FragmentRoutines;
 import com.josemgu91.habittune.android.FragmentSchedule;
 import com.josemgu91.habittune.android.FragmentSettings;
 import com.josemgu91.habittune.android.FragmentStatistics;
