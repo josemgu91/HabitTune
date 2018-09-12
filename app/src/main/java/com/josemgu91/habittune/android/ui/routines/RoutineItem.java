@@ -39,6 +39,7 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
     public RoutineItem(String id, String name) {
         this.id = id;
         this.name = name;
+        setSwipeable(true);
     }
 
     public String getId() {
