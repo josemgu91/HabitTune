@@ -49,7 +49,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     def supportLibraryVersion = '27.1.1'
-    def constraintLayoutVersion = '1.1.2'
+    def constraintLayoutVersion = '1.1.3'
     def roomVersion = "1.1.1"
     def lifecycleVersion = "1.1.1"
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
@@ -64,8 +64,6 @@ dependencies {
 
     def sqLiteSupportLibraryVersion = '3.24.0'
     implementation "io.requery:sqlite-android:$sqLiteSupportLibraryVersion"
-    def eventBusVersion = '3.1.1'
-    implementation "org.greenrobot:eventbus:$eventBusVersion"
     def simpleStackVersion = '1.11.2'
     implementation "com.github.Zhuinden:simple-stack:$simpleStackVersion"
     def colorPickerVersion = '1.0.2'
