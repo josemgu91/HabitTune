@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,11 +35,13 @@ import android.view.ViewGroup;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
+import com.josemgu91.habittune.android.ui.common.ConfirmationDialog;
 import com.josemgu91.habittune.databinding.FragmentRoutinesBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.helpers.ItemTouchHelperCallback;
 import eu.davidea.flexibleadapter.items.IFlexible;
 
@@ -50,10 +53,36 @@ public class FragmentRoutines extends BaseFragment {
 
     private RecyclerViewAdapterRoutines recyclerViewAdapterRoutines;
 
+    private ConfirmationDialog deletionConfirmationDialog;
+
+    private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletionDialog";
+
+    private IFlexible itemToDelete;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelRoutines = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutines.class);
+        deletionConfirmationDialog = (ConfirmationDialog) getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DELETION_DIALOG);
+        if (deletionConfirmationDialog == null) {
+            deletionConfirmationDialog = ConfirmationDialog.newInstance(
+                    R.string.routines_delete_dialog_title,
+                    R.string.routines_delete_dialog_content,
+                    R.string.action_delete,
+                    R.string.action_cancel
+            );
+        }
+        deletionConfirmationDialog.setOnPositiveClickListener(() -> delete());
+    }
+
+    private void showDeletionDialog() {
+        deletionConfirmationDialog.show(getFragmentManager(), FRAGMENT_TAG_DELETION_DIALOG);
+    }
+
+    private void delete() {
+        final int position = recyclerViewAdapterRoutines.getGlobalPositionOf(itemToDelete);
+        recyclerViewAdapterRoutines.removeItem(position);
+        itemToDelete = null;
     }
 
     @Nullable
@@ -78,6 +107,20 @@ public class FragmentRoutines extends BaseFragment {
         }
         fragmentRoutinesBinding.setShowProgress(false);
         recyclerViewAdapterRoutines.updateDataSet(generateTestData(100));
+        recyclerViewAdapterRoutines.addListener(new FlexibleAdapter.OnItemSwipeListener() {
+            @Override
+            public void onItemSwipe(int position, int direction) {
+                itemToDelete = recyclerViewAdapterRoutines.getItem(position);
+                showDeletionDialog();
+                deletionConfirmationDialog.setOnNegativeClickListener(() -> recyclerViewAdapterRoutines.notifyItemChanged(position));
+                deletionConfirmationDialog.setOnDismissListener(() -> recyclerViewAdapterRoutines.notifyItemChanged(position));
+            }
+
+            @Override
+            public void onActionStateChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+
+            }
+        });
     }
 
     private void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
