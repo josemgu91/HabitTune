@@ -30,11 +30,13 @@
     <string name="menu_delete_items">Borrar Elementos</string>
 
     <string name="schedule_title">Horario</string>
-    <string name="routines_title">Rutinas</string>
-    <string name="activities_title">Actividades</string>
     <string name="statistics_title">Estadísticas</string>
     <string name="settings_title">Configuración</string>
     <string name="help_title">Ayuda</string>
+
+    <string name="activities_title">Actividades</string>
+    <string name="activities_delete_dialog_title">¿Eliminar Actividad?</string>
+    <string name="activities_delete_dialog_content">Vamos a eliminar esta actividad y removerla de todas tus rutinas. Tus rutinas y etiquetas no serán eliminadas pero las estadísticas de esta actividad se irán para siempre.</string>
 
     <string name="new_activity_title">Nueva Actividad</string>
     <string name="new_activity_hint_activity_name">Nombre de la Actividad</string>
@@ -49,6 +51,10 @@
     <string name="tag_editor_tag_create">Crear \"%s\"</string>
     <string name="tag_editor_delete_dialog_title">¿Eliminar etiqueta?</string>
     <string name="tag_editor_delete_dialog_content">Vamos a eliminar esta etiqueta y removerla de todas tus actividades. Tus actividades no serán eliminadas.</string>
+
+    <string name="routines_title">Rutinas</string>
+    <string name="routines_delete_dialog_title">¿Eliminar Rutina?</string>
+    <string name="routines_delete_dialog_content">Vamos a eliminar esta rutina. Tus actividades no serán eliminadas.</string>
 
     <string name="action_delete">Eliminar</string>
     <string name="action_cancel">Cancelar</string>

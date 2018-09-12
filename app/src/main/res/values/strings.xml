@@ -32,11 +32,13 @@
     <string name="menu_delete_items">Delete Items</string>
 
     <string name="schedule_title">Schedule</string>
-    <string name="routines_title">Routines</string>
-    <string name="activities_title">Activities</string>
     <string name="statistics_title">Statistics</string>
     <string name="settings_title">Settings</string>
     <string name="help_title">Help</string>
+
+    <string name="activities_title">Activities</string>
+    <string name="activities_delete_dialog_title">Delete Activity?</string>
+    <string name="activities_delete_dialog_content">We\'ll delete this activity and remove it from all of your routines. Your routines and tags won\'t be deleted but this activity statistics will be gone forever.</string>
 
     <string name="new_activity_title">New Activity</string>
     <string name="new_activity_hint_activity_name">Activity Name</string>
@@ -51,6 +53,10 @@
     <string name="tag_editor_tag_create">Create \"%s\"</string>
     <string name="tag_editor_delete_dialog_title">Delete tag?</string>
     <string name="tag_editor_delete_dialog_content">We\'ll delete this tag and remove it from all of your activities. Your activities won\'t be deleted.</string>
+
+    <string name="routines_title">Routines</string>
+    <string name="routines_delete_dialog_title">Delete Routine?</string>
+    <string name="routines_delete_dialog_content">We\'ll delete this routine. Your activities won\'t be deleted.</string>
 
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
