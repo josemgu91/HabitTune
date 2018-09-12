@@ -41,6 +41,7 @@ import android.widget.EditText;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
+import com.josemgu91.habittune.android.ui.common.ConfirmationDialog;
 import com.josemgu91.habittune.databinding.FragmentTagEditorBinding;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 
@@ -62,7 +63,7 @@ public class FragmentTagEditor extends BaseFragment {
     private EditText toolbarEditText;
     private InputMethodManager inputMethodManager;
 
-    private TagDeletionConfirmationDialog tagDeletionConfirmationDialog;
+    private ConfirmationDialog tagDeletionConfirmationDialog;
 
     private FragmentManager fragmentManager;
 
@@ -93,11 +94,16 @@ public class FragmentTagEditor extends BaseFragment {
         }
         viewModelTagEditor.fetchTags();
         fragmentManager = getFragmentManager();
-        tagDeletionConfirmationDialog = (TagDeletionConfirmationDialog) fragmentManager.findFragmentByTag(FRAGMENT_TAG_DELETION_DIALOG);
+        tagDeletionConfirmationDialog = (ConfirmationDialog) fragmentManager.findFragmentByTag(FRAGMENT_TAG_DELETION_DIALOG);
         if (tagDeletionConfirmationDialog == null) {
-            tagDeletionConfirmationDialog = new TagDeletionConfirmationDialog();
+            tagDeletionConfirmationDialog = ConfirmationDialog.newInstance(
+                    R.string.tag_editor_delete_dialog_title,
+                    R.string.tag_editor_delete_dialog_content,
+                    R.string.action_delete,
+                    R.string.action_cancel
+            );
         }
-        tagDeletionConfirmationDialog.setOnDeleteClickListener(() -> {
+        tagDeletionConfirmationDialog.setOnPositiveClickListener(() -> {
             viewModelTagEditor.deleteTag(tagIdToDelete);
             tagIdToDelete = null;
         });
@@ -199,7 +205,8 @@ public class FragmentTagEditor extends BaseFragment {
                 tagDeletionConfirmationDialog.show(fragmentManager, FRAGMENT_TAG_DELETION_DIALOG);
                 final TagEditorFlexibleAdapter.TagItem tagItem = (TagEditorFlexibleAdapter.TagItem) recyclerViewTagsAdapter.getItem(position);
                 tagIdToDelete = tagItem.getTagId();
-                tagDeletionConfirmationDialog.setOnCancelListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
+                tagDeletionConfirmationDialog.setOnNegativeClickListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
+                tagDeletionConfirmationDialog.setOnDismissListener(() -> recyclerViewTagsAdapter.notifyItemChanged(position));
             }
 
             @Override

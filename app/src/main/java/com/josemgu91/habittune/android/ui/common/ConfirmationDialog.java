@@ -38,6 +38,18 @@ public class ConfirmationDialog extends DialogFragment {
     private OnNegativeClickListener onNegativeClickListener;
     private OnDismissListener onDismissListener;
 
+    public void setOnPositiveClickListener(OnPositiveClickListener onPositiveClickListener) {
+        this.onPositiveClickListener = onPositiveClickListener;
+    }
+
+    public void setOnNegativeClickListener(OnNegativeClickListener onNegativeClickListener) {
+        this.onNegativeClickListener = onNegativeClickListener;
+    }
+
+    public void setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
     public static ConfirmationDialog newInstance(@StringRes final int title,
                                                  @StringRes final int message,
                                                  @StringRes final int positiveText,
@@ -55,7 +67,7 @@ public class ConfirmationDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Bundle arguments = new Bundle();
+        final Bundle arguments = getArguments();
         return new AlertDialog
                 .Builder(getContext())
                 .setTitle(arguments.getInt(ARGUMENT_TITLE))
