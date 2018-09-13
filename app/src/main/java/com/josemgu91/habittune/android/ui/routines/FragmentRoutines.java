@@ -90,10 +90,9 @@ public class FragmentRoutines extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutinesBinding =
                 DataBindingUtil.inflate(inflater, R.layout.fragment_routines, container, false);
-        recyclerViewAdapterRoutines = new RecyclerViewAdapterRoutines(null, null, true);
+        recyclerViewAdapterRoutines = new RecyclerViewAdapterRoutines(null, null);
         fragmentRoutinesBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fragmentRoutinesBinding.recyclerView.setAdapter(recyclerViewAdapterRoutines);
-        recyclerViewAdapterRoutines.setSwipeEnabled(true);
         final ItemTouchHelperCallback itemTouchHelperCallback = recyclerViewAdapterRoutines.getItemTouchHelperCallback();
         itemTouchHelperCallback.setSwipeFlags(ItemTouchHelper.RIGHT);
         return fragmentRoutinesBinding.getRoot();

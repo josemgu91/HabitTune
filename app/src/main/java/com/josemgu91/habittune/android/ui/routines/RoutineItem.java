@@ -59,6 +59,11 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
     }
 
     @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
     public int getLayoutRes() {
         return R.layout.element_routine;
     }
@@ -80,6 +85,11 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
         public RoutineViewHolder(View view, FlexibleAdapter adapter) {
             super(view, adapter);
             textViewRoutineName = view.findViewById(R.id.textViewRoutineName);
+        }
+
+        @Override
+        public View getFrontView() {
+            return super.getFrontView();
         }
     }
 }
