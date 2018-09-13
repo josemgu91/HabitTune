@@ -19,52 +19,19 @@
 
 package com.josemgu91.habittune.android.ui.routines;
 
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.IFlexible;
 
+//TODO: Checkout best approaches to items state restoration (e.g. swiped items).
+//The "FlexibleAdapter" library already handles the state restoration of selected items, but not of the swiped ones.
 public class RecyclerViewAdapterRoutines extends FlexibleAdapter<IFlexible> {
-
-    private final static String SAVED_INSTANCE_STATE_KEY_SWIPED_ITEMS_IDS = "swipedItemsIds";
-    private final ArrayList<Long> swipedItemsIds;
 
     public RecyclerViewAdapterRoutines(@Nullable List<IFlexible> items, @Nullable Object listeners) {
         super(items, listeners, true);
-        swipedItemsIds = new ArrayList<>();
         setSwipeEnabled(true);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        final long[] swipedItemsIdsArray = new long[swipedItemsIds.size()];
-        for (int i = 0; i < swipedItemsIds.size(); i++) {
-            swipedItemsIdsArray[i] = swipedItemsIds.get(i);
-        }
-        outState.putLongArray(SAVED_INSTANCE_STATE_KEY_SWIPED_ITEMS_IDS, swipedItemsIdsArray);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        final long[] swipedItemsIdsArray = savedInstanceState.getLongArray(SAVED_INSTANCE_STATE_KEY_SWIPED_ITEMS_IDS);
-        if (swipedItemsIdsArray != null) {
-            for (long swipedItemId : swipedItemsIdsArray) {
-                swipedItemsIds.add(swipedItemId);
-            }
-        }
-    }
-
-    @Override
-    public void onItemSwiped(int position, int direction) {
-        super.onItemSwiped(position, direction);
-        Log.d("onItemSwiped", "Position: " + position + ", direction: " + direction);
-        //getItemId(position);
     }
 }
