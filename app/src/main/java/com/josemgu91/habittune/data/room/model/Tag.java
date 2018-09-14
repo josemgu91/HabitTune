@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
@@ -39,6 +40,18 @@ public class Tag {
     public final long id;
     @NonNull
     public final String name;
+
+    @Ignore
+    public Tag(long id) {
+        this.id = id;
+        this.name = "";
+    }
+
+    @Ignore
+    public Tag(@NonNull String name) {
+        this.id = 0;
+        this.name = name;
+    }
 
     public Tag(long id, @NonNull String name) {
         this.id = id;

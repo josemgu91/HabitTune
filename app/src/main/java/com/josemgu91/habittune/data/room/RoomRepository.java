@@ -81,6 +81,15 @@ public class RoomRepository implements Repository {
     }
 
     @Override
+    public boolean deleteActivityById(String id) throws DataGatewayException {
+        try {
+            return localRoomDatabase.getActivityDao().deleteActivity(new com.josemgu91.habittune.data.room.model.Activity(Long.valueOf(id))) != 0;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
     public boolean createActivity(@NonNull Activity activity) throws DataGatewayException {
         try {
             final long activityId = localRoomDatabase.getActivityDao().insertActivity(new com.josemgu91.habittune.data.room.model.Activity(

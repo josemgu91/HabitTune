@@ -38,6 +38,8 @@ public interface ActivityDataGateway {
 
     boolean deleteActivityByName(final String name) throws DataGatewayException;
 
+    boolean deleteActivityById(final String id) throws DataGatewayException;
+
     boolean createActivity(@NonNull final Activity activity) throws DataGatewayException;
 
     boolean updateActivity(@NonNull final Activity updatedActivity) throws DataGatewayException;

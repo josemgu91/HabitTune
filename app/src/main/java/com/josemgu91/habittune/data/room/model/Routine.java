@@ -46,6 +46,15 @@ public class Routine {
     public final int numberOfDays;
 
     @Ignore
+    public Routine(long id) {
+        this.id = id;
+        this.name = "";
+        this.description = "";
+        this.color = 0;
+        this.numberOfDays = 0;
+    }
+
+    @Ignore
     public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays) {
         this.id = 0;
         this.name = name;

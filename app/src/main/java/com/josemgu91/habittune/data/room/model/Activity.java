@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
@@ -42,6 +43,22 @@ public class Activity {
     @NonNull
     public final String description;
     public final int color;
+
+    @Ignore
+    public Activity(long id) {
+        this.id = id;
+        this.name = "";
+        this.description = "";
+        this.color = 0;
+    }
+
+    @Ignore
+    public Activity(@NonNull String name, @NonNull String description, int color) {
+        this.id = 0;
+        this.name = name;
+        this.description = description;
+        this.color = color;
+    }
 
     public Activity(long id, @NonNull String name, @NonNull String description, int color) {
         this.id = id;
