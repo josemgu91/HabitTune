@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui.routines;
+package com.josemgu91.habittune.android.ui.activities;
 
 import android.view.View;
 import android.widget.TextView;
@@ -31,12 +31,12 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
-public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHolder> {
+public class ActivityItem extends AbstractFlexibleItem<ActivityItem.ActivityViewHolder> {
 
     private final String id;
     private final String name;
 
-    public RoutineItem(String id, String name) {
+    public ActivityItem(String id, String name) {
         this.id = id;
         this.name = name;
         setSwipeable(true);
@@ -52,8 +52,8 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof RoutineItem) {
-            return id.equals(((RoutineItem) o).id);
+        if (o instanceof ActivityItem) {
+            return id.equals(((ActivityItem) o).id);
         }
         return false;
     }
@@ -65,26 +65,26 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
 
     @Override
     public int getLayoutRes() {
-        return R.layout.element_routine;
+        return R.layout.element_activity;
     }
 
     @Override
-    public RoutineViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-        return new RoutineViewHolder(view, adapter);
+    public ActivityViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
+        return new ActivityViewHolder(view, adapter);
     }
 
     @Override
-    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, RoutineViewHolder holder, int position, List<Object> payloads) {
-        holder.textViewRoutineName.setText(name);
+    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, ActivityViewHolder holder, int position, List<Object> payloads) {
+        holder.textViewActivity.setText(name);
     }
 
-    public static class RoutineViewHolder extends FlexibleViewHolder {
+    public static class ActivityViewHolder extends FlexibleViewHolder {
 
-        private TextView textViewRoutineName;
+        private TextView textViewActivity;
 
-        public RoutineViewHolder(View view, FlexibleAdapter adapter) {
+        public ActivityViewHolder(View view, FlexibleAdapter adapter) {
             super(view, adapter);
-            textViewRoutineName = view.findViewById(R.id.textViewRoutineName);
+            textViewActivity = view.findViewById(R.id.textViewActivityName);
         }
     }
 }

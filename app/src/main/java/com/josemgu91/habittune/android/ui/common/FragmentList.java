@@ -42,7 +42,7 @@ import eu.davidea.flexibleadapter.items.IFlexible;
 
 public abstract class FragmentList<E extends IFlexible> extends BaseFragment {
 
-    private FragmentListBinding fragmentListBinding;
+    protected FragmentListBinding fragmentListBinding;
 
     protected FlexibleAdapter<E> recyclerViewFlexibleAdapter;
 
@@ -50,7 +50,7 @@ public abstract class FragmentList<E extends IFlexible> extends BaseFragment {
 
     private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletionDialog";
 
-    private E itemToDelete;
+    protected E itemToDelete;
 
     @Override
     public void onAttach(Context context) {
@@ -69,25 +69,33 @@ public abstract class FragmentList<E extends IFlexible> extends BaseFragment {
     private void delete() {
         final int position = recyclerViewFlexibleAdapter.getGlobalPositionOf(itemToDelete);
         recyclerViewFlexibleAdapter.removeItem(position);
+        onDelete(itemToDelete);
         itemToDelete = null;
     }
 
     protected abstract void saveItemToDeleteState(Bundle outState);
 
-    protected abstract void restoreItemToDeleteState(Bundle savedInstanceState);
+    protected abstract E restoreItemToDeleteState(Bundle savedInstanceState);
 
     protected abstract ConfirmationDialog createDeletionConfirmationDialog();
 
-    protected abstract FlexibleAdapter<E> createFlexibleAdapter();
+    protected abstract void onDelete(final E itemToDelete);
+
+    protected abstract void onItemSelected(final E item);
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentListBinding =
                 DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
-        recyclerViewFlexibleAdapter = createFlexibleAdapter();
+        recyclerViewFlexibleAdapter = new FlexibleAdapter<>(null, null, true);
         fragmentListBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fragmentListBinding.recyclerView.setAdapter(recyclerViewFlexibleAdapter);
+        recyclerViewFlexibleAdapter.setSwipeEnabled(true);
+        recyclerViewFlexibleAdapter.addListener((FlexibleAdapter.OnItemClickListener) (view, position) -> {
+            onItemSelected(recyclerViewFlexibleAdapter.getItem(position));
+            return true;
+        });
         final ItemTouchHelperCallback itemTouchHelperCallback = recyclerViewFlexibleAdapter.getItemTouchHelperCallback();
         itemTouchHelperCallback.setSwipeFlags(ItemTouchHelper.RIGHT);
         return fragmentListBinding.getRoot();
@@ -118,14 +126,16 @@ public abstract class FragmentList<E extends IFlexible> extends BaseFragment {
 
     private void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         recyclerViewFlexibleAdapter.onRestoreInstanceState(savedInstanceState);
-        restoreItemToDeleteState(savedInstanceState);
+        itemToDelete = restoreItemToDeleteState(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         recyclerViewFlexibleAdapter.onSaveInstanceState(outState);
-        saveItemToDeleteState(outState);
+        if (itemToDelete != null) {
+            saveItemToDeleteState(outState);
+        }
     }
 
     @Override

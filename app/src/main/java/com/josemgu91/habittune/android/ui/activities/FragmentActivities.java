@@ -21,37 +21,24 @@ package com.josemgu91.habittune.android.ui.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
-import com.josemgu91.habittune.android.ui.BaseFragment;
-import com.josemgu91.habittune.databinding.FragmentActivitiesBinding;
+import com.josemgu91.habittune.android.ui.common.ConfirmationDialog;
+import com.josemgu91.habittune.android.ui.common.FragmentList;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentActivities extends BaseFragment {
+public class FragmentActivities extends FragmentList<ActivityItem> {
+
+    private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID = "activityId";
+    private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME = "activityName";
 
     private ViewModelActivities viewModelActivities;
-
-    private FragmentActivitiesBinding fragmentActivitiesBinding;
-
-    private RecyclerViewAdapterActivities recyclerViewAdapterActivities;
 
     @Override
     public void onAttach(Context context) {
@@ -65,86 +52,61 @@ public class FragmentActivities extends BaseFragment {
         viewModelActivities.fetchActivities();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentActivitiesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_activities, container, false);
-        final View view = fragmentActivitiesBinding.getRoot();
-        fragmentActivitiesBinding.floatingActionButtonAdd.setOnClickListener((v) -> onFloatingActionButtonClick());
-        return view;
+    protected void saveItemToDeleteState(Bundle outState) {
+        outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID, itemToDelete.getId());
+        outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME, itemToDelete.getName());
+    }
+
+    @Override
+    protected ActivityItem restoreItemToDeleteState(Bundle savedInstanceState) {
+        if (!savedInstanceState.containsKey(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID)) {
+            return null;
+        }
+        final String id = savedInstanceState.getString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID);
+        final String name = savedInstanceState.getString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME);
+        return new ActivityItem(id, name);
+    }
+
+    @Override
+    protected ConfirmationDialog createDeletionConfirmationDialog() {
+        return ConfirmationDialog.newInstance(
+                R.string.activities_delete_dialog_title,
+                R.string.activities_delete_dialog_content,
+                R.string.action_delete,
+                R.string.action_cancel
+        );
+    }
+
+    @Override
+    protected void onItemSelected(ActivityItem item) {
+
+    }
+
+    @Override
+    protected void onDelete(ActivityItem itemToDelete) {
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final RecyclerView recyclerViewActivities = fragmentActivitiesBinding.recyclerView;
-        recyclerViewAdapterActivities = new RecyclerViewAdapterActivities(getContext(), LayoutInflater.from(getContext()));
-        fragmentActivitiesBinding.setShowProgress(true);
+        fragmentListBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToFragmentNewActivity());
+        fragmentListBinding.setShowProgress(true);
         viewModelActivities.getResponse().observe(this, response -> {
             switch (response.status) {
                 case LOADING:
-                    fragmentActivitiesBinding.setShowProgress(true);
+                    fragmentListBinding.setShowProgress(true);
                     break;
                 case ERROR:
-                    fragmentActivitiesBinding.setShowProgress(false);
+                    fragmentListBinding.setShowProgress(false);
                     break;
                 case SUCCESS:
-                    fragmentActivitiesBinding.setShowProgress(false);
+                    fragmentListBinding.setShowProgress(false);
                     response.successData.observe(this, this::showActivities);
                     break;
             }
         });
-        recyclerViewAdapterActivities.setOnActivitySelectedListener(activityName -> Toast.makeText(getContext(), activityName, Toast.LENGTH_SHORT).show());
-        recyclerViewAdapterActivities.setOnMultiSelectionModeListener(new RecyclerViewAdapterActivities.OnMultiSelectionModeListener() {
-
-            private ActionMode actionMode;
-
-            @Override
-            public void onMultiSelectionModeEnabled() {
-                actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
-                    @Override
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        mode.getMenuInflater().inflate(R.menu.list_multiple_selection, menu);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.actionDeleteItems:
-                                Toast.makeText(getContext(), "Delete Items", Toast.LENGTH_SHORT).show();
-                                return true;
-                            default:
-                                return false;
-                        }
-                    }
-
-                    @Override
-                    public void onDestroyActionMode(ActionMode mode) {
-                        recyclerViewAdapterActivities.setMultiSelectionMode(false);
-                    }
-                });
-            }
-
-            @Override
-            public void onMultiSelectionModeDisabled() {
-                if (actionMode != null) {
-                    actionMode.finish();
-                }
-            }
-
-            @Override
-            public void onItemSelected() {
-                actionMode.setTitle(String.valueOf(recyclerViewAdapterActivities.getSelectedActivities().size()));
-            }
-        });
-        recyclerViewActivities.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewActivities.setAdapter(recyclerViewAdapterActivities);
     }
 
     @Override
@@ -155,16 +117,10 @@ public class FragmentActivities extends BaseFragment {
     }
 
     private void showActivities(List<GetActivities.Output> outputs) {
-        final List<String> activities = new ArrayList<>();
+        final List<ActivityItem> activities = new ArrayList<>();
         for (final GetActivities.Output output : outputs) {
-            activities.add(output.getName());
+            activities.add(new ActivityItem(output.getId(), output.getName()));
         }
-        recyclerViewAdapterActivities.setActivities(activities);
+        recyclerViewFlexibleAdapter.updateDataSet(activities);
     }
-
-    private void onFloatingActionButtonClick() {
-
-        fragmentInteractionListener.navigateToFragmentNewActivity();
-    }
-
 }
