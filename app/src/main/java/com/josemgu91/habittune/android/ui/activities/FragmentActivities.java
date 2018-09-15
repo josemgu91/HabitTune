@@ -93,7 +93,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
         super.onActivityCreated(savedInstanceState);
         fragmentListBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToFragmentNewActivity());
         fragmentListBinding.setShowProgress(true);
-        viewModelActivities.getResponse().observe(this, response -> {
+        viewModelActivities.getGetActivitiesResponse().observe(this, response -> {
             switch (response.status) {
                 case LOADING:
                     fragmentListBinding.setShowProgress(true);

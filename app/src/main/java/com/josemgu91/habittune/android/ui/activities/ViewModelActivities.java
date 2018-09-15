@@ -79,7 +79,7 @@ public class ViewModelActivities extends ViewModel {
         });
     }
 
-    public MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> getResponse() {
+    public MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> getGetActivitiesResponse() {
         return getActivitiesResponse;
     }
 }

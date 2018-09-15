@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.josemgu91.habittune.R;
 
 import java.util.List;
+import java.util.Objects;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -52,15 +53,17 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof RoutineItem) {
-            return id.equals(((RoutineItem) o).id);
-        }
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RoutineItem that = (RoutineItem) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+
+        return Objects.hash(id, name);
     }
 
     @Override

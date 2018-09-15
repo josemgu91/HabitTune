@@ -21,115 +21,86 @@ package com.josemgu91.habittune.android.ui.routines;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
-import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.common.ConfirmationDialog;
-import com.josemgu91.habittune.databinding.FragmentRoutinesBinding;
+import com.josemgu91.habittune.android.ui.common.FragmentList;
+import com.josemgu91.habittune.domain.usecases.GetRoutines;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.davidea.flexibleadapter.FlexibleAdapter;
-import eu.davidea.flexibleadapter.helpers.ItemTouchHelperCallback;
-import eu.davidea.flexibleadapter.items.IFlexible;
+public class FragmentRoutines extends FragmentList<RoutineItem> {
 
-public class FragmentRoutines extends BaseFragment {
+    private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID = "routineId";
+    private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME = "routineName";
 
     private ViewModelRoutines viewModelRoutines;
-
-    private FragmentRoutinesBinding fragmentRoutinesBinding;
-
-    private RecyclerViewAdapterRoutines recyclerViewAdapterRoutines;
-
-    private ConfirmationDialog deletionConfirmationDialog;
-
-    private final static String FRAGMENT_TAG_DELETION_DIALOG = "deletionDialog";
-
-    private IFlexible itemToDelete;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelRoutines = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutines.class);
-        deletionConfirmationDialog = (ConfirmationDialog) getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DELETION_DIALOG);
-        if (deletionConfirmationDialog == null) {
-            deletionConfirmationDialog = ConfirmationDialog.newInstance(
-                    R.string.routines_delete_dialog_title,
-                    R.string.routines_delete_dialog_content,
-                    R.string.action_delete,
-                    R.string.action_cancel
-            );
-        }
-        deletionConfirmationDialog.setOnPositiveClickListener(() -> delete());
     }
 
-    private void showDeletionDialog() {
-        deletionConfirmationDialog.show(getFragmentManager(), FRAGMENT_TAG_DELETION_DIALOG);
-    }
-
-    private void delete() {
-        final int position = recyclerViewAdapterRoutines.getGlobalPositionOf(itemToDelete);
-        recyclerViewAdapterRoutines.removeItem(position);
-        itemToDelete = null;
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentRoutinesBinding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_routines, container, false);
-        recyclerViewAdapterRoutines = new RecyclerViewAdapterRoutines(null, null);
-        fragmentRoutinesBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        fragmentRoutinesBinding.recyclerView.setAdapter(recyclerViewAdapterRoutines);
-        final ItemTouchHelperCallback itemTouchHelperCallback = recyclerViewAdapterRoutines.getItemTouchHelperCallback();
-        itemTouchHelperCallback.setSwipeFlags(ItemTouchHelper.RIGHT);
-        return fragmentRoutinesBinding.getRoot();
+    protected void saveItemToDeleteState(Bundle outState) {
+        outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID, itemToDelete.getId());
+        outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME, itemToDelete.getName());
+    }
+
+    @Override
+    protected RoutineItem restoreItemToDeleteState(Bundle savedInstanceState) {
+        if (!savedInstanceState.containsKey(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID)) {
+            return null;
+        }
+        final String id = savedInstanceState.getString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID);
+        final String name = savedInstanceState.getString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME);
+        return new RoutineItem(id, name);
+    }
+
+    @Override
+    protected ConfirmationDialog createDeletionConfirmationDialog() {
+        return ConfirmationDialog.newInstance(
+                R.string.routines_delete_dialog_title,
+                R.string.routines_delete_dialog_content,
+                R.string.action_delete,
+                R.string.action_cancel
+        );
+    }
+
+    @Override
+    protected void onDelete(RoutineItem itemToDelete) {
+        viewModelRoutines.deleteRoutine(itemToDelete.getId());
+    }
+
+    @Override
+    protected void onItemSelected(RoutineItem item) {
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            onRestoreInstanceState(savedInstanceState);
-        }
-        fragmentRoutinesBinding.setShowProgress(false);
-        recyclerViewAdapterRoutines.updateDataSet(generateTestData(100));
-        recyclerViewAdapterRoutines.addListener(new FlexibleAdapter.OnItemSwipeListener() {
-            @Override
-            public void onItemSwipe(int position, int direction) {
-                itemToDelete = recyclerViewAdapterRoutines.getItem(position);
-                showDeletionDialog();
-                deletionConfirmationDialog.setOnNegativeClickListener(() -> recyclerViewAdapterRoutines.notifyItemChanged(position));
-                deletionConfirmationDialog.setOnDismissListener(() -> recyclerViewAdapterRoutines.notifyItemChanged(position));
-            }
-
-            @Override
-            public void onActionStateChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-
+        fragmentListBinding.floatingActionButtonAdd.setOnClickListener(null);
+        fragmentListBinding.setShowProgress(true);
+        viewModelRoutines.getGetRoutinesResponse().observe(this, response -> {
+            switch (response.status) {
+                case LOADING:
+                    fragmentListBinding.setShowProgress(true);
+                    break;
+                case ERROR:
+                    fragmentListBinding.setShowProgress(false);
+                    break;
+                case SUCCESS:
+                    fragmentListBinding.setShowProgress(false);
+                    response.successData.observe(this, this::updateRoutines);
+                    break;
             }
         });
-    }
-
-    private void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        recyclerViewAdapterRoutines.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        recyclerViewAdapterRoutines.onSaveInstanceState(outState);
     }
 
     @Override
@@ -139,14 +110,11 @@ public class FragmentRoutines extends BaseFragment {
         fragmentInteractionListener.updateNavigationDrawer(true);
     }
 
-    private List<IFlexible> generateTestData(final int size) {
-        final List<IFlexible> routineItems = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            routineItems.add(new RoutineItem(
-                    String.valueOf(i),
-                    "Routine item " + i
-            ));
+    private void updateRoutines(List<GetRoutines.Output> outputs) {
+        final List<RoutineItem> routineItems = new ArrayList<>();
+        for (final GetRoutines.Output output : outputs) {
+            routineItems.add(new RoutineItem(output.getId(), output.getName()));
         }
-        return routineItems;
+        recyclerViewFlexibleAdapter.updateDataSet(routineItems);
     }
 }
