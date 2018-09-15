@@ -30,5 +30,7 @@ public interface RoutineDataGateway {
 
     @NonNull
     LiveData<List<Routine>> subscribeToAllRoutines() throws DataGatewayException;
+
+    boolean deleteRoutineById(@NonNull final String id) throws DataGatewayException;
 }
 

@@ -25,6 +25,7 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.usecases.DeleteRoutine;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
@@ -33,16 +34,30 @@ import java.util.List;
 public class ViewModelRoutines extends ViewModel {
 
     private final GetRoutines getRoutines;
+    private final DeleteRoutine deleteRoutine;
 
     private final MutableLiveData<Response<LiveData<List<GetRoutines.Output>>, Void>> getRoutinesResponse;
 
-    public ViewModelRoutines(GetRoutines getRoutines) {
+    public ViewModelRoutines(GetRoutines getRoutines, DeleteRoutine deleteRoutine) {
         this.getRoutines = getRoutines;
+        this.deleteRoutine = deleteRoutine;
         getRoutinesResponse = new MutableLiveData<>();
     }
 
     public void deleteRoutine(final String routineId) {
+        deleteRoutine.execute(new DeleteRoutine.Input(routineId), new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+            }
 
+            @Override
+            public void inProgress() {
+            }
+
+            @Override
+            public void onError() {
+            }
+        });
     }
 
     public void fetchRoutines() {

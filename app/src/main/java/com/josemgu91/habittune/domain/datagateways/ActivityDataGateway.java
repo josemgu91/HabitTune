@@ -36,9 +36,9 @@ public interface ActivityDataGateway {
 
     int countActivities() throws DataGatewayException;
 
-    boolean deleteActivityByName(final String name) throws DataGatewayException;
+    boolean deleteActivityByName(@NonNull final String name) throws DataGatewayException;
 
-    boolean deleteActivityById(final String id) throws DataGatewayException;
+    boolean deleteActivityById(@NonNull final String id) throws DataGatewayException;
 
     boolean createActivity(@NonNull final Activity activity) throws DataGatewayException;
 

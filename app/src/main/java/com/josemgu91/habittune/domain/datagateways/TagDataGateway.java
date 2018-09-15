@@ -32,11 +32,11 @@ public interface TagDataGateway {
     LiveData<List<Tag>> subscribeToAllTags() throws DataGatewayException;
 
     @NonNull
-    LiveData<List<Tag>> subscribeToTagsByIds(List<String> tagIds) throws DataGatewayException;
+    LiveData<List<Tag>> subscribeToTagsByIds(@NonNull List<String> tagIds) throws DataGatewayException;
 
     boolean createTag(@NonNull final Tag tag) throws DataGatewayException;
 
-    boolean deleteTagById(final String id) throws DataGatewayException;
+    boolean deleteTagById(@NonNull final String id) throws DataGatewayException;
 
     boolean updateTag(@NonNull final Tag updatedTag) throws DataGatewayException;
 

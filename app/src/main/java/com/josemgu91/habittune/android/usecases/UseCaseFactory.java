@@ -22,6 +22,7 @@ package com.josemgu91.habittune.android.usecases;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteActivity;
+import com.josemgu91.habittune.domain.usecases.DeleteRoutine;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
@@ -45,5 +46,7 @@ public interface UseCaseFactory {
     UpdateTag createUpdateTag();
 
     GetRoutines createGetRoutines();
+
+    DeleteRoutine createDeleteRoutine();
 
 }

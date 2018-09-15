@@ -23,6 +23,7 @@ import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteActivity;
+import com.josemgu91.habittune.domain.usecases.DeleteRoutine;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
@@ -109,6 +110,15 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     @Override
     public GetRoutines createGetRoutines() {
         return new GetRoutines(
+                uiThreadExecutor,
+                defaultThreadPoolExecutor,
+                repository
+        );
+    }
+
+    @Override
+    public DeleteRoutine createDeleteRoutine() {
+        return new DeleteRoutine(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
                 repository

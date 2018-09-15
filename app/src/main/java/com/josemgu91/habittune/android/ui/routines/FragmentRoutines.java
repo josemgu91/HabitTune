@@ -85,6 +85,7 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        viewModelRoutines.fetchRoutines();
         fragmentListBinding.floatingActionButtonAdd.setOnClickListener(null);
         fragmentListBinding.setShowProgress(true);
         viewModelRoutines.getGetRoutinesResponse().observe(this, response -> {

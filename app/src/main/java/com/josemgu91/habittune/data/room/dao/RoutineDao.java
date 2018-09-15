@@ -21,6 +21,7 @@ package com.josemgu91.habittune.data.room.dao;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Query;
 
 import com.josemgu91.habittune.data.room.model.Routine;
@@ -32,5 +33,8 @@ public interface RoutineDao {
 
     @Query("SELECT * FROM routines ORDER BY name ASC")
     LiveData<List<Routine>> subscribeToAllRoutines();
+
+    @Delete
+    int deleteRoutine(final Routine routine);
 
 }

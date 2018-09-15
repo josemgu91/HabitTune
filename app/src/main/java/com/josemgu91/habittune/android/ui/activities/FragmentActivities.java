@@ -47,12 +47,6 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        viewModelActivities.fetchActivities();
-    }
-
-    @Override
     protected void saveItemToDeleteState(Bundle outState) {
         outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID, itemToDelete.getId());
         outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME, itemToDelete.getName());
@@ -91,6 +85,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        viewModelActivities.fetchActivities();
         fragmentListBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToFragmentNewActivity());
         fragmentListBinding.setShowProgress(true);
         viewModelActivities.getGetActivitiesResponse().observe(this, response -> {
