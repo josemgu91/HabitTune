@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.josemgu91.habittune.R;
 
 import java.util.List;
+import java.util.Objects;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -52,15 +53,16 @@ public class ActivityItem extends AbstractFlexibleItem<ActivityItem.ActivityView
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ActivityItem) {
-            return id.equals(((ActivityItem) o).id);
-        }
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActivityItem that = (ActivityItem) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id, name);
     }
 
     @Override

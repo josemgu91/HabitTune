@@ -25,6 +25,7 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.usecases.DeleteActivity;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
@@ -33,34 +34,52 @@ import java.util.List;
 public class ViewModelActivities extends ViewModel {
 
     private final GetActivities getActivities;
+    private final DeleteActivity deleteActivity;
 
-    private final MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> response;
+    private final MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> getActivitiesResponse;
 
-    public ViewModelActivities(final GetActivities getActivities) {
+    public ViewModelActivities(final GetActivities getActivities, final DeleteActivity deleteActivity) {
         this.getActivities = getActivities;
-        this.response = new MutableLiveData<>();
+        this.deleteActivity = deleteActivity;
+        this.getActivitiesResponse = new MutableLiveData<>();
+    }
+
+    public void deleteActivity(final String activityId) {
+        deleteActivity.execute(new DeleteActivity.Input(activityId), new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+            }
+
+            @Override
+            public void inProgress() {
+            }
+
+            @Override
+            public void onError() {
+            }
+        });
     }
 
     public void fetchActivities() {
         getActivities.execute(null, new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
             @Override
             public void onSuccess(@Nullable LiveData<List<GetActivities.Output>> listLiveData) {
-                response.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
+                getActivitiesResponse.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
             }
 
             @Override
             public void inProgress() {
-                response.setValue(new Response<>(Response.Status.LOADING, null, null));
+                getActivitiesResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
             }
 
             @Override
             public void onError() {
-                response.setValue(new Response<>(Response.Status.ERROR, null, null));
+                getActivitiesResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
             }
         });
     }
 
     public MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> getResponse() {
-        return response;
+        return getActivitiesResponse;
     }
 }

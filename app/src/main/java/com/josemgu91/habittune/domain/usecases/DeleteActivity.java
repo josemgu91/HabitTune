@@ -43,7 +43,7 @@ public class DeleteActivity extends AbstractUseCase<DeleteActivity.Input, Void> 
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Void> output) {
         output.inProgress();
         try {
-            final boolean tagDeleted = activityDataGateway.deleteActivityByName(input.id);
+            final boolean tagDeleted = activityDataGateway.deleteActivityById(input.id);
             if (tagDeleted) {
                 output.onSuccess(null);
             } else {

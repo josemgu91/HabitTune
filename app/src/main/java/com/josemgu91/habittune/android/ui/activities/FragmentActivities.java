@@ -85,7 +85,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
 
     @Override
     protected void onDelete(ActivityItem itemToDelete) {
-
+        viewModelActivities.deleteActivity(itemToDelete.getId());
     }
 
     @Override
@@ -103,7 +103,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
                     break;
                 case SUCCESS:
                     fragmentListBinding.setShowProgress(false);
-                    response.successData.observe(this, this::showActivities);
+                    response.successData.observe(this, this::updateActivities);
                     break;
             }
         });
@@ -116,7 +116,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
         fragmentInteractionListener.updateNavigationDrawer(true);
     }
 
-    private void showActivities(List<GetActivities.Output> outputs) {
+    private void updateActivities(List<GetActivities.Output> outputs) {
         final List<ActivityItem> activities = new ArrayList<>();
         for (final GetActivities.Output output : outputs) {
             activities.add(new ActivityItem(output.getId(), output.getName()));

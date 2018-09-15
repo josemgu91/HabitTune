@@ -42,7 +42,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(ViewModelActivities.class)) {
-            return (T) new ViewModelActivities(useCaseFactory.createGetActivities());
+            return (T) new ViewModelActivities(useCaseFactory.createGetActivities(), useCaseFactory.createDeleteActivity());
         }
         if (modelClass.isAssignableFrom(ViewModelNewActivity.class)) {
             return (T) new ViewModelNewActivity(useCaseFactory.createCreateActivity(), useCaseFactory.createGetTags());
