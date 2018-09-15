@@ -58,6 +58,14 @@
     <string name="routines_delete_dialog_title">Delete Routine?</string>
     <string name="routines_delete_dialog_content">We\'ll delete this routine. Your activities won\'t be deleted.</string>
 
+    <string name="new_routine_title">New Routine</string>
+    <string name="new_routine_hint_routine_name">Routine Name</string>
+    <string name="new_routine_hint_routine_description">Description</string>
+    <string name="new_routine_number_of_days">Number of days: %s</string>
+    <string name="new_routine_label_routine_color">Color</string>
+    <string name="new_routine_hint_routine_color">Color</string>
+    <string name="new_routine_create">Save</string>
+
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
 

@@ -30,25 +30,47 @@
         android:paddingTop="@dimen/layoutMarginTop">
 
         <EditText
-            android:id="@+id/editTextActivityName"
+            android:id="@+id/editTextRoutineName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/new_activity_hint_activity_name"
+            android:hint="@string/new_routine_hint_routine_name"
             android:inputType="textCapSentences"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editTextActivityDescription"
+            android:id="@+id/editTextRoutineDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="@string/new_activity_hint_activity_description"
+            android:hint="@string/new_routine_hint_routine_description"
             android:inputType="textMultiLine"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextActivityName" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextRoutineName" />
+
+        <TextView
+            android:id="@+id/textViewNumberOfDays"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="4dp"
+            android:text="@string/new_routine_number_of_days"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextRoutineDescription" />
+
+        <SeekBar
+            android:id="@+id/seekBarNumberOfDays"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:max="7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumberOfDays" />
 
         <TextView
             android:id="@+id/textViewColor"
@@ -57,11 +79,10 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:padding="4dp"
-            android:text="@string/new_activity_label_activity_color"
+            android:text="@string/new_routine_label_routine_color"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            app:layout_constraintBottom_toTopOf="@+id/textViewActivityTags"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextActivityDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/seekBarNumberOfDays" />
 
         <View
             android:id="@+id/viewColor"
@@ -71,25 +92,12 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="@string/new_activity_hint_activity_color"
+            android:hint="@string/new_routine_hint_routine_color"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/textViewActivityTags"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewColor"
             app:layout_constraintStart_toEndOf="@+id/textViewColor"
-            app:layout_constraintTop_toBottomOf="@+id/editTextActivityDescription"
+            app:layout_constraintTop_toTopOf="@+id/textViewColor"
             tools:background="@color/secondary" />
-
-        <TextView
-            android:id="@+id/textViewActivityTags"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="?attr/editTextBackground"
-            android:hint="@string/new_activity_hint_activity_tags"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
-            android:textColor="?attr/editTextColor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/barrierColorBottom" />
 
         <android.support.constraint.Barrier
             android:id="@+id/barrierColorTop"
