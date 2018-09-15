@@ -42,6 +42,8 @@ public interface FragmentInteractionListener {
 
     void navigateToFragmentNewActivity();
 
+    void navigateToFragmentNewRoutine();
+
     void navigateToFragmentTagEditor();
 
     void showToolbarTextInput();

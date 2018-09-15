@@ -215,6 +215,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void navigateToFragmentNewRoutine() {
+        backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createNewRoutineKey());
+    }
+
+    @Override
     public void navigateToFragmentTagEditor() {
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createTagEditorKey());
     }
