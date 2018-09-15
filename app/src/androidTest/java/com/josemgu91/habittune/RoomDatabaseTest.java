@@ -104,15 +104,6 @@ public class RoomDatabaseTest {
     }
 
     @Test
-    public void countActivities() {
-        final int originalCount = activityDao.countActivities();
-        Assert.assertEquals(0, originalCount);
-        activityDao.insertActivity(testDataGenerator.createActivities(1).get(0));
-        final int newCount = activityDao.countActivities();
-        Assert.assertEquals(1, newCount);
-    }
-
-    @Test
     public void updateActivityName() throws Exception {
         final String originalActivityName = "Piano practice";
         final Activity testActivity = new Activity(0, originalActivityName, "Practice piano lessons.", 0xFFFF0000);
@@ -171,15 +162,6 @@ public class RoomDatabaseTest {
     }
 
     @Test
-    public void deleteActivityByName() {
-        final Activity testActivity = testDataGenerator.createActivities(1).get(0);
-        final long testActivityId = activityDao.insertActivity(testActivity);
-        final Activity testActivityWithId = testDataGenerator.addIdToActivity(testActivity, testActivityId);
-        final int deletedRows = activityDao.deleteActivityByName(testActivityWithId.name);
-        Assert.assertEquals(1, deletedRows);
-    }
-
-    @Test
     public void insertTag() {
         final Tag tag = testDataGenerator.createTags(1).get(0);
         final long tagId = tagDao.insertTag(tag);
@@ -201,15 +183,6 @@ public class RoomDatabaseTest {
     }
 
     @Test
-    public void getTagByName() {
-        final String testTagName = "My Tag";
-        final long insertedTagId = tagDao.insertTag(new Tag(0, testTagName));
-        final Tag insertedTag = tagDao.getTagByName(testTagName);
-        Assert.assertEquals(insertedTagId, insertedTag.id);
-        Assert.assertEquals(testTagName, insertedTag.name);
-    }
-
-    @Test
     public void updateTagName() throws Exception {
         final String originalTagName = "My Tag";
         final Tag testTag = new Tag(0, originalTagName);
@@ -224,20 +197,6 @@ public class RoomDatabaseTest {
         final Tag updatedTag = liveDataTestUtils.getValueSync(tagDao.subscribeToAllTags()).get(0);
         Assert.assertEquals(1, rowsUpdated);
         Assert.assertEquals(tagToUpdate, updatedTag);
-    }
-
-    @Test
-    public void updateTagByName() throws Exception {
-        final String originalTagName = "My Tag";
-        final Tag testTag = new Tag(0, originalTagName);
-        tagDao.insertTag(testTag);
-        final String newTagName = "Study";
-        final int rowsUpdated = tagDao.updateTagByName(originalTagName, newTagName);
-        final Tag updatedTag = tagDao.getTagByName(newTagName);
-        final Tag oldTag = tagDao.getTagByName(originalTagName);
-        Assert.assertEquals(1, rowsUpdated);
-        Assert.assertNull(oldTag);
-        Assert.assertEquals(newTagName, updatedTag.name);
     }
 
     @Test

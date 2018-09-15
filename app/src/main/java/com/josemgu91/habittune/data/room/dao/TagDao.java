@@ -43,18 +43,9 @@ public interface TagDao {
     @Query("SELECT * FROM tags WHERE id IN(:tagIds) ORDER BY name ASC")
     LiveData<List<Tag>> subscribeToTagsByIds(long[] tagIds);
 
-    @Query("SELECT * FROM tags WHERE name = :name")
-    Tag getTagByName(final String name);
-
     @Update(onConflict = OnConflictStrategy.ABORT)
     int updateTag(final Tag tag);
 
-    @Query("UPDATE tags SET name=:updatedTagName WHERE name = :currentTagName")
-    int updateTagByName(final String currentTagName, final String updatedTagName);
-
     @Delete
     int deleteTag(final Tag tag);
-
-    @Query("DELETE FROM tags WHERE name = :tagName")
-    int deleteTagByName(final String tagName);
 }

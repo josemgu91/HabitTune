@@ -34,10 +34,6 @@ public interface ActivityDataGateway {
     @NonNull
     LiveData<List<Activity>> subscribeToAllActivitiesButWithoutTags() throws DataGatewayException;
 
-    int countActivities() throws DataGatewayException;
-
-    boolean deleteActivityByName(@NonNull final String name) throws DataGatewayException;
-
     boolean deleteActivityById(@NonNull final String id) throws DataGatewayException;
 
     boolean createActivity(@NonNull final Activity activity) throws DataGatewayException;

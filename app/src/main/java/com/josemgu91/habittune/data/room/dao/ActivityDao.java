@@ -43,15 +43,6 @@ public interface ActivityDao {
     @Query("SELECT * FROM activities WHERE id = :activityId")
     LiveData<Activity> subscribeToActivityById(final long activityId);
 
-    @Query("SELECT * FROM activities WHERE name = :activityName")
-    LiveData<Activity> subscribeToActivityByName(final String activityName);
-
-    @Query("SELECT COUNT(name) FROM activities")
-    int countActivities();
-
-    @Query("DELETE FROM activities WHERE name = :activityName")
-    int deleteActivityByName(final String activityName);
-
     @Update(onConflict = OnConflictStrategy.ABORT)
     int updateActivity(final Activity activity);
 
