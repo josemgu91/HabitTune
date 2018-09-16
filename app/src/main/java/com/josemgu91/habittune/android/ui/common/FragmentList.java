@@ -125,14 +125,12 @@ public abstract class FragmentList<E extends IFlexible> extends BaseFragment {
     }
 
     private void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        recyclerViewFlexibleAdapter.onRestoreInstanceState(savedInstanceState);
         itemToDelete = restoreItemToDeleteState(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        recyclerViewFlexibleAdapter.onSaveInstanceState(outState);
         if (itemToDelete != null) {
             saveItemToDeleteState(outState);
         }
