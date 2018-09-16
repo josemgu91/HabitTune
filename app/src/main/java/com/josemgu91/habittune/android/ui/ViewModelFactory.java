@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.android.ui.activities.ViewModelActivities;
 import com.josemgu91.habittune.android.ui.new_activity.ViewModelNewActivity;
+import com.josemgu91.habittune.android.ui.new_routine.ViewModelNewRoutine;
 import com.josemgu91.habittune.android.ui.routines.ViewModelRoutines;
 import com.josemgu91.habittune.android.ui.tag_editor.ViewModelTagEditor;
 import com.josemgu91.habittune.android.usecases.UseCaseFactory;
@@ -52,6 +53,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(ViewModelRoutines.class)) {
             return (T) new ViewModelRoutines(useCaseFactory.createGetRoutines(), useCaseFactory.createDeleteRoutine());
+        }
+        if (modelClass.isAssignableFrom(ViewModelNewRoutine.class)) {
+            return (T) new ViewModelNewRoutine(useCaseFactory.createCreateRoutine());
         }
         try {
             return modelClass.newInstance();

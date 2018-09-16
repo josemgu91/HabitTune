@@ -21,6 +21,7 @@ package com.josemgu91.habittune.android.usecases;
 
 import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
+import com.josemgu91.habittune.domain.usecases.CreateRoutine;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteActivity;
 import com.josemgu91.habittune.domain.usecases.DeleteRoutine;
@@ -119,6 +120,15 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     @Override
     public DeleteRoutine createDeleteRoutine() {
         return new DeleteRoutine(
+                uiThreadExecutor,
+                defaultThreadPoolExecutor,
+                repository
+        );
+    }
+
+    @Override
+    public CreateRoutine createCreateRoutine() {
+        return new CreateRoutine(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
                 repository

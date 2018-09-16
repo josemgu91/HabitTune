@@ -35,6 +35,7 @@ import com.josemgu91.habittune.databinding.FragmentNewRoutineBinding;
 public class FragmentNewRoutine extends BaseFragment {
 
     private FragmentNewRoutineBinding fragmentNewRoutineBinding;
+    private ViewModelNewRoutine viewModelNewRoutine;
 
     @Nullable
     @Override

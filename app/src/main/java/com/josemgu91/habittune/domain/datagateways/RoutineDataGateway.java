@@ -32,5 +32,7 @@ public interface RoutineDataGateway {
     LiveData<List<Routine>> subscribeToAllRoutines() throws DataGatewayException;
 
     boolean deleteRoutineById(@NonNull final String id) throws DataGatewayException;
+
+    boolean createRoutine(@NonNull final Routine routine) throws DataGatewayException;
 }
 
