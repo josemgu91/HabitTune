@@ -19,28 +19,95 @@
 
 package com.josemgu91.habittune.android.ui.new_routine;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
+import com.jaredrummler.android.colorpicker.ColorPickerDialog;
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentNewRoutineBinding;
+import com.josemgu91.habittune.domain.usecases.CreateRoutine;
 
-public class FragmentNewRoutine extends BaseFragment {
+public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialogListener {
 
     private FragmentNewRoutineBinding fragmentNewRoutineBinding;
     private ViewModelNewRoutine viewModelNewRoutine;
+    private ColorPickerDialog colorPickerDialog;
+
+    private final static String FRAGMENT_TAG_COLOR_PICKER = "colorPickerDialog";
+
+    private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
+
+    @ColorInt
+    private int defaultColor;
+    @ColorInt
+    private int selectedColor;
+    private int numberOfDays;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        defaultColor = ContextCompat.getColor(context, R.color.secondary);
+        viewModelNewRoutine = ViewModelProviders.of(this, viewModelFactory).get(ViewModelNewRoutine.class);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        if (savedInstanceState == null) {
+            selectedColor = defaultColor;
+        } else {
+            selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
+        }
+        colorPickerDialog = (ColorPickerDialog) getActivity().getFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
+        if (colorPickerDialog != null) {
+            colorPickerDialog.setColorPickerDialogListener(this);
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentNewRoutineBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_routine, container, false);
+        fragmentNewRoutineBinding.viewColor.setOnClickListener(v -> showColorPicker());
+        fragmentNewRoutineBinding.seekBarNumberOfDays.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                fragmentNewRoutineBinding.textViewNumberOfDays.setText(getString(R.string.new_routine_number_of_days, String.valueOf(progress)));
+                numberOfDays = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        if (savedInstanceState == null) {
+            fragmentNewRoutineBinding.seekBarNumberOfDays.setProgress(1);
+            numberOfDays = 1;
+        }
+        fragmentNewRoutineBinding.viewColor.setBackgroundColor(selectedColor);
         return fragmentNewRoutineBinding.getRoot();
     }
 
@@ -49,5 +116,55 @@ public class FragmentNewRoutine extends BaseFragment {
         super.onResume();
         fragmentInteractionListener.updateToolbar(getString(R.string.new_routine_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
         fragmentInteractionListener.updateNavigationDrawer(false);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, selectedColor);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_new_routine, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.actionCreateRoutine) {
+            createRoutine();
+            return true;
+        }
+        return false;
+    }
+
+    private void createRoutine() {
+        viewModelNewRoutine.createRoutine(new CreateRoutine.Input(
+                fragmentNewRoutineBinding.editTextRoutineName.getText().toString(),
+                fragmentNewRoutineBinding.editTextRoutineDescription.getText().toString(),
+                selectedColor,
+                numberOfDays
+        ));
+        getActivity().onBackPressed();
+    }
+
+    private void showColorPicker() {
+        colorPickerDialog = ColorPickerDialog.newBuilder().setColor(selectedColor).create();
+        colorPickerDialog.setColorPickerDialogListener(this);
+        colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
+    }
+
+    @Override
+    public void onColorSelected(int dialogId, int color) {
+        selectedColor = color;
+        fragmentNewRoutineBinding.viewColor.setBackgroundColor(color);
+        colorPickerDialog = ColorPickerDialog.newBuilder().setColor(color).create();
+        colorPickerDialog.setColorPickerDialogListener(this);
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+
     }
 }
