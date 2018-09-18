@@ -51,13 +51,17 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
 
     private final static String FRAGMENT_TAG_COLOR_PICKER = "colorPickerDialog";
 
-    private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
+    private final static String SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR = "selectedColor";
+    private final static String SAVED_INSTANCE_STATE_KEY_NUMBER_OF_DAYS = "numberOfDays";
 
     @ColorInt
     private int defaultColor;
     @ColorInt
     private int selectedColor;
     private int numberOfDays;
+
+    private final static int MAX_NUMBER_OF_DAYS = 7;
+    private final static int DEFAULT_NUMBER_OF_DAYS = 1;
 
     @Override
     public void onAttach(Context context) {
@@ -72,8 +76,10 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
         setHasOptionsMenu(true);
         if (savedInstanceState == null) {
             selectedColor = defaultColor;
+            numberOfDays = DEFAULT_NUMBER_OF_DAYS;
         } else {
-            selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
+            numberOfDays = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_NUMBER_OF_DAYS);
+            selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR);
         }
         colorPickerDialog = (ColorPickerDialog) getActivity().getFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
         if (colorPickerDialog != null) {
@@ -89,8 +95,9 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
         fragmentNewRoutineBinding.seekBarNumberOfDays.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                fragmentNewRoutineBinding.textViewNumberOfDays.setText(getString(R.string.new_routine_number_of_days, String.valueOf(progress)));
-                numberOfDays = progress;
+                final int numberOfDays = progress + 1;
+                fragmentNewRoutineBinding.textViewNumberOfDays.setText(getString(R.string.new_routine_number_of_days, String.valueOf(numberOfDays)));
+                FragmentNewRoutine.this.numberOfDays = numberOfDays;
             }
 
             @Override
@@ -103,9 +110,10 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
 
             }
         });
+        fragmentNewRoutineBinding.seekBarNumberOfDays.setMax(MAX_NUMBER_OF_DAYS);
         if (savedInstanceState == null) {
-            fragmentNewRoutineBinding.seekBarNumberOfDays.setProgress(1);
-            numberOfDays = 1;
+            fragmentNewRoutineBinding.seekBarNumberOfDays.setProgress(DEFAULT_NUMBER_OF_DAYS - 1);
+            fragmentNewRoutineBinding.textViewNumberOfDays.setText(getString(R.string.new_routine_number_of_days, String.valueOf(DEFAULT_NUMBER_OF_DAYS)));
         }
         fragmentNewRoutineBinding.viewColor.setBackgroundColor(selectedColor);
         return fragmentNewRoutineBinding.getRoot();
@@ -121,7 +129,8 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, selectedColor);
+        outState.putInt(SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR, selectedColor);
+        outState.putInt(SAVED_INSTANCE_STATE_KEY_NUMBER_OF_DAYS, numberOfDays);
     }
 
     @Override

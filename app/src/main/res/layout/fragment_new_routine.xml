@@ -55,19 +55,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:freezesText="true"
             android:padding="4dp"
-            android:text="@string/new_routine_number_of_days"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextRoutineDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextRoutineDescription"
+            tools:text="@string/new_routine_number_of_days" />
 
         <SeekBar
             android:id="@+id/seekBarNumberOfDays"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:max="7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewNumberOfDays" />
