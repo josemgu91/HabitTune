@@ -110,7 +110,7 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
 
             }
         });
-        fragmentNewRoutineBinding.seekBarNumberOfDays.setMax(MAX_NUMBER_OF_DAYS);
+        fragmentNewRoutineBinding.seekBarNumberOfDays.setMax(MAX_NUMBER_OF_DAYS - 1);
         if (savedInstanceState == null) {
             fragmentNewRoutineBinding.seekBarNumberOfDays.setProgress(DEFAULT_NUMBER_OF_DAYS - 1);
             fragmentNewRoutineBinding.textViewNumberOfDays.setText(getString(R.string.new_routine_number_of_days, String.valueOf(DEFAULT_NUMBER_OF_DAYS)));
