@@ -92,6 +92,10 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
             drawerLayout.closeDrawers();
             return;
         }
+        goBack();
+    }
+
+    private void goBack() {
         if (!backstackDelegate.onBackPressed()) {
             super.onBackPressed();
         }
@@ -248,5 +252,10 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
+    }
+
+    @Override
+    public void finishFragment() {
+        goBack();
     }
 }

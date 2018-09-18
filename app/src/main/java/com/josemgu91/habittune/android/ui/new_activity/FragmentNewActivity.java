@@ -204,6 +204,6 @@ public class FragmentNewActivity extends BaseFragment implements ColorPickerDial
                 tagIds
         );
         viewModelNewActivity.createActivity(input);
-        getActivity().onBackPressed();
+        fragmentInteractionListener.finishFragment();
     }
 }

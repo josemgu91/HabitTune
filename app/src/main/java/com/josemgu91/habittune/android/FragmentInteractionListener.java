@@ -52,4 +52,6 @@ public interface FragmentInteractionListener {
 
     void hideToolbarTextInput();
 
+    void finishFragment();
+
 }
