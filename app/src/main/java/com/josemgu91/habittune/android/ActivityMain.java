@@ -234,6 +234,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void navigateToFragmentRoutineEditor() {
+        backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createRoutineEditorKey());
+    }
+
+    @Override
     public void showToolbarTextInput() {
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
