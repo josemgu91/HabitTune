@@ -156,6 +156,7 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
                 numberOfDays
         ));
         fragmentInteractionListener.finishFragment();
+        fragmentInteractionListener.navigateToFragmentRoutineEditor();
     }
 
     private void showColorPicker() {
