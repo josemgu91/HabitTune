@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentRoutineEditorBinding;
 
@@ -42,6 +43,13 @@ public class FragmentRoutineEditor extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelRoutineEditor = ViewModelProviders.of(this).get(ViewModelRoutineEditor.class);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fragmentInteractionListener.updateToolbar(getString(R.string.routine_editor_title), FragmentInteractionListener.IC_NAVIGATION_UP);
+        fragmentInteractionListener.updateNavigationDrawer(false);
     }
 
     @Nullable

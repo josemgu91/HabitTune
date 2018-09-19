@@ -66,6 +66,8 @@
     <string name="new_routine_hint_routine_color">Color</string>
     <string name="new_routine_create">Save</string>
 
+    <string name="routine_editor_title">Routine Editor</string>
+
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
 
