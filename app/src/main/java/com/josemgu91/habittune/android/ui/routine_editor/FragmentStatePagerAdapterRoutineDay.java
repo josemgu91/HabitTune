@@ -45,6 +45,6 @@ public class FragmentStatePagerAdapterRoutineDay extends FragmentStatePagerAdapt
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Day " + position;
+        return "Day " + (position + 1);
     }
 }
