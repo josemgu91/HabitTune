@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui.new_routine;
+package com.josemgu91.habittune.android.ui.routine_editor;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
