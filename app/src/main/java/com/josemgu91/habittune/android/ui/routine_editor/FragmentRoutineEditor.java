@@ -31,12 +31,12 @@ import android.view.ViewGroup;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.ui.BaseFragment;
-import com.josemgu91.habittune.databinding.FragmentNewRoutineBinding;
+import com.josemgu91.habittune.databinding.FragmentRoutineEditorBinding;
 
 public class FragmentRoutineEditor extends BaseFragment {
 
     private ViewModelRoutineEditor viewModelRoutineEditor;
-    private FragmentNewRoutineBinding fragmentNewRoutineBinding;
+    private FragmentRoutineEditorBinding fragmentRoutineEditorBinding;
 
     @Override
     public void onAttach(Context context) {
@@ -47,7 +47,9 @@ public class FragmentRoutineEditor extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentNewRoutineBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_routine, container, false);
-        return fragmentNewRoutineBinding.getRoot();
+        fragmentRoutineEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_editor, container, false);
+        fragmentRoutineEditorBinding.viewPager.setAdapter(new FragmentStatePagerAdapterRoutineDay(getChildFragmentManager()));
+        fragmentRoutineEditorBinding.tabLayout.setupWithViewPager(fragmentRoutineEditorBinding.viewPager);
+        return fragmentRoutineEditorBinding.getRoot();
     }
 }
