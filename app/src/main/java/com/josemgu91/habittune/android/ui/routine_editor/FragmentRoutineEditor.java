@@ -54,7 +54,7 @@ public class FragmentRoutineEditor extends BaseFragment {
 
     @Override
     protected ToolbarOptions createToolbarOptions() {
-        return new ToolbarOptions(true);
+        return new ToolbarOptions(R.id.toolbar);
     }
 
     @NonNull
