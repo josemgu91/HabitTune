@@ -52,6 +52,8 @@ public interface FragmentInteractionListener {
 
     void navigateToFragmentRoutineEditor();
 
+    void navigateToActivitySelection();
+
     void finishFragment();
 
 }
