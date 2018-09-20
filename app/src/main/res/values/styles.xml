@@ -29,18 +29,9 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="AppTheme.AppBarLayout" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarLayout" parent="ThemeOverlay.AppCompat.ActionBar" />
 
-    <style name="AppTheme.AppBar" parent="Widget.AppCompat.ActionBar">
-        <item name="titleTextColor">@color/primaryText</item>
-        <item name="subtitleTextColor">@color/primaryText</item>
-        <item name="colorControlNormal">@color/primaryText</item>
-        <item name="android:actionMenuTextColor">@color/primaryText</item>
-        <item name="android:textColorPrimary">@color/primaryText</item>
-        <item name="android:textColorSecondary">@color/primaryText</item>
-        <item name="android:textColorHint">@color/primaryText</item>
-        <item name="actionMenuTextColor">@color/primaryText</item>
-    </style>
+    <style name="AppTheme.AppBar" parent="Widget.AppCompat.Light.ActionBar" />
 
     <style name="AppTheme.AppBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
