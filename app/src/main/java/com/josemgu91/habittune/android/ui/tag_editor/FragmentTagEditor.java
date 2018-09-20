@@ -36,7 +36,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -60,7 +59,6 @@ public class FragmentTagEditor extends BaseFragment {
 
     private TagEditorFlexibleAdapter recyclerViewTagsAdapter;
 
-    private EditText toolbarEditText;
     private InputMethodManager inputMethodManager;
 
     private ConfirmationDialog tagDeletionConfirmationDialog;
@@ -121,7 +119,7 @@ public class FragmentTagEditor extends BaseFragment {
 
     @Override
     protected ToolbarOptions createToolbarOptions() {
-        return new ToolbarOptions(true);
+        return new ToolbarOptions(R.id.toolbar);
     }
 
     @NonNull
@@ -159,12 +157,8 @@ public class FragmentTagEditor extends BaseFragment {
                     break;
             }
         });
-        fragmentInteractionListener.updateToolbar(getString(R.string.tag_editor_title), FragmentInteractionListener.IC_NAVIGATION_UP);
-        fragmentInteractionListener.updateNavigationDrawer(false);
-        fragmentInteractionListener.showToolbarTextInput();
-        toolbarEditText = fragmentInteractionListener.getToolbarTextInput();
-        toolbarEditText.requestFocus();
-        toolbarEditText.addTextChangedListener(new TextWatcher() {
+        fragmentTagEditorBinding.editTextToolbarTextInput.requestFocus();
+        fragmentTagEditorBinding.editTextToolbarTextInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -188,14 +182,14 @@ public class FragmentTagEditor extends BaseFragment {
                 }
             }
         });
-        toolbarEditText.setOnEditorActionListener((v, actionId, event) -> {
+        fragmentTagEditorBinding.editTextToolbarTextInput.setOnEditorActionListener((v, actionId, event) -> {
             if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
                 return false;
             }
-            createTagAndClearAndDismissKeyboard(toolbarEditText.getText().toString());
+            createTagAndClearAndDismissKeyboard(fragmentTagEditorBinding.editTextToolbarTextInput.getText().toString());
             return true;
         });
-        recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTagAndClearAndDismissKeyboard(toolbarEditText.getText().toString()));
+        recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTagAndClearAndDismissKeyboard(fragmentTagEditorBinding.editTextToolbarTextInput.getText().toString()));
         recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener((position, view, tagId, newName) -> {
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             if (tags.contains(new GetTags.Output(tagId, newName))) {
@@ -222,10 +216,16 @@ public class FragmentTagEditor extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        fragmentInteractionListener.updateToolbar("", FragmentInteractionListener.IC_NAVIGATION_UP);
+        fragmentInteractionListener.updateNavigationDrawer(false);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         sharedViewModelTagEditor.setSelectedTagIds(recyclerViewTagsAdapter.getSelectedTagsIds());
-        fragmentInteractionListener.hideToolbarTextInput();
     }
 
     private void showTags(List<GetTags.Output> outputs) {
@@ -245,7 +245,7 @@ public class FragmentTagEditor extends BaseFragment {
 
     private void createTagAndClearAndDismissKeyboard(final String tagName) {
         viewModelTagEditor.createTag(tagName);
-        toolbarEditText.getText().clear();
-        inputMethodManager.hideSoftInputFromWindow(toolbarEditText.getWindowToken(), 0);
+        fragmentTagEditorBinding.editTextToolbarTextInput.getText().clear();
+        inputMethodManager.hideSoftInputFromWindow(fragmentTagEditorBinding.editTextToolbarTextInput.getWindowToken(), 0);
     }
 }

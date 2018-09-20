@@ -48,11 +48,6 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
         fragmentInteractionListener = (FragmentInteractionListener) getActivity();
         viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         toolbarOptions = createToolbarOptions();
     }
 
@@ -70,8 +65,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         fragmentInteractionListener.setToolbar(toolbar);
     }
 

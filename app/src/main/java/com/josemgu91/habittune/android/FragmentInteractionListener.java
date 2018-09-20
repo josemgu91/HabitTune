@@ -21,7 +21,6 @@ package com.josemgu91.habittune.android;
 
 import android.support.annotation.IntDef;
 import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
 
 public interface FragmentInteractionListener {
 
@@ -52,12 +51,6 @@ public interface FragmentInteractionListener {
     void navigateToFragmentTagEditor();
 
     void navigateToFragmentRoutineEditor();
-
-    void showToolbarTextInput();
-
-    EditText getToolbarTextInput();
-
-    void hideToolbarTextInput();
 
     void finishFragment();
 
