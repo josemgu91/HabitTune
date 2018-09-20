@@ -31,9 +31,14 @@ import com.josemgu91.habittune.android.ui.BaseFragment;
 
 public class FragmentSettings extends BaseFragment {
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected ToolbarOptions createToolbarOptions() {
+        return new ToolbarOptions(true);
+    }
+
+    @NonNull
+    @Override
+    public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 

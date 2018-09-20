@@ -87,9 +87,14 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected ToolbarOptions createToolbarOptions() {
+        return new ToolbarOptions(true);
+    }
+
+    @NonNull
+    @Override
+    public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentNewRoutineBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_routine, container, false);
         fragmentNewRoutineBinding.viewColor.setOnClickListener(v -> showColorPicker());
         fragmentNewRoutineBinding.seekBarNumberOfDays.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

@@ -119,9 +119,14 @@ public class FragmentTagEditor extends BaseFragment {
         outState.putString(SAVED_INSTANCE_STATE_KEY_TAG_ID_TO_DELETE, tagIdToDelete);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected ToolbarOptions createToolbarOptions() {
+        return new ToolbarOptions(true);
+    }
+
+    @NonNull
+    @Override
+    public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentTagEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tag_editor, container, false);
         recyclerViewTagsAdapter = new TagEditorFlexibleAdapter(getContext());
         fragmentTagEditorBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

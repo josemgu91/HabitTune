@@ -48,20 +48,18 @@ public class FragmentRoutineEditor extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //fragmentInteractionListener.showCustomToolbar(fragmentRoutineEditorBinding.toolbar);
         fragmentInteractionListener.updateToolbar(getString(R.string.routine_editor_title), FragmentInteractionListener.IC_NAVIGATION_UP);
         fragmentInteractionListener.updateNavigationDrawer(false);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        //fragmentInteractionListener.removeCustomToolbar();
+    protected ToolbarOptions createToolbarOptions() {
+        return new ToolbarOptions(true);
     }
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_editor, container, false);
         fragmentRoutineEditorBinding.viewPager.setAdapter(new FragmentStatePagerAdapterRoutineDay(getChildFragmentManager()));
         fragmentRoutineEditorBinding.tabLayout.setupWithViewPager(fragmentRoutineEditorBinding.viewPager);

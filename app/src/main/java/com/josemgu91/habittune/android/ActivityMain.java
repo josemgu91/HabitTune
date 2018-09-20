@@ -19,13 +19,16 @@
 
 package com.josemgu91.habittune.android;
 
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,6 +48,7 @@ import com.zhuinden.simplestack.StateChanger;
 public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentInteractionListener, StateChanger {
 
     private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     private BackstackDelegate backstackDelegate;
     private FragmentStateChanger fragmentStateChanger;
@@ -67,6 +71,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
 
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         drawerLayout = activityMainBinding.drawerLayout;
         navigationView = activityMainBinding.navigationView;
         navigationView.setNavigationItemSelectedListener(this);
@@ -93,6 +98,30 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
         return backstackDelegate.onRetainCustomNonConfigurationInstance();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (actionBarDrawerToggle != null) {
+            actionBarDrawerToggle.syncState();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (actionBarDrawerToggle != null) {
+            actionBarDrawerToggle.onConfigurationChanged(newConfig);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (actionBarDrawerToggle != null && actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -160,6 +189,22 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void updateToolbar(String title, int toolbarToggleIcon) {
+        getSupportActionBar().setTitle(title);
+        switch (toolbarToggleIcon) {
+            case FragmentInteractionListener.IC_NAVIGATION_CLOSE:
+                actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+                actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_navigation_close_black_24dp);
+                break;
+            case FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER:
+                actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+                break;
+            case FragmentInteractionListener.IC_NAVIGATION_UP:
+                actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+                actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_navigation_up_black_24dp);
+                break;
+            default:
+                throw new RuntimeException("Unknown toolbarToggleIcon constant");
+        }
     }
 
     @Override
@@ -217,11 +262,27 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         goBack();
     }
 
+    private void setActionBarDrawerToggle(final Toolbar toolbar) {
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this,
+                drawerLayout,
+                toolbar,
+                R.string.menu_navigation_open_drawer,
+                R.string.menu_navigation_close_drawer);
+        actionBarDrawerToggle.setToolbarNavigationClickListener(v -> onBackPressed());
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+    }
+
     @Override
     public void setToolbar(final Toolbar toolbar) {
+        setSupportActionBar(null);
+        drawerLayout.removeDrawerListener(actionBarDrawerToggle);
+        setSupportActionBar(toolbar);
+        setActionBarDrawerToggle(toolbar);
     }
 
     @Override
     public void removeToolbar() {
+        setSupportActionBar(null);
+        actionBarDrawerToggle = null;
     }
 }

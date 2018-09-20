@@ -112,9 +112,14 @@ public class FragmentNewActivity extends BaseFragment implements ColorPickerDial
         return false;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected ToolbarOptions createToolbarOptions() {
+        return new ToolbarOptions(true);
+    }
+
+    @NonNull
+    @Override
+    public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentNewActivityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_activity, container, false);
         fragmentNewActivityBinding.textViewActivityTags.setOnClickListener(v -> goToTagEditor());
         return fragmentNewActivityBinding.getRoot();

@@ -19,27 +19,29 @@
 
 package com.josemgu91.habittune.android.ui;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.josemgu91.habittune.R;
 
-public class DefaultToolbarViewWrapper implements ViewWrapper {
+public class DefaultToolbarViewFactory implements ViewFactory {
 
-    private final View viewToWrap;
+    private final ViewFactory viewFactory;
 
-    public DefaultToolbarViewWrapper(@NonNull View viewToWrap) {
-        this.viewToWrap = viewToWrap;
+    public DefaultToolbarViewFactory(@NonNull ViewFactory viewFactory) {
+        this.viewFactory = viewFactory;
     }
 
     @Override
     @NonNull
-    public View wrap(@NonNull LayoutInflater layoutInflater, @NonNull ViewGroup root) {
+    public View createView(@NonNull final LayoutInflater layoutInflater, @NonNull final ViewGroup root) {
         final View wrapper = layoutInflater.inflate(R.layout.default_toolbar_wrapper, root, false);
         final ViewGroup container = wrapper.findViewById(R.id.container);
-        container.addView(viewToWrap);
+        container.addView(viewFactory.createView(layoutInflater, container));
         return wrapper;
     }
 }

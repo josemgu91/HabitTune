@@ -83,9 +83,14 @@ public abstract class FragmentList<E extends IFlexible> extends BaseFragment {
 
     protected abstract void onItemSelected(final E item);
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected ToolbarOptions createToolbarOptions() {
+        return new ToolbarOptions(true);
+    }
+
+    @NonNull
+    @Override
+    public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentListBinding =
                 DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         recyclerViewFlexibleAdapter = new FlexibleAdapter<>(null, null, true);
