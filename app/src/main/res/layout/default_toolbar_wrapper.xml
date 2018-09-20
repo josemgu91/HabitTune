@@ -19,18 +19,29 @@
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".android.ActivityMain">
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/includedToolbar"
-        layout="@layout/toolbar" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/appbarTopElevation"
+        android:theme="@style/AppTheme.AppBarLayout">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/AppTheme.AppBar"
+            app:popupTheme="@style/AppTheme.AppBar.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        android:id="@+id/fragmentContainerWithToolbar"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

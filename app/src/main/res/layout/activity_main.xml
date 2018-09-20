@@ -28,23 +28,10 @@
         android:fitsSystemWindows="true"
         tools:context=".android.ActivityMain">
 
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/coordinatorLayout"
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".android.ActivityMain">
-
-            <include
-                android:id="@+id/includedToolbar"
-                layout="@layout/toolbar" />
-
-            <FrameLayout
-                android:id="@+id/fragmentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-        </android.support.design.widget.CoordinatorLayout>
+            android:layout_height="match_parent" />
 
         <android.support.design.widget.NavigationView
             android:id="@+id/navigationView"

@@ -37,9 +37,9 @@ public interface FragmentInteractionListener {
     @interface NavigationIcon {
     }
 
-    void showCustomToolbar(final Toolbar toolbar);
+    void setToolbar(final Toolbar toolbar);
 
-    void removeCustomToolbar();
+    void removeToolbar();
 
     void updateToolbar(final String title, @NavigationIcon final int toolbarToggleIcon);
 

@@ -42,13 +42,13 @@ public class FragmentRoutineEditor extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModelRoutineEditor = ViewModelProviders.of(this).get(ViewModelRoutineEditor.class);
+        viewModelRoutineEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineEditor.class);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fragmentInteractionListener.showCustomToolbar(fragmentRoutineEditorBinding.toolbar);
+        //fragmentInteractionListener.showCustomToolbar(fragmentRoutineEditorBinding.toolbar);
         fragmentInteractionListener.updateToolbar(getString(R.string.routine_editor_title), FragmentInteractionListener.IC_NAVIGATION_UP);
         fragmentInteractionListener.updateNavigationDrawer(false);
     }
@@ -56,7 +56,7 @@ public class FragmentRoutineEditor extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        fragmentInteractionListener.removeCustomToolbar();
+        //fragmentInteractionListener.removeCustomToolbar();
     }
 
     @Nullable
