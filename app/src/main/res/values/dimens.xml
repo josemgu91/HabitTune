@@ -31,4 +31,5 @@
     <dimen name="listElementMarginBottom">8dp</dimen>
     <dimen name="listElementMarginStart">8dp</dimen>
     <dimen name="listElementMarginEnd">8dp</dimen>
+    <dimen name="appbarTopElevation">4dp</dimen>
 </resources>
