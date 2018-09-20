@@ -19,12 +19,14 @@
 
 package com.josemgu91.habittune.android.ui;
 
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 public interface ViewWrapper {
 
-    View wrap(final View view, final LayoutInflater layoutInflater, final ViewGroup container);
+    @NonNull
+    View wrap(@NonNull final LayoutInflater layoutInflater, @NonNull final ViewGroup root);
 
 }
