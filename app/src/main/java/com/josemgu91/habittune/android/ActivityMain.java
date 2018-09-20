@@ -33,6 +33,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.josemgu91.habittune.R;
@@ -57,6 +58,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     private FragmentKeyFactory fragmentKeyFactory;
 
+    private ActivityMainBinding activityMainBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         fragmentKeyFactory = new FragmentKeyFactory();
@@ -68,22 +71,28 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
         super.onCreate(savedInstanceState);
 
-        final ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         toolbar = activityMainBinding.includedToolbar.toolbar;
         drawerLayout = activityMainBinding.drawerLayout;
         navigationView = activityMainBinding.navigationView;
+        navigationView.setNavigationItemSelectedListener(this);
+
         setSupportActionBar(toolbar);
+
+        setActionBarDrawerToggle(toolbar);
+
+        fragmentStateChanger = new FragmentStateChanger(getSupportFragmentManager(), R.id.fragmentContainer, new FragmentKeyFactory.FragmentFactory());
+        backstackDelegate.setStateChanger(this);
+    }
+
+    private void setActionBarDrawerToggle(final Toolbar toolbar) {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,
                 drawerLayout,
                 toolbar,
                 R.string.menu_navigation_open_drawer,
                 R.string.menu_navigation_close_drawer);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        fragmentStateChanger = new FragmentStateChanger(getSupportFragmentManager(), R.id.fragmentContainer, new FragmentKeyFactory.FragmentFactory());
-        backstackDelegate.setStateChanger(this);
         actionBarDrawerToggle.setToolbarNavigationClickListener(v -> onBackPressed());
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
     }
 
     @Override
@@ -191,7 +200,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void updateToolbar(String title, int toolbarToggleIcon) {
-        toolbar.setTitle(title);
+        getSupportActionBar().setTitle(title);
         switch (toolbarToggleIcon) {
             case FragmentInteractionListener.IC_NAVIGATION_CLOSE:
                 actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
@@ -262,5 +271,21 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public void finishFragment() {
         goBack();
+    }
+
+    @Override
+    public void showCustomToolbar(final Toolbar toolbar) {
+        setSupportActionBar(null);
+        activityMainBinding.includedToolbar.appBarLayout.setVisibility(View.GONE);
+        drawerLayout.removeDrawerListener(actionBarDrawerToggle);
+        setSupportActionBar(toolbar);
+        setActionBarDrawerToggle(toolbar);
+    }
+
+    @Override
+    public void removeCustomToolbar() {
+        activityMainBinding.includedToolbar.appBarLayout.setVisibility(View.VISIBLE);
+        setSupportActionBar(toolbar);
+        setActionBarDrawerToggle(toolbar);
     }
 }
