@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
+import com.josemgu91.habittune.android.ui.activity_selection.SharedViewModelActivitySelection;
 import com.josemgu91.habittune.databinding.FragmentRoutineAddActivityBinding;
 
 import java.text.DateFormat;
@@ -62,10 +63,13 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
     private Hour startHour;
     private Hour endHour;
 
+    private SharedViewModelActivitySelection sharedViewModelActivitySelection;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelRoutineAddActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineAddActivity.class);
+        sharedViewModelActivitySelection = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
     }
 
     @Override
@@ -111,6 +115,16 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         super.onStart();
         fragmentInteractionListener.updateToolbar(getString(R.string.routine_add_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
         fragmentInteractionListener.updateNavigationDrawer(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final String selectedActivityId = sharedViewModelActivitySelection.getSelectedActivityId();
+        if (selectedActivityId != null) {
+            fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setText(selectedActivityId);
+            sharedViewModelActivitySelection.clear();
+        }
     }
 
     @Override

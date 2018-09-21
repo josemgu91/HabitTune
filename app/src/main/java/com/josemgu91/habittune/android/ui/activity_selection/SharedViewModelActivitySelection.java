@@ -22,4 +22,22 @@ package com.josemgu91.habittune.android.ui.activity_selection;
 import android.arch.lifecycle.ViewModel;
 
 public class SharedViewModelActivitySelection extends ViewModel {
+
+    private String selectedActivityId;
+
+    public SharedViewModelActivitySelection() {
+        this.selectedActivityId = null;
+    }
+
+    public void setSelectedActivityId(String selectedActivityId) {
+        this.selectedActivityId = selectedActivityId;
+    }
+
+    public String getSelectedActivityId() {
+        return selectedActivityId;
+    }
+
+    public void clear() {
+        selectedActivityId = null;
+    }
 }

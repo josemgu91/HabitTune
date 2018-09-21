@@ -54,7 +54,7 @@ public class FragmentActivitySelection extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelActivitySelection = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivitySelection.class);
-        sharedViewModelActivitySelection = ViewModelProviders.of(this, viewModelFactory).get(SharedViewModelActivitySelection.class);
+        sharedViewModelActivitySelection = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
     }
 
     @NonNull
@@ -62,6 +62,8 @@ public class FragmentActivitySelection extends BaseFragment {
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentActivitySelectionBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_activity_selection, container, false);
         flexibleAdapterActivities = new FlexibleAdapter<>(null, (FlexibleAdapter.OnItemClickListener) (view, position) -> {
+            final ActivityItem activityItem = flexibleAdapterActivities.getItem(position);
+            sharedViewModelActivitySelection.setSelectedActivityId(activityItem.getId());
             fragmentInteractionListener.finishFragment();
             return true;
         }, true);
