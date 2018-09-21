@@ -24,6 +24,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.android.ui.activities.ViewModelActivities;
+import com.josemgu91.habittune.android.ui.activity_selection.ViewModelActivitySelection;
 import com.josemgu91.habittune.android.ui.new_activity.ViewModelNewActivity;
 import com.josemgu91.habittune.android.ui.new_routine.ViewModelNewRoutine;
 import com.josemgu91.habittune.android.ui.routine_add_activity.ViewModelRoutineAddActivity;
@@ -64,6 +65,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(ViewModelRoutineAddActivity.class)) {
             return (T) new ViewModelRoutineAddActivity();
+        }
+        if (modelClass.isAssignableFrom(ViewModelActivitySelection.class)) {
+            return (T) new ViewModelActivitySelection();
         }
         try {
             return modelClass.newInstance();

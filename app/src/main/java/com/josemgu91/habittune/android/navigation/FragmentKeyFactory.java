@@ -26,6 +26,7 @@ import com.josemgu91.habittune.android.FragmentSchedule;
 import com.josemgu91.habittune.android.FragmentSettings;
 import com.josemgu91.habittune.android.FragmentStatistics;
 import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
+import com.josemgu91.habittune.android.ui.activity_selection.FragmentActivitySelection;
 import com.josemgu91.habittune.android.ui.new_activity.FragmentNewActivity;
 import com.josemgu91.habittune.android.ui.new_routine.FragmentNewRoutine;
 import com.josemgu91.habittune.android.ui.routine_add_activity.FragmentRoutineAddActivity;
@@ -47,6 +48,7 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_NEW_ROUTINE = "fragmentNewRoutine";
     public static final String FRAGMENT_TAG_ROUTINE_EDITOR = "fragmentRoutineEditor";
     public static final String FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY = "fragmentRoutineAddActivity";
+    public static final String FRAGMENT_TAG_ACTIVITY_SELECTION = "fragmentActivitySelection";
 
     public FragmentKey createScheduleKey() {
         return new FragmentKey(FRAGMENT_TAG_SCHEDULE, null);
@@ -84,6 +86,10 @@ public class FragmentKeyFactory {
         return new FragmentKey(FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY, null);
     }
 
+    public FragmentKey createFragmentActivitySelection() {
+        return new FragmentKey(FRAGMENT_TAG_ACTIVITY_SELECTION, null);
+    }
+
     public FragmentKey createSettingsKey() {
         return new FragmentKey(FRAGMENT_TAG_SETTINGS, null);
     }
@@ -117,6 +123,8 @@ public class FragmentKeyFactory {
                     return new FragmentRoutineEditor();
                 case FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY:
                     return new FragmentRoutineAddActivity();
+                case FRAGMENT_TAG_ACTIVITY_SELECTION:
+                    return new FragmentActivitySelection();
                 default:
                     throw new RuntimeException("Unknown fragment tag!");
             }
