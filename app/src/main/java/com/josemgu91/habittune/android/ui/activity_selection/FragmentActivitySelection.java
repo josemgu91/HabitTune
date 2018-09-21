@@ -25,6 +25,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +34,18 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentActivitySelectionBinding;
+import com.josemgu91.habittune.domain.usecases.GetActivities;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
 
 public class FragmentActivitySelection extends BaseFragment {
 
     private FragmentActivitySelectionBinding fragmentActivitySelectionBinding;
+
+    private FlexibleAdapter<ActivityItem> flexibleAdapterActivities;
 
     private ViewModelActivitySelection viewModelActivitySelection;
     private SharedViewModelActivitySelection sharedViewModelActivitySelection;
@@ -52,7 +61,34 @@ public class FragmentActivitySelection extends BaseFragment {
     @Override
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentActivitySelectionBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_activity_selection, container, false);
+        flexibleAdapterActivities = new FlexibleAdapter<>(null, (FlexibleAdapter.OnItemClickListener) (view, position) -> {
+            fragmentInteractionListener.finishFragment();
+            return true;
+        }, true);
+        fragmentActivitySelectionBinding.recyclerView.setAdapter(flexibleAdapterActivities);
+        fragmentActivitySelectionBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return fragmentActivitySelectionBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModelActivitySelection.fetchActivities();
+        fragmentActivitySelectionBinding.setShowProgress(true);
+        viewModelActivitySelection.getGetActivitiesResponse().observe(this, response -> {
+            switch (response.status) {
+                case LOADING:
+                    fragmentActivitySelectionBinding.setShowProgress(true);
+                    break;
+                case ERROR:
+                    fragmentActivitySelectionBinding.setShowProgress(false);
+                    break;
+                case SUCCESS:
+                    fragmentActivitySelectionBinding.setShowProgress(false);
+                    response.successData.observe(this, this::updateActivities);
+                    break;
+            }
+        });
     }
 
     @Override
@@ -65,5 +101,13 @@ public class FragmentActivitySelection extends BaseFragment {
     @Override
     protected ToolbarOptions createToolbarOptions() {
         return new ToolbarOptions(true);
+    }
+
+    private void updateActivities(List<GetActivities.Output> outputs) {
+        final List<ActivityItem> activities = new ArrayList<>();
+        for (final GetActivities.Output output : outputs) {
+            activities.add(new ActivityItem(output.getId(), output.getName()));
+        }
+        flexibleAdapterActivities.updateDataSet(activities);
     }
 }
