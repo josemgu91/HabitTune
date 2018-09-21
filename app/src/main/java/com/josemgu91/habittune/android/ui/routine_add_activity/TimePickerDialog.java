@@ -30,6 +30,12 @@ import java.util.Calendar;
 
 public class TimePickerDialog extends DialogFragment implements android.app.TimePickerDialog.OnTimeSetListener {
 
+    private OnTimeSetListener onTimeSetListener;
+
+    public void setOnTimeSetListener(OnTimeSetListener onTimeSetListener) {
+        this.onTimeSetListener = onTimeSetListener;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -46,6 +52,14 @@ public class TimePickerDialog extends DialogFragment implements android.app.Time
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        if (onTimeSetListener != null) {
+            onTimeSetListener.onTimeSet(hourOfDay, minute);
+        }
+    }
+
+    public interface OnTimeSetListener {
+
+        void onTimeSet(int hourOfDay, int minute);
 
     }
 }
