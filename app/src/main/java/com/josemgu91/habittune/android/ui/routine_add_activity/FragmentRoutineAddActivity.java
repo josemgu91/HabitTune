@@ -51,6 +51,7 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
     private final static String SAVED_INSTANCE_STATE_KEY_VIEW_THAT_STARTED_TIME_PICKER = "viewThatStartedTimePicker";
     private final static String SAVED_INSTANCE_STATE_START_HOUR = "startHour";
     private final static String SAVED_INSTANCE_STATE_END_HOUR = "endHour";
+    private final static String SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID = "selectedActivityId";
 
     @IdRes
     private int viewThatStartedTimePicker;
@@ -62,6 +63,8 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
 
     private Hour startHour;
     private Hour endHour;
+
+    private String selectedActivityId;
 
     private SharedViewModelActivitySelection sharedViewModelActivitySelection;
 
@@ -81,6 +84,7 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
             endHour = new Hour(0, 0);
             return;
         }
+        selectedActivityId = savedInstanceState.getString(SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID);
         startHour = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_START_HOUR);
         endHour = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_END_HOUR);
         timePickerDialog = (TimePickerDialog) getFragmentManager().findFragmentByTag(FRAGMENT_TAG_TIME_PICKER_DIALOG);
@@ -96,6 +100,7 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         outState.putInt(SAVED_INSTANCE_STATE_KEY_VIEW_THAT_STARTED_TIME_PICKER, viewThatStartedTimePicker);
         outState.putParcelable(SAVED_INSTANCE_STATE_START_HOUR, startHour);
         outState.putParcelable(SAVED_INSTANCE_STATE_END_HOUR, endHour);
+        outState.putString(SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID, selectedActivityId);
     }
 
     @NonNull
@@ -120,10 +125,13 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
     @Override
     public void onResume() {
         super.onResume();
-        final String selectedActivityId = sharedViewModelActivitySelection.getSelectedActivityId();
+        final String newSelectedActivityId = sharedViewModelActivitySelection.getSelectedActivityId();
+        if (newSelectedActivityId != null) {
+            selectedActivityId = newSelectedActivityId;
+            sharedViewModelActivitySelection.clear();
+        }
         if (selectedActivityId != null) {
             fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setText(selectedActivityId);
-            sharedViewModelActivitySelection.clear();
         }
     }
 
