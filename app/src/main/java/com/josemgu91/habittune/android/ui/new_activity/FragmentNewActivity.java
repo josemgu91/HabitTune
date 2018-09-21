@@ -132,6 +132,13 @@ public class FragmentNewActivity extends BaseFragment implements ColorPickerDial
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        fragmentInteractionListener.updateToolbar(getString(R.string.new_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
+        fragmentInteractionListener.updateNavigationDrawer(false);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (sharedViewModelTagEditor.getSelectedTagIds() != null) {
@@ -155,8 +162,6 @@ public class FragmentNewActivity extends BaseFragment implements ColorPickerDial
             colorPickerDialog = ColorPickerDialog.newBuilder().setColor(color).create();
             colorPickerDialog.setColorPickerDialogListener(this);
         });
-        fragmentInteractionListener.updateToolbar(getString(R.string.new_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
-        fragmentInteractionListener.updateNavigationDrawer(false);
     }
 
     @Override

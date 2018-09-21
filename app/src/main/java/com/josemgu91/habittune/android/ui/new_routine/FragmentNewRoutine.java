@@ -125,8 +125,8 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         fragmentInteractionListener.updateToolbar(getString(R.string.new_routine_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
         fragmentInteractionListener.updateNavigationDrawer(false);
     }

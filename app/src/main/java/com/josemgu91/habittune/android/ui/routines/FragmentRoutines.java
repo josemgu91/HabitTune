@@ -105,8 +105,8 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         fragmentInteractionListener.updateToolbar(getString(R.string.routines_title), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
         fragmentInteractionListener.updateNavigationDrawer(true);
     }

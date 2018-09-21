@@ -65,8 +65,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onStart() {
+        super.onStart();
         fragmentInteractionListener.setToolbar(toolbar);
     }
 

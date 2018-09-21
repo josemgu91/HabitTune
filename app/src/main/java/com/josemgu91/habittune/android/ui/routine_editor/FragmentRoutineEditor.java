@@ -46,8 +46,8 @@ public class FragmentRoutineEditor extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         fragmentInteractionListener.updateToolbar(getString(R.string.routine_editor_title), FragmentInteractionListener.IC_NAVIGATION_UP);
         fragmentInteractionListener.updateNavigationDrawer(false);
     }

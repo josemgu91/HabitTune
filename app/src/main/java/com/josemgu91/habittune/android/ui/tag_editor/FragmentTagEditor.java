@@ -216,8 +216,8 @@ public class FragmentTagEditor extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         fragmentInteractionListener.updateToolbar("", FragmentInteractionListener.IC_NAVIGATION_UP);
         fragmentInteractionListener.updateNavigationDrawer(false);
     }
