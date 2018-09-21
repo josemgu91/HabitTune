@@ -221,6 +221,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void navigateToRoutineAddActivity() {
+        backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createRoutineAddActivityKey());
+    }
+
+    @Override
     public void navigateToActivitySelection() {
         //TODO: This is a placeholder. Show activity selection list.
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createActivitiesKey());

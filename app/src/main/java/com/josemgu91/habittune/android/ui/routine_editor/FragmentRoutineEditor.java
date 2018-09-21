@@ -63,7 +63,7 @@ public class FragmentRoutineEditor extends BaseFragment {
         fragmentRoutineEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_editor, container, false);
         fragmentRoutineEditorBinding.viewPager.setAdapter(new FragmentStatePagerAdapterRoutineDay(getChildFragmentManager()));
         fragmentRoutineEditorBinding.tabLayout.setupWithViewPager(fragmentRoutineEditorBinding.viewPager);
-        fragmentRoutineEditorBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToActivitySelection());
+        fragmentRoutineEditorBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToRoutineAddActivity());
         return fragmentRoutineEditorBinding.getRoot();
     }
 }

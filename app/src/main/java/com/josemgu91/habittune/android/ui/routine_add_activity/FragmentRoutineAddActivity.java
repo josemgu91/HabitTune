@@ -26,6 +26,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -45,10 +48,17 @@ public class FragmentRoutineAddActivity extends BaseFragment {
         viewModelRoutineAddActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineAddActivity.class);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @NonNull
     @Override
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineAddActivityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_add_activity, container, false);
+        fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setOnClickListener(v -> fragmentInteractionListener.navigateToActivitySelection());
         return fragmentRoutineAddActivityBinding.getRoot();
     }
 
@@ -62,5 +72,19 @@ public class FragmentRoutineAddActivity extends BaseFragment {
     @Override
     protected ToolbarOptions createToolbarOptions() {
         return new ToolbarOptions(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_routine_add_activity, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.actionAssignActivity) {
+            fragmentInteractionListener.finishFragment();
+            return true;
+        }
+        return false;
     }
 }
