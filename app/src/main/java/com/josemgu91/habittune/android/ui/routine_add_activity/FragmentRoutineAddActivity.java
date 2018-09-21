@@ -39,6 +39,8 @@ import com.josemgu91.habittune.databinding.FragmentRoutineAddActivityBinding;
 
 public class FragmentRoutineAddActivity extends BaseFragment {
 
+    private final static String FRAGMENT_TAG_TIME_PICKER_DIALOG = "timePickerDialog";
+
     private FragmentRoutineAddActivityBinding fragmentRoutineAddActivityBinding;
     private ViewModelRoutineAddActivity viewModelRoutineAddActivity;
 
@@ -59,6 +61,8 @@ public class FragmentRoutineAddActivity extends BaseFragment {
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineAddActivityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_add_activity, container, false);
         fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setOnClickListener(v -> fragmentInteractionListener.navigateToActivitySelection());
+        fragmentRoutineAddActivityBinding.textViewStartHour.setOnClickListener(v -> showTimePicker());
+        fragmentRoutineAddActivityBinding.textViewEndHour.setOnClickListener(v -> showTimePicker());
         return fragmentRoutineAddActivityBinding.getRoot();
     }
 
@@ -86,5 +90,10 @@ public class FragmentRoutineAddActivity extends BaseFragment {
             return true;
         }
         return false;
+    }
+
+    private void showTimePicker() {
+        final TimePickerDialog timePickerDialog = new TimePickerDialog();
+        timePickerDialog.show(getFragmentManager(), FRAGMENT_TAG_TIME_PICKER_DIALOG);
     }
 }
