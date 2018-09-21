@@ -72,6 +72,8 @@
     <string name="routine_add_activity_start_hour">Inicio</string>
     <string name="routine_add_activity_end_hour">Fin</string>
 
+    <string name="activity_selection_title">Selecciona una Actividad</string>
+
     <string name="action_delete">Eliminar</string>
     <string name="action_cancel">Cancelar</string>
 
