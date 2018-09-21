@@ -68,6 +68,12 @@
 
     <string name="routine_editor_title">Routine Editor</string>
 
+    <string name="routine_add_activity_title">Assign Activity</string>
+    <string name="routine_add_activity_action_add">Assign</string>
+    <string name="routine_add_activity_hint_select_activity">Select an activity.</string>
+    <string name="routine_add_activity_start_hour">Start</string>
+    <string name="routine_add_activity_end_hour">End</string>
+
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
 
