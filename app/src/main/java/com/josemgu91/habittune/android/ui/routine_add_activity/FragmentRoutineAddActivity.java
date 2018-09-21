@@ -23,6 +23,9 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -37,12 +40,27 @@ import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentRoutineAddActivityBinding;
 
-public class FragmentRoutineAddActivity extends BaseFragment {
+import java.text.DateFormat;
+import java.util.Calendar;
+
+public class FragmentRoutineAddActivity extends BaseFragment implements TimePickerDialog.OnTimeSetListener {
 
     private final static String FRAGMENT_TAG_TIME_PICKER_DIALOG = "timePickerDialog";
 
+    private final static String SAVED_INSTANCE_STATE_KEY_VIEW_THAT_STARTED_TIME_PICKER = "viewThatStartedTimePicker";
+    private final static String SAVED_INSTANCE_STATE_START_HOUR = "startHour";
+    private final static String SAVED_INSTANCE_STATE_END_HOUR = "endHour";
+
+    @IdRes
+    private int viewThatStartedTimePicker;
+
     private FragmentRoutineAddActivityBinding fragmentRoutineAddActivityBinding;
     private ViewModelRoutineAddActivity viewModelRoutineAddActivity;
+
+    private TimePickerDialog timePickerDialog;
+
+    private Hour startHour;
+    private Hour endHour;
 
     @Override
     public void onAttach(Context context) {
@@ -54,6 +72,26 @@ public class FragmentRoutineAddActivity extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (savedInstanceState == null) {
+            startHour = new Hour(0, 0);
+            endHour = new Hour(0, 0);
+            return;
+        }
+        startHour = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_START_HOUR);
+        endHour = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_END_HOUR);
+        timePickerDialog = (TimePickerDialog) getFragmentManager().findFragmentByTag(FRAGMENT_TAG_TIME_PICKER_DIALOG);
+        if (timePickerDialog != null) {
+            viewThatStartedTimePicker = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_VIEW_THAT_STARTED_TIME_PICKER);
+            timePickerDialog.setOnTimeSetListener(this);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVED_INSTANCE_STATE_KEY_VIEW_THAT_STARTED_TIME_PICKER, viewThatStartedTimePicker);
+        outState.putParcelable(SAVED_INSTANCE_STATE_START_HOUR, startHour);
+        outState.putParcelable(SAVED_INSTANCE_STATE_END_HOUR, endHour);
     }
 
     @NonNull
@@ -61,8 +99,10 @@ public class FragmentRoutineAddActivity extends BaseFragment {
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineAddActivityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_add_activity, container, false);
         fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setOnClickListener(v -> fragmentInteractionListener.navigateToActivitySelection());
-        fragmentRoutineAddActivityBinding.textViewStartHour.setOnClickListener(v -> showTimePicker());
-        fragmentRoutineAddActivityBinding.textViewEndHour.setOnClickListener(v -> showTimePicker());
+        fragmentRoutineAddActivityBinding.textViewStartHour.setOnClickListener(v -> showTimePicker(v.getId()));
+        fragmentRoutineAddActivityBinding.textViewEndHour.setOnClickListener(v -> showTimePicker(v.getId()));
+        fragmentRoutineAddActivityBinding.textViewStartHour.setText(getFormattedHour(startHour.hourOfDay, startHour.minute));
+        fragmentRoutineAddActivityBinding.textViewEndHour.setText(getFormattedHour(endHour.hourOfDay, endHour.minute));
         return fragmentRoutineAddActivityBinding.getRoot();
     }
 
@@ -92,8 +132,73 @@ public class FragmentRoutineAddActivity extends BaseFragment {
         return false;
     }
 
-    private void showTimePicker() {
-        final TimePickerDialog timePickerDialog = new TimePickerDialog();
+    private void showTimePicker(@IdRes final int viewThatStartedTimePicker) {
+        this.viewThatStartedTimePicker = viewThatStartedTimePicker;
+        timePickerDialog = new TimePickerDialog();
+        timePickerDialog.setOnTimeSetListener(this);
         timePickerDialog.show(getFragmentManager(), FRAGMENT_TAG_TIME_PICKER_DIALOG);
+    }
+
+    @Override
+    public void onTimeSet(final int hourOfDay, final int minute) {
+        final String formattedHour = getFormattedHour(hourOfDay, minute);
+        final Hour hour = new Hour(hourOfDay, minute);
+        switch (viewThatStartedTimePicker) {
+            case R.id.textViewStartHour:
+                startHour = hour;
+                fragmentRoutineAddActivityBinding.textViewStartHour.setText(formattedHour);
+                break;
+            case R.id.textViewEndHour:
+                endHour = hour;
+                fragmentRoutineAddActivityBinding.textViewEndHour.setText(formattedHour);
+                break;
+        }
+    }
+
+    private String getFormattedHour(final int hourOfDay, final int minute) {
+        final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        return dateFormat.format(calendar.getTime());
+    }
+
+    private final static class Hour implements Parcelable {
+
+        private final int hourOfDay;
+        private final int minute;
+
+        public Hour(int hourOfDay, int minute) {
+            this.hourOfDay = hourOfDay;
+            this.minute = minute;
+        }
+
+        protected Hour(Parcel in) {
+            hourOfDay = in.readInt();
+            minute = in.readInt();
+        }
+
+        public static final Creator<Hour> CREATOR = new Creator<Hour>() {
+            @Override
+            public Hour createFromParcel(Parcel in) {
+                return new Hour(in);
+            }
+
+            @Override
+            public Hour[] newArray(int size) {
+                return new Hour[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(hourOfDay);
+            dest.writeInt(minute);
+        }
     }
 }
