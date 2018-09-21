@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.josemgu91.habittune.R;
-import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentListBinding;
 
@@ -139,12 +138,5 @@ public abstract class FragmentList<E extends IFlexible> extends BaseFragment {
         if (itemToDelete != null) {
             saveItemToDeleteState(outState);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        fragmentInteractionListener.updateToolbar(getString(R.string.routines_title), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
-        fragmentInteractionListener.updateNavigationDrawer(true);
     }
 }
