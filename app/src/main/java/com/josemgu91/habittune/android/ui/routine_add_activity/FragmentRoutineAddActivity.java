@@ -132,6 +132,14 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         }
         if (selectedActivityId != null) {
             fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setText(selectedActivityId);
+            viewModelRoutineAddActivity.getActivity(selectedActivityId);
+            viewModelRoutineAddActivity.getGetActivityResponse().observe(this, response -> {
+                switch (response.status) {
+                    case SUCCESS:
+                        fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setText(response.successData.getName());
+                        break;
+                }
+            });
         }
     }
 

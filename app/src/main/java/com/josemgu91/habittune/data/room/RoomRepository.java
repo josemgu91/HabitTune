@@ -66,6 +66,16 @@ public class RoomRepository implements Repository {
         }
     }
 
+    @NonNull
+    @Override
+    public Activity getActivityById(@NonNull String id) throws DataGatewayException {
+        try {
+            return mapToEntityActivity(localRoomDatabase.getActivityDao().getActivityById(Long.valueOf(id)));
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
     @Override
     public boolean deleteActivityById(String id) throws DataGatewayException {
         try {

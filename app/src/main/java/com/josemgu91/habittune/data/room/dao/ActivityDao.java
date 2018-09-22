@@ -43,6 +43,9 @@ public interface ActivityDao {
     @Query("SELECT * FROM activities WHERE id = :activityId")
     LiveData<Activity> subscribeToActivityById(final long activityId);
 
+    @Query("SELECT * FROM activities WHERE id = :activityId")
+    Activity getActivityById(final long activityId);
+
     @Update(onConflict = OnConflictStrategy.ABORT)
     int updateActivity(final Activity activity);
 

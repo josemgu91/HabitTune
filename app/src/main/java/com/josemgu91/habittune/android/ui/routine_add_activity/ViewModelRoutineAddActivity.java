@@ -19,7 +19,45 @@
 
 package com.josemgu91.habittune.android.ui.routine_add_activity;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
+
+import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.usecases.GetActivity;
+import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 public class ViewModelRoutineAddActivity extends ViewModel {
+
+    private final GetActivity getActivity;
+
+    private final MutableLiveData<Response<GetActivity.Output, Void>> getActivityResponse;
+
+    public ViewModelRoutineAddActivity(GetActivity getActivity) {
+        this.getActivity = getActivity;
+        this.getActivityResponse = new MutableLiveData<>();
+    }
+
+    public void getActivity(final String id) {
+        getActivity.execute(new GetActivity.Input(id), new UseCaseOutput<GetActivity.Output>() {
+            @Override
+            public void onSuccess(@Nullable GetActivity.Output output) {
+                getActivityResponse.setValue(new Response<>(Response.Status.SUCCESS, output, null));
+            }
+
+            @Override
+            public void inProgress() {
+                getActivityResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                getActivityResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
+    public MutableLiveData<Response<GetActivity.Output, Void>> getGetActivityResponse() {
+        return getActivityResponse;
+    }
 }
