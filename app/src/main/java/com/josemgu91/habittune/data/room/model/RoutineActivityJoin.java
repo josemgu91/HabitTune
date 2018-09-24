@@ -21,13 +21,14 @@ package com.josemgu91.habittune.data.room.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Objects;
 
 @Entity(tableName = "routineActivityJoins",
-        primaryKeys = {"routineId", "activityId"},
-        indices = {@Index(value = {"activityId", "routineId"})},
+        indices = {@Index(value = {"activityId", "routineId", "day", "startTime", "endTime"}, unique = true)},
         foreignKeys = {
                 @ForeignKey(entity = Routine.class,
                         parentColumns = "id",
@@ -40,12 +41,41 @@ import java.util.Objects;
         })
 public class RoutineActivityJoin {
 
+    @PrimaryKey(autoGenerate = true)
+    public final long id;
     public final long routineId;
     public final long activityId;
+    public final int day;
+    public final int startTime;
+    public final int endTime;
 
-    public RoutineActivityJoin(long routineId, long activityId) {
+    @Ignore
+    public RoutineActivityJoin(long routineId, long activityId, int day, int startTime, int endTime) {
+        this.id = 0;
         this.routineId = routineId;
         this.activityId = activityId;
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public RoutineActivityJoin(long id, long routineId, long activityId, int day, int startTime, int endTime) {
+        this.id = id;
+        this.routineId = routineId;
+        this.activityId = activityId;
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    @Ignore
+    public RoutineActivityJoin(long id) {
+        this.id = id;
+        this.routineId = 0;
+        this.activityId = 0;
+        this.day = 0;
+        this.startTime = 0;
+        this.endTime = 0;
     }
 
     @Override
@@ -53,20 +83,28 @@ public class RoutineActivityJoin {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RoutineActivityJoin that = (RoutineActivityJoin) o;
-        return routineId == that.routineId &&
-                activityId == that.activityId;
+        return id == that.id &&
+                routineId == that.routineId &&
+                activityId == that.activityId &&
+                day == that.day &&
+                startTime == that.startTime &&
+                endTime == that.endTime;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(routineId, activityId);
+        return Objects.hash(id, routineId, activityId, day, startTime, endTime);
     }
 
     @Override
     public String toString() {
         return "RoutineActivityJoin{" +
-                "routineId=" + routineId +
+                "id=" + id +
+                ", routineId=" + routineId +
                 ", activityId=" + activityId +
+                ", day=" + day +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 '}';
     }
 }
