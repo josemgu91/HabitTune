@@ -20,12 +20,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "com.josemgu91.habittune"
         minSdkVersion 22
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 5
         versionName "pre-1.0-vc5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -48,7 +48,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    def supportLibraryVersion = '27.1.1'
+    def supportLibraryVersion = '28.0.0'
     def constraintLayoutVersion = '1.1.3'
     def roomVersion = "1.1.1"
     def lifecycleVersion = "1.1.1"
@@ -62,13 +62,13 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
     implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
 
-    def sqLiteSupportLibraryVersion = '3.24.0'
+    def sqLiteSupportLibraryVersion = '3.25.1'
     implementation "io.requery:sqlite-android:$sqLiteSupportLibraryVersion"
-    def simpleStackVersion = '1.11.2'
+    def simpleStackVersion = '1.13.0'
     implementation "com.github.Zhuinden:simple-stack:$simpleStackVersion"
     def colorPickerVersion = '1.0.2'
     implementation "com.jaredrummler:colorpicker:$colorPickerVersion"
-    def flexibleAdapterVersion = '5.0.5'
+    def flexibleAdapterVersion = '5.0.6'
     implementation "eu.davidea:flexible-adapter:$flexibleAdapterVersion"
 
     def jUnitVersion = '4.12'
