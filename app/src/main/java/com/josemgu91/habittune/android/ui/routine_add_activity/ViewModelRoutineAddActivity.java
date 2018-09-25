@@ -19,23 +19,29 @@
 
 package com.josemgu91.habittune.android.ui.routine_add_activity;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.usecases.CreateRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.GetActivity;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 public class ViewModelRoutineAddActivity extends ViewModel {
 
+    private final CreateRoutineEntry createRoutineEntry;
     private final GetActivity getActivity;
 
     private final MutableLiveData<Response<GetActivity.Output, Void>> getActivityResponse;
+    private final MutableLiveData<Response<Void, Void>> createRoutineEntryResponse;
 
-    public ViewModelRoutineAddActivity(GetActivity getActivity) {
+    public ViewModelRoutineAddActivity(final CreateRoutineEntry createRoutineEntry, final GetActivity getActivity) {
+        this.createRoutineEntry = createRoutineEntry;
         this.getActivity = getActivity;
         this.getActivityResponse = new MutableLiveData<>();
+        this.createRoutineEntryResponse = new MutableLiveData<>();
     }
 
     public void getActivity(final String id) {
@@ -57,7 +63,30 @@ public class ViewModelRoutineAddActivity extends ViewModel {
         });
     }
 
-    public MutableLiveData<Response<GetActivity.Output, Void>> getGetActivityResponse() {
+    public void createRoutineEntry(final String routineId, final String activityId, int day, int startTime, int endTime) {
+        createRoutineEntry.execute(new CreateRoutineEntry.Input(routineId, activityId, day, startTime, endTime), new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+                createRoutineEntryResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
+            }
+
+            @Override
+            public void inProgress() {
+                createRoutineEntryResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                createRoutineEntryResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
+    public LiveData<Response<GetActivity.Output, Void>> getGetActivityResponse() {
         return getActivityResponse;
+    }
+
+    public LiveData<Response<Void, Void>> getCreateRoutineEntryResponse() {
+        return createRoutineEntryResponse;
     }
 }
