@@ -31,7 +31,7 @@ import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, Void> {
+public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, CreateRoutine.Output> {
 
     private final RoutineDataGateway routineDataGateway;
 
@@ -41,7 +41,7 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, Void> {
     }
 
     @Override
-    protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Void> output) {
+    protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Output> output) {
         output.inProgress();
         try {
             final Routine routineCreated = routineDataGateway.createRoutine(new Routine(
@@ -51,7 +51,7 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, Void> {
                     input.numberOfDays
             ));
             if (routineCreated != null) {
-                output.onSuccess(null);
+                output.onSuccess(new Output(routineCreated.getId()));
             } else {
                 output.onError();
             }
@@ -98,6 +98,41 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, Void> {
                     ", description='" + description + '\'' +
                     ", color=" + color +
                     ", numberOfDays=" + numberOfDays +
+                    '}';
+        }
+    }
+
+    public static final class Output {
+
+        @NonNull
+        private final String id;
+
+        public Output(@NonNull String id) {
+            this.id = id;
+        }
+
+        @NonNull
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Output output = (Output) o;
+            return Objects.equals(id, output.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
+
+        @Override
+        public String toString() {
+            return "Output{" +
+                    "id='" + id + '\'' +
                     '}';
         }
     }

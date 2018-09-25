@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android.ui.new_routine;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
@@ -31,7 +32,7 @@ public class ViewModelNewRoutine extends ViewModel {
 
     private CreateRoutine createRoutine;
 
-    private final MutableLiveData<Response<Void, Void>> createRoutineResponse;
+    private final MutableLiveData<Response<CreateRoutine.Output, Void>> createRoutineResponse;
 
     public ViewModelNewRoutine(CreateRoutine createRoutine) {
         this.createRoutine = createRoutine;
@@ -39,10 +40,10 @@ public class ViewModelNewRoutine extends ViewModel {
     }
 
     public void createRoutine(final CreateRoutine.Input routine) {
-        createRoutine.execute(routine, new UseCaseOutput<Void>() {
+        createRoutine.execute(routine, new UseCaseOutput<CreateRoutine.Output>() {
             @Override
-            public void onSuccess(@Nullable Void aVoid) {
-                createRoutineResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
+            public void onSuccess(@Nullable CreateRoutine.Output output) {
+                createRoutineResponse.setValue(new Response<>(Response.Status.SUCCESS, output, null));
             }
 
             @Override
@@ -55,5 +56,9 @@ public class ViewModelNewRoutine extends ViewModel {
                 createRoutineResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
             }
         });
+    }
+
+    public LiveData<Response<CreateRoutine.Output, Void>> getCreateRoutineResponse() {
+        return createRoutineResponse;
     }
 }
