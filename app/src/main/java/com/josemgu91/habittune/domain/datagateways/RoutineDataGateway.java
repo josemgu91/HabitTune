@@ -23,6 +23,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.domain.entities.Routine;
+import com.josemgu91.habittune.domain.entities.RoutineEntry;
 
 import java.util.List;
 
@@ -34,5 +35,9 @@ public interface RoutineDataGateway {
     boolean deleteRoutineById(@NonNull final String id) throws DataGatewayException;
 
     boolean createRoutine(@NonNull final Routine routine) throws DataGatewayException;
+
+    LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException;
+
+    RoutineEntry createRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException;
 }
 

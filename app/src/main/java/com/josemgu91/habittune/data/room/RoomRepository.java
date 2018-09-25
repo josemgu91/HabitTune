@@ -25,10 +25,13 @@ import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
+import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
+import com.josemgu91.habittune.domain.DomainException;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.entities.Activity;
 import com.josemgu91.habittune.domain.entities.Routine;
+import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.entities.Tag;
 
 import java.util.ArrayList;
@@ -211,12 +214,64 @@ public class RoomRepository implements Repository {
         }
     }
 
+    @Override
+    public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException {
+        try {
+            final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData = localRoomDatabase.getRoutineActivityJoinDao().subscribeToAllRoutineActivityJoinsByRoutineId(Long.valueOf(routineId));
+            final LiveData<List<RoutineEntry>> routineEntriesLiveData = Transformations.map(routineActivityJoinsLiveData, input -> {
+                final List<RoutineEntry> routineEntries = new ArrayList<>();
+                for (final RoutineActivityJoin routineActivityJoin : input) {
+                    try {
+                        final Activity activity = getActivityById(String.valueOf(routineActivityJoin.activityId));
+                        routineEntries.add(mapRoutineActivityJoinToRoutineEntry(routineActivityJoin, activity));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return routineEntries;
+            });
+            return routineEntriesLiveData;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
+    public RoutineEntry createRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException {
+        try {
+            final long id = localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(new RoutineActivityJoin(
+                    Long.valueOf(routineId),
+                    Long.valueOf(routineEntry.getActivity().getId()),
+                    routineEntry.getDay().getDay(),
+                    routineEntry.getStartTime().getTime(),
+                    routineEntry.getEndTime().getTime()
+            ));
+            return new RoutineEntry(String.valueOf(id),
+                    routineEntry.getDay(),
+                    routineEntry.getStartTime(),
+                    routineEntry.getEndTime(),
+                    routineEntry.getActivity());
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
         final List<O> outList = new ArrayList<>();
         for (final I element : inList) {
             outList.add(function.apply(element));
         }
         return outList;
+    }
+
+    private static RoutineEntry mapRoutineActivityJoinToRoutineEntry(final RoutineActivityJoin routineActivityJoin, final Activity activity) throws DomainException {
+        return new RoutineEntry(
+                String.valueOf(routineActivityJoin.id),
+                new RoutineEntry.Day(routineActivityJoin.day),
+                new RoutineEntry.Time(routineActivityJoin.startTime),
+                new RoutineEntry.Time(routineActivityJoin.endTime),
+                activity
+        );
     }
 
     private static Activity mapToEntityActivity(final com.josemgu91.habittune.data.room.model.Activity roomActivity) {
