@@ -188,6 +188,16 @@ public class RoomRepository implements Repository {
         }
     }
 
+    @NonNull
+    @Override
+    public Routine getRoutineById(@NonNull String id) throws DataGatewayException {
+        try {
+            return mapToEntityRoutine(localRoomDatabase.getRoutineDao().getRoutineById(id));
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
     @Override
     public boolean createRoutine(@NonNull Routine routine) throws DataGatewayException {
         try {

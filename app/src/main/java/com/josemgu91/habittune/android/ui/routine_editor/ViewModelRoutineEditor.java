@@ -26,6 +26,7 @@ import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
+import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 import java.util.List;
@@ -33,12 +34,16 @@ import java.util.List;
 public class ViewModelRoutineEditor extends ViewModel {
 
     private final GetRoutineEntries getRoutineEntries;
+    private final GetRoutine getRoutine;
 
     private final MutableLiveData<Response<LiveData<List<GetRoutineEntries.Output>>, Void>> getRoutineEntriesResponse;
+    private final MutableLiveData<Response<GetRoutine.Output, Void>> getRoutineResponse;
 
-    public ViewModelRoutineEditor(GetRoutineEntries getRoutineEntries) {
+    public ViewModelRoutineEditor(GetRoutine getRoutine, GetRoutineEntries getRoutineEntries) {
         this.getRoutineEntries = getRoutineEntries;
+        this.getRoutine = getRoutine;
         getRoutineEntriesResponse = new MutableLiveData<>();
+        getRoutineResponse = new MutableLiveData<>();
     }
 
     public void fetchRoutineEntries(final String routineId) {
@@ -60,7 +65,30 @@ public class ViewModelRoutineEditor extends ViewModel {
         });
     }
 
+    public void fetchRoutine(final String routineId) {
+        getRoutine.execute(new GetRoutine.Input(routineId), new UseCaseOutput<GetRoutine.Output>() {
+            @Override
+            public void onSuccess(@Nullable GetRoutine.Output output) {
+                getRoutineResponse.setValue(new Response<>(Response.Status.SUCCESS, output, null));
+            }
+
+            @Override
+            public void inProgress() {
+                getRoutineResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                getRoutineResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
     public LiveData<Response<LiveData<List<GetRoutineEntries.Output>>, Void>> getGetRoutineEntriesResponse() {
         return getRoutineEntriesResponse;
+    }
+
+    public LiveData<Response<GetRoutine.Output, Void>> getGetRoutineResponse() {
+        return getRoutineResponse;
     }
 }

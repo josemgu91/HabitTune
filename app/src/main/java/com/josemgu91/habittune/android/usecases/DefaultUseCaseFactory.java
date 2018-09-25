@@ -33,6 +33,7 @@ import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 import com.josemgu91.habittune.domain.usecases.UpdateTag;
+import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
 
 import java.util.concurrent.Executor;
 
@@ -123,6 +124,15 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     @Override
     public GetRoutines createGetRoutines() {
         return new GetRoutines(
+                uiThreadExecutor,
+                defaultThreadPoolExecutor,
+                repository
+        );
+    }
+
+    @Override
+    public GetRoutine createGetRoutine() {
+        return new GetRoutine(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
                 repository

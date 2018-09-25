@@ -36,6 +36,9 @@ public interface RoutineDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertRoutine(final Routine routine);
 
+    @Query("SELECT * FROM routines WHERE id = :id")
+    Routine getRoutineById(final String id);
+
     @Query("SELECT * FROM routines ORDER BY name ASC")
     LiveData<List<Routine>> subscribeToAllRoutines();
 
