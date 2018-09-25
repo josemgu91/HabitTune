@@ -38,12 +38,28 @@ public class RoutineEntry {
     @NonNull
     private final Activity activity;
 
+    public RoutineEntry(@NonNull Day day, @NonNull Time startTime, @NonNull Time endTime, @NonNull Activity activity) {
+        this.id = "";
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.activity = activity;
+    }
+
     public RoutineEntry(@NonNull final String id, @NonNull final Day day, @NonNull final Time startTime, @NonNull final Time endTime, @NonNull final Activity activity) {
         this.id = id;
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
         this.activity = activity;
+    }
+
+    public RoutineEntry(@NonNull String id) {
+        this.id = id;
+        this.day = null;
+        this.startTime = null;
+        this.endTime = null;
+        this.activity = null;
     }
 
     @NonNull

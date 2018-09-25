@@ -44,11 +44,10 @@ public class CreateTag extends AbstractUseCase<CreateTag.Input, Void> {
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Void> output) {
         output.inProgress();
         try {
-            final boolean tagCreated = tagDataGateway.createTag(new Tag(
-                    "",
+            final Tag tagCreated = tagDataGateway.createTag(new Tag(
                     input.name
             ));
-            if (tagCreated) {
+            if (tagCreated != null) {
                 output.onSuccess(null);
             } else {
                 output.onError();

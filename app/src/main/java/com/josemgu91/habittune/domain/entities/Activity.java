@@ -30,12 +30,28 @@ public class Activity {
     private final int color;
     private final List<Tag> tags;
 
+    public Activity(String name, String description, int color, List<Tag> tags) {
+        this.id = "";
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.tags = tags;
+    }
+
     public Activity(String id, String name, String description, int color, List<Tag> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.color = color;
         this.tags = tags;
+    }
+
+    public Activity(String id) {
+        this.id = id;
+        this.name = "";
+        this.description = "";
+        this.color = 0;
+        this.tags = null;
     }
 
     public String getId() {

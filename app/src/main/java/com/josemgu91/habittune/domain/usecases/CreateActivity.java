@@ -51,14 +51,13 @@ public class CreateActivity extends AbstractUseCase<CreateActivity.Input, Void> 
             for (final String tagId : input.tagIds) {
                 tags.add(new Tag(tagId, ""));
             }
-            final boolean activityCreated = activityDataGateway.createActivity(new Activity(
-                    "",
+            final Activity activityCreated = activityDataGateway.createActivity(new Activity(
                     input.name,
                     input.description,
                     input.color,
                     tags
             ));
-            if (activityCreated) {
+            if (activityCreated != null) {
                 output.onSuccess(null);
             } else {
                 output.onError();

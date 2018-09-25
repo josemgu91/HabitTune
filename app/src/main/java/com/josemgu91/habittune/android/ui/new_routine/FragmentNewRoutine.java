@@ -162,6 +162,7 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
         ));
         fragmentInteractionListener.finishFragment();
         //TODO: Add RoutineId.
+
         fragmentInteractionListener.navigateToFragmentRoutineEditor("");
     }
 

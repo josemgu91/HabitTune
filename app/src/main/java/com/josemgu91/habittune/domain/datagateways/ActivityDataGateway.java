@@ -29,9 +29,6 @@ import java.util.List;
 public interface ActivityDataGateway {
 
     @NonNull
-    LiveData<List<Activity>> subscribeToAllActivities() throws DataGatewayException;
-
-    @NonNull
     Activity getActivityById(@NonNull final String id) throws DataGatewayException;
 
     @NonNull
@@ -39,7 +36,7 @@ public interface ActivityDataGateway {
 
     boolean deleteActivityById(@NonNull final String id) throws DataGatewayException;
 
-    boolean createActivity(@NonNull final Activity activity) throws DataGatewayException;
+    Activity createActivity(@NonNull final Activity activity) throws DataGatewayException;
 
     boolean updateActivity(@NonNull final Activity updatedActivity) throws DataGatewayException;
 

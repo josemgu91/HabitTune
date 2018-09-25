@@ -31,6 +31,11 @@ public class Tag {
         this.name = name;
     }
 
+    public Tag(String name) {
+        this.id = "";
+        this.name = name;
+    }
+
     public String getId() {
         return id;
     }

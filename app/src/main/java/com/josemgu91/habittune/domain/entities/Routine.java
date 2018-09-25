@@ -29,12 +29,28 @@ public class Routine {
     private final int color;
     private final int numberOfDays;
 
+    public Routine(String name, String description, int color, int numberOfDays) {
+        this.id = "";
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.numberOfDays = numberOfDays;
+    }
+
     public Routine(String id, String name, String description, int color, int numberOfDays) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.color = color;
         this.numberOfDays = numberOfDays;
+    }
+
+    public Routine(String id) {
+        this.id = id;
+        this.name = "";
+        this.description = "";
+        this.color = 0;
+        this.numberOfDays = 0;
     }
 
     public String getId() {

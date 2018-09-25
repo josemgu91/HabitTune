@@ -47,20 +47,6 @@ public class RoomRepository implements Repository {
 
     @NonNull
     @Override
-    public LiveData<List<Activity>> subscribeToAllActivities() throws DataGatewayException {
-        final LiveData<List<com.josemgu91.habittune.data.room.model.Activity>> roomActivityListLiveData = localRoomDatabase.getActivityDao().subscribeToAllActivities();
-        Transformations.map(roomActivityListLiveData, roomActivityList -> {
-            for (final com.josemgu91.habittune.data.room.model.Activity roomActivity : roomActivityList) {
-                final LiveData<List<com.josemgu91.habittune.data.room.model.Tag>> roomActivityTagsLiveData = localRoomDatabase.getActivityTagJoinDao().subscribeToAllTagsByActivityId(roomActivity.id);
-                Transformations.map(roomActivityTagsLiveData, roomActivityTags -> mapToEntityActivity(roomActivity, roomActivityTags));
-            }
-            return null;
-        });
-        return null;
-    }
-
-    @NonNull
-    @Override
     public LiveData<List<Activity>> subscribeToAllActivitiesButWithoutTags() throws DataGatewayException {
         try {
             return Transformations.map(localRoomDatabase.getActivityDao().subscribeToAllActivities(), input -> mapList(input, RoomRepository::mapToEntityActivity));
@@ -89,22 +75,25 @@ public class RoomRepository implements Repository {
     }
 
     @Override
-    public boolean createActivity(@NonNull Activity activity) throws DataGatewayException {
+    public Activity createActivity(@NonNull Activity activity) throws DataGatewayException {
         try {
             final long activityId = localRoomDatabase.getActivityDao().insertActivity(new com.josemgu91.habittune.data.room.model.Activity(
                     activity.getName(),
                     activity.getDescription(),
                     activity.getColor()
             ));
-            if (activityId <= 0) {
-                return false;
-            }
             for (final Tag tag : activity.getTags()) {
                 localRoomDatabase.getActivityTagJoinDao().insertActivityTagJoin(
                         new ActivityTagJoin(activityId, Long.valueOf(tag.getId()))
                 );
             }
-            return true;
+            return new Activity(
+                    String.valueOf(activityId),
+                    activity.getName(),
+                    activity.getDescription(),
+                    activity.getColor(),
+                    activity.getTags()
+            );
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -140,13 +129,13 @@ public class RoomRepository implements Repository {
     }
 
     @Override
-    public boolean createTag(@NonNull Tag tag) throws DataGatewayException {
+    public Tag createTag(@NonNull Tag tag) throws DataGatewayException {
         try {
             final long insertedTagId = localRoomDatabase.getTagDao().insertTag(new com.josemgu91.habittune.data.room.model.Tag(
                     0,
                     tag.getName()
             ));
-            return insertedTagId != -1;
+            return new Tag(String.valueOf(insertedTagId), tag.getName());
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -199,7 +188,7 @@ public class RoomRepository implements Repository {
     }
 
     @Override
-    public boolean createRoutine(@NonNull Routine routine) throws DataGatewayException {
+    public Routine createRoutine(@NonNull Routine routine) throws DataGatewayException {
         try {
             final long insertedRoutineId = localRoomDatabase.getRoutineDao().insertRoutine(new com.josemgu91.habittune.data.room.model.Routine(
                     routine.getName(),
@@ -207,7 +196,13 @@ public class RoomRepository implements Repository {
                     routine.getColor(),
                     routine.getNumberOfDays()
             ));
-            return insertedRoutineId != -1;
+            return new Routine(
+                    String.valueOf(insertedRoutineId),
+                    routine.getName(),
+                    routine.getDescription(),
+                    routine.getColor(),
+                    routine.getNumberOfDays()
+            );
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
