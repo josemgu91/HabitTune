@@ -30,14 +30,17 @@ public class RoutineEntry {
     @NonNull
     private final String id;
     @NonNull
+    private final Day day;
+    @NonNull
     private final Time startTime;
     @NonNull
     private final Time endTime;
     @NonNull
     private final Activity activity;
 
-    public RoutineEntry(@NonNull final String id, @NonNull final Time startTime, @NonNull final Time endTime, @NonNull final Activity activity) {
+    public RoutineEntry(@NonNull String id, @NonNull Day day, @NonNull Time startTime, @NonNull Time endTime, @NonNull Activity activity) {
         this.id = id;
+        this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
         this.activity = activity;
@@ -46,6 +49,11 @@ public class RoutineEntry {
     @NonNull
     public String getId() {
         return id;
+    }
+
+    @NonNull
+    public Day getDay() {
+        return day;
     }
 
     @NonNull
@@ -69,6 +77,7 @@ public class RoutineEntry {
         if (o == null || getClass() != o.getClass()) return false;
         RoutineEntry that = (RoutineEntry) o;
         return Objects.equals(id, that.id) &&
+                Objects.equals(day, that.day) &&
                 Objects.equals(startTime, that.startTime) &&
                 Objects.equals(endTime, that.endTime) &&
                 Objects.equals(activity, that.activity);
@@ -76,17 +85,54 @@ public class RoutineEntry {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startTime, endTime, activity);
+        return Objects.hash(id, day, startTime, endTime, activity);
     }
 
     @Override
     public String toString() {
         return "RoutineEntry{" +
                 "id='" + id + '\'' +
+                ", day=" + day +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", activity=" + activity +
                 '}';
+    }
+
+    public static final class Day {
+
+        private final int day;
+
+        public Day(int day) throws DomainException {
+            if (day < 0) {
+                throw new DomainException("Invalid day!");
+            }
+            this.day = day;
+        }
+
+        public int getDay() {
+            return day;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Day day1 = (Day) o;
+            return day == day1.day;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(day);
+        }
+
+        @Override
+        public String toString() {
+            return "Day{" +
+                    "day=" + day +
+                    '}';
+        }
     }
 
     public static final class Time {
