@@ -36,6 +36,18 @@ import com.josemgu91.habittune.databinding.FragmentRoutineEditorBinding;
 
 public class FragmentRoutineEditor extends BaseFragment {
 
+    private final static String ARG_ROUTINE_ID = "routineId";
+
+    public static FragmentRoutineEditor newInstance(final String routineId) {
+        Bundle args = new Bundle();
+        args.putString(ARG_ROUTINE_ID, routineId);
+        FragmentRoutineEditor fragment = new FragmentRoutineEditor();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private String routineId;
+    private int currentRoutineDay;
     private ViewModelRoutineEditor viewModelRoutineEditor;
     private FragmentRoutineEditorBinding fragmentRoutineEditorBinding;
 
@@ -43,6 +55,7 @@ public class FragmentRoutineEditor extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelRoutineEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineEditor.class);
+        routineId = getArguments().getString(ARG_ROUTINE_ID);
     }
 
     @Override
@@ -63,7 +76,7 @@ public class FragmentRoutineEditor extends BaseFragment {
         fragmentRoutineEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_editor, container, false);
         fragmentRoutineEditorBinding.viewPager.setAdapter(new FragmentStatePagerAdapterRoutineDay(getChildFragmentManager()));
         fragmentRoutineEditorBinding.tabLayout.setupWithViewPager(fragmentRoutineEditorBinding.viewPager);
-        fragmentRoutineEditorBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToRoutineAddActivity());
+        fragmentRoutineEditorBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToRoutineAddActivity(routineId, currentRoutineDay));
         return fragmentRoutineEditorBinding.getRoot();
     }
 }

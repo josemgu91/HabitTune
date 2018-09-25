@@ -79,7 +79,7 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
 
     @Override
     protected void onItemSelected(RoutineItem item) {
-        fragmentInteractionListener.navigateToFragmentRoutineEditor();
+        fragmentInteractionListener.navigateToFragmentRoutineEditor(item.getId());
     }
 
     @Override

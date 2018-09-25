@@ -19,6 +19,8 @@
 
 package com.josemgu91.habittune.android.navigation;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.josemgu91.habittune.android.FragmentHelp;
@@ -50,6 +52,11 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY = "fragmentRoutineAddActivity";
     public static final String FRAGMENT_TAG_ACTIVITY_SELECTION = "fragmentActivitySelection";
 
+    private static final String FRAGMENT_ARG_ROUTINE_EDITOR_ROUTINE_ID = "routineId";
+
+    private static final String FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_ID = "routineId";
+    private static final String FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_DAY = "routineDay";
+
     public FragmentKey createScheduleKey() {
         return new FragmentKey(FRAGMENT_TAG_SCHEDULE, null);
     }
@@ -78,12 +85,17 @@ public class FragmentKeyFactory {
         return new FragmentKey(FRAGMENT_TAG_NEW_ROUTINE, null);
     }
 
-    public FragmentKey createRoutineEditorKey() {
-        return new FragmentKey(FRAGMENT_TAG_ROUTINE_EDITOR, null);
+    public FragmentKey createRoutineEditorKey(@NonNull final String routineId) {
+        final Bundle arguments = new Bundle();
+        arguments.putString(FRAGMENT_ARG_ROUTINE_EDITOR_ROUTINE_ID, routineId);
+        return new FragmentKey(FRAGMENT_TAG_ROUTINE_EDITOR, arguments);
     }
 
-    public FragmentKey createRoutineAddActivityKey() {
-        return new FragmentKey(FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY, null);
+    public FragmentKey createRoutineAddActivityKey(@NonNull final String routineId, final int routineDay) {
+        final Bundle arguments = new Bundle();
+        arguments.putString(FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_ID, routineId);
+        arguments.putInt(FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_DAY, routineDay);
+        return new FragmentKey(FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY, arguments);
     }
 
     public FragmentKey createFragmentActivitySelection() {
@@ -100,6 +112,7 @@ public class FragmentKeyFactory {
 
     public static class FragmentFactory {
         public Fragment createFragment(final FragmentKey fragmentKey) {
+            final Bundle arguments = fragmentKey.getArguments();
             switch (fragmentKey.getFragmentTag()) {
                 case FRAGMENT_TAG_SCHEDULE:
                     return new FragmentSchedule();
@@ -120,9 +133,14 @@ public class FragmentKeyFactory {
                 case FRAGMENT_TAG_NEW_ROUTINE:
                     return new FragmentNewRoutine();
                 case FRAGMENT_TAG_ROUTINE_EDITOR:
-                    return new FragmentRoutineEditor();
+                    return FragmentRoutineEditor.newInstance(
+                            arguments.getString(FRAGMENT_ARG_ROUTINE_EDITOR_ROUTINE_ID)
+                    );
                 case FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY:
-                    return new FragmentRoutineAddActivity();
+                    return FragmentRoutineAddActivity.newInstance(
+                            arguments.getString(FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_ID),
+                            arguments.getInt(FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_DAY)
+                    );
                 case FRAGMENT_TAG_ACTIVITY_SELECTION:
                     return new FragmentActivitySelection();
                 default:

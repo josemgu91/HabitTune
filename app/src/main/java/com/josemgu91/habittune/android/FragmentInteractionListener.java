@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.android;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 
 public interface FragmentInteractionListener {
@@ -50,9 +51,9 @@ public interface FragmentInteractionListener {
 
     void navigateToFragmentTagEditor();
 
-    void navigateToFragmentRoutineEditor();
+    void navigateToFragmentRoutineEditor(@NonNull final String routineId);
 
-    void navigateToRoutineAddActivity();
+    void navigateToRoutineAddActivity(@NonNull final String routineId, final int routineDay);
 
     void navigateToActivitySelection();
 

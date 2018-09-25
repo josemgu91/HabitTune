@@ -46,12 +46,27 @@ import java.util.Calendar;
 
 public class FragmentRoutineAddActivity extends BaseFragment implements TimePickerDialog.OnTimeSetListener {
 
+    private final static String ARG_ROUTINE_ID = "routineId";
+    private final static String ARG_ROUTINE_DAY = "routineDay";
+
     private final static String FRAGMENT_TAG_TIME_PICKER_DIALOG = "timePickerDialog";
 
     private final static String SAVED_INSTANCE_STATE_KEY_VIEW_THAT_STARTED_TIME_PICKER = "viewThatStartedTimePicker";
     private final static String SAVED_INSTANCE_STATE_START_HOUR = "startHour";
     private final static String SAVED_INSTANCE_STATE_END_HOUR = "endHour";
     private final static String SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID = "selectedActivityId";
+
+    public static FragmentRoutineAddActivity newInstance(@NonNull final String routineId, final int routineDay) {
+        final Bundle args = new Bundle();
+        args.putString(ARG_ROUTINE_ID, routineId);
+        args.putInt(ARG_ROUTINE_DAY, routineDay);
+        FragmentRoutineAddActivity fragment = new FragmentRoutineAddActivity();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private String routineId;
+    private int routineDay;
 
     @IdRes
     private int viewThatStartedTimePicker;
@@ -73,6 +88,9 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         super.onAttach(context);
         viewModelRoutineAddActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineAddActivity.class);
         sharedViewModelActivitySelection = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
+        final Bundle arguments = getArguments();
+        routineId = arguments.getString(ARG_ROUTINE_ID);
+        routineDay = arguments.getInt(ARG_ROUTINE_DAY);
     }
 
     @Override
