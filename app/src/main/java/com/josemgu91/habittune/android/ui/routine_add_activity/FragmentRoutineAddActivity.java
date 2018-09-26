@@ -98,8 +98,11 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (savedInstanceState == null) {
-            startHour = new Hour(0, 0);
-            endHour = new Hour(0, 0);
+            final Calendar calendar = Calendar.getInstance();
+            final int currentHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+            final int currentMinute = calendar.get(Calendar.MINUTE);
+            startHour = new Hour(currentHourOfDay, currentMinute);
+            endHour = new Hour((currentHourOfDay + 1) % 24, currentMinute);
             return;
         }
         selectedActivityId = savedInstanceState.getString(SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID);
@@ -125,9 +128,15 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
     @Override
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineAddActivityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_add_activity, container, false);
-        fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setOnClickListener(v -> fragmentInteractionListener.navigateToActivitySelection());
-        fragmentRoutineAddActivityBinding.textViewStartHour.setOnClickListener(v -> showTimePicker(v.getId()));
-        fragmentRoutineAddActivityBinding.textViewEndHour.setOnClickListener(v -> showTimePicker(v.getId()));
+        fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setOnClickListener(
+                v -> fragmentInteractionListener.navigateToActivitySelection()
+        );
+        fragmentRoutineAddActivityBinding.textViewStartHour.setOnClickListener(
+                v -> showTimePicker(v.getId(), startHour.hourOfDay, startHour.minute)
+        );
+        fragmentRoutineAddActivityBinding.textViewEndHour.setOnClickListener(
+                v -> showTimePicker(v.getId(), endHour.hourOfDay, endHour.minute)
+        );
         fragmentRoutineAddActivityBinding.textViewStartHour.setText(getFormattedHour(startHour.hourOfDay, startHour.minute));
         fragmentRoutineAddActivityBinding.textViewEndHour.setText(getFormattedHour(endHour.hourOfDay, endHour.minute));
         return fragmentRoutineAddActivityBinding.getRoot();
@@ -191,9 +200,9 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         );
     }
 
-    private void showTimePicker(@IdRes final int viewThatStartedTimePicker) {
+    private void showTimePicker(@IdRes final int viewThatStartedTimePicker, final int hourOfDay, final int minute) {
         this.viewThatStartedTimePicker = viewThatStartedTimePicker;
-        timePickerDialog = new TimePickerDialog();
+        timePickerDialog = TimePickerDialog.newInstance(hourOfDay, minute);
         timePickerDialog.setOnTimeSetListener(this);
         timePickerDialog.show(getFragmentManager(), FRAGMENT_TAG_TIME_PICKER_DIALOG);
     }

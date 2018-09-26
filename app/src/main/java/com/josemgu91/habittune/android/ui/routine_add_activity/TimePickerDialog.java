@@ -20,32 +20,51 @@
 package com.josemgu91.habittune.android.ui.routine_add_activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
-
 public class TimePickerDialog extends DialogFragment implements android.app.TimePickerDialog.OnTimeSetListener {
 
+    private static final String ARG_HOUR_OF_DAY = "hourOfDay";
+    private static final String ARG_MINUTE = "minute";
+
+    public static TimePickerDialog newInstance(final int hourOfDay, final int minute) {
+        final Bundle args = new Bundle();
+        args.putInt(ARG_HOUR_OF_DAY, hourOfDay);
+        args.putInt(ARG_MINUTE, minute);
+        final TimePickerDialog fragment = new TimePickerDialog();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private OnTimeSetListener onTimeSetListener;
+
+    private int hourOfDay;
+    private int minute;
 
     public void setOnTimeSetListener(OnTimeSetListener onTimeSetListener) {
         this.onTimeSetListener = onTimeSetListener;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        final Bundle arguments = getArguments();
+        hourOfDay = arguments.getInt(ARG_HOUR_OF_DAY);
+        minute = arguments.getInt(ARG_MINUTE);
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Calendar calendar = Calendar.getInstance();
-        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        final int minute = calendar.get(Calendar.MINUTE);
         return new android.app.TimePickerDialog(
                 getActivity(),
                 this,
-                hour,
+                hourOfDay,
                 minute,
                 DateFormat.is24HourFormat(getActivity()));
     }
