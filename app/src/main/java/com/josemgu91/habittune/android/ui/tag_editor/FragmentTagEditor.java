@@ -140,7 +140,7 @@ public class FragmentTagEditor extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         fragmentTagEditorBinding.setShowProgress(true);
-        viewModelTagEditor.getGetTagsResponse().observe(this, response -> {
+        viewModelTagEditor.getGetTagsResponse().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case LOADING:
                     fragmentTagEditorBinding.setShowProgress(true);
@@ -150,7 +150,7 @@ public class FragmentTagEditor extends BaseFragment {
                     break;
                 case SUCCESS:
                     fragmentTagEditorBinding.setShowProgress(false);
-                    response.successData.observe(this, outputs -> {
+                    response.successData.observe(getViewLifecycleOwner(), outputs -> {
                         tags = outputs;
                         showTags(outputs);
                     });

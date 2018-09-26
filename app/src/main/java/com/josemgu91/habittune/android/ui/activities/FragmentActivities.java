@@ -88,7 +88,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
         viewModelActivities.fetchActivities();
         fragmentListBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToFragmentNewActivity());
         fragmentListBinding.setShowProgress(true);
-        viewModelActivities.getGetActivitiesResponse().observe(this, response -> {
+        viewModelActivities.getGetActivitiesResponse().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case LOADING:
                     fragmentListBinding.setShowProgress(true);
@@ -98,7 +98,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
                     break;
                 case SUCCESS:
                     fragmentListBinding.setShowProgress(false);
-                    response.successData.observe(this, this::updateActivities);
+                    response.successData.observe(getViewLifecycleOwner(), this::updateActivities);
                     break;
             }
         });

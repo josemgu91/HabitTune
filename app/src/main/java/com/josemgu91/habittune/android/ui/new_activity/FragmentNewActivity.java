@@ -145,9 +145,9 @@ public class FragmentNewActivity extends BaseFragment implements ColorPickerDial
             viewModelNewActivity.getTags(sharedViewModelTagEditor.getSelectedTagIds());
             sharedViewModelTagEditor.clear();
         }
-        viewModelNewActivity.getGetTagsResponse().observe(this, response -> {
+        viewModelNewActivity.getGetTagsResponse().observe(getViewLifecycleOwner(), response -> {
             if (response.status == Response.Status.SUCCESS) {
-                response.successData.observe(this, outputs -> {
+                response.successData.observe(getViewLifecycleOwner(), outputs -> {
                     tags = outputs;
                     final List<String> tagNames = new ArrayList<>();
                     for (final GetTags.Output output : outputs) {
@@ -157,7 +157,7 @@ public class FragmentNewActivity extends BaseFragment implements ColorPickerDial
                 });
             }
         });
-        viewModelNewActivity.getSelectedColor().observe(this, color -> {
+        viewModelNewActivity.getSelectedColor().observe(getViewLifecycleOwner(), color -> {
             fragmentNewActivityBinding.viewColor.setBackgroundColor(color);
             colorPickerDialog = ColorPickerDialog.newBuilder().setColor(color).create();
             colorPickerDialog.setColorPickerDialogListener(this);

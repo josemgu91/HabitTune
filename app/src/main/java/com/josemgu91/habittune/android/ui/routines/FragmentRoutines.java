@@ -88,7 +88,7 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
         viewModelRoutines.fetchRoutines();
         fragmentListBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToFragmentNewRoutine());
         fragmentListBinding.setShowProgress(true);
-        viewModelRoutines.getGetRoutinesResponse().observe(this, response -> {
+        viewModelRoutines.getGetRoutinesResponse().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case LOADING:
                     fragmentListBinding.setShowProgress(true);
@@ -98,7 +98,7 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
                     break;
                 case SUCCESS:
                     fragmentListBinding.setShowProgress(false);
-                    response.successData.observe(this, this::updateRoutines);
+                    response.successData.observe(getViewLifecycleOwner(), this::updateRoutines);
                     break;
             }
         });

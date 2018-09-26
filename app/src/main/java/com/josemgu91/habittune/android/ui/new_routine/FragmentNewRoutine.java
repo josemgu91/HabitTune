@@ -19,7 +19,6 @@
 
 package com.josemgu91.habittune.android.ui.new_routine;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -41,7 +40,6 @@ import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
-import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.databinding.FragmentNewRoutineBinding;
 import com.josemgu91.habittune.domain.usecases.CreateRoutine;
 
@@ -162,19 +160,16 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
                 selectedColor,
                 numberOfDays
         ));
-        viewModelNewRoutine.getCreateRoutineResponse().observe(this, new Observer<Response<CreateRoutine.Output, Void>>() {
-            @Override
-            public void onChanged(@Nullable Response<CreateRoutine.Output, Void> output) {
-                switch (output.status) {
-                    case LOADING:
-                        break;
-                    case ERROR:
-                        break;
-                    case SUCCESS:
-                        fragmentInteractionListener.finishFragment();
-                        fragmentInteractionListener.navigateToFragmentRoutineEditor(output.successData.getId());
-                        break;
-                }
+        viewModelNewRoutine.getCreateRoutineResponse().observe(getViewLifecycleOwner(), output -> {
+            switch (output.status) {
+                case LOADING:
+                    break;
+                case ERROR:
+                    break;
+                case SUCCESS:
+                    fragmentInteractionListener.finishFragment();
+                    fragmentInteractionListener.navigateToFragmentRoutineEditor(output.successData.getId());
+                    break;
             }
         });
     }

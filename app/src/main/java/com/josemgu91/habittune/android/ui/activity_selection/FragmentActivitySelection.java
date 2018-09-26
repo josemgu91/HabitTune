@@ -77,7 +77,7 @@ public class FragmentActivitySelection extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         viewModelActivitySelection.fetchActivities();
         fragmentActivitySelectionBinding.setShowProgress(true);
-        viewModelActivitySelection.getGetActivitiesResponse().observe(this, response -> {
+        viewModelActivitySelection.getGetActivitiesResponse().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case LOADING:
                     fragmentActivitySelectionBinding.setShowProgress(true);
@@ -87,7 +87,7 @@ public class FragmentActivitySelection extends BaseFragment {
                     break;
                 case SUCCESS:
                     fragmentActivitySelectionBinding.setShowProgress(false);
-                    response.successData.observe(this, this::updateActivities);
+                    response.successData.observe(getViewLifecycleOwner(), this::updateActivities);
                     break;
             }
         });
