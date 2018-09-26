@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,15 +44,24 @@ import eu.davidea.viewholders.FlexibleViewHolder;
 public class FragmentRoutineDay extends Fragment {
 
     private FragmentRoutineDayBinding fragmentRoutineDayBinding;
+    private FlexibleAdapter<RoutineEntryItem> routineEntryItemFlexibleAdapter;
+    private List<RoutineEntryItem> routineEntryItems;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineDayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_day, container, false);
+        routineEntryItemFlexibleAdapter = new FlexibleAdapter<>(routineEntryItems);
+        fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setAdapter(routineEntryItemFlexibleAdapter);
+        fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setLayoutManager(new LinearLayoutManager(getContext()));
         return fragmentRoutineDayBinding.getRoot();
     }
 
-    private static class RoutineEntryItem extends AbstractFlexibleItem<RoutineEntryItem.RoutineEntryViewHolder> {
+    public void setRoutineEntries(List<RoutineEntryItem> routineEntries) {
+        this.routineEntryItems = routineEntries;
+    }
+
+    public static class RoutineEntryItem extends AbstractFlexibleItem<RoutineEntryItem.RoutineEntryViewHolder> {
 
         @NonNull
         private final String activityId;

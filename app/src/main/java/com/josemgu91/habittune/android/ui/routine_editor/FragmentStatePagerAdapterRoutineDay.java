@@ -59,7 +59,21 @@ public class FragmentStatePagerAdapterRoutineDay extends FragmentStatePagerAdapt
 
     @Override
     public Fragment getItem(int position) {
-        return FragmentRoutineDay.newInstance("Day " + (position + 1));
+        final FragmentRoutineDay fragmentRoutineDay = new FragmentRoutineDay();
+        /*final List<FragmentRoutineDay.RoutineEntryItem> items = new ArrayList<>();
+        for(final GetRoutineEntries.Output routineEntry : routineEntries){
+
+        }*/
+        fragmentRoutineDay.setRoutineEntries(createTestData());
+        return fragmentRoutineDay;
+    }
+
+    private List<FragmentRoutineDay.RoutineEntryItem> createTestData() {
+        final List<FragmentRoutineDay.RoutineEntryItem> items = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            items.add(new FragmentRoutineDay.RoutineEntryItem("", "08:00", "13:00", "Test"));
+        }
+        return items;
     }
 
     @Override
