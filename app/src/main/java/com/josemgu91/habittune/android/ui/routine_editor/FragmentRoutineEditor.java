@@ -33,10 +33,7 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentRoutineEditorBinding;
-import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
-
-import java.util.List;
 
 public class FragmentRoutineEditor extends BaseFragment {
 
@@ -80,26 +77,10 @@ public class FragmentRoutineEditor extends BaseFragment {
                     break;
             }
         });
-        viewModelRoutineEditor.fetchRoutineEntries(routineId);
-        viewModelRoutineEditor.getGetRoutineEntriesResponse().observe(getViewLifecycleOwner(), response -> {
-            switch (response.status) {
-                case LOADING:
-                    break;
-                case ERROR:
-                    break;
-                case SUCCESS:
-                    response.successData.observe(getViewLifecycleOwner(), this::updateRoutineEntries);
-                    break;
-            }
-        });
     }
 
     private void updateRoutine(GetRoutine.Output routine) {
         fragmentStatePagerAdapterRoutineDay.updateNumberOfDays(routine.getNumberOfDays());
-    }
-
-    private void updateRoutineEntries(List<GetRoutineEntries.Output> routineEntries) {
-
     }
 
     @Override
@@ -111,7 +92,7 @@ public class FragmentRoutineEditor extends BaseFragment {
     @Override
     public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_editor, container, false);
-        fragmentStatePagerAdapterRoutineDay = new FragmentStatePagerAdapterRoutineDay(getChildFragmentManager());
+        fragmentStatePagerAdapterRoutineDay = new FragmentStatePagerAdapterRoutineDay(getChildFragmentManager(), routineId);
         fragmentRoutineEditorBinding.viewPager.setAdapter(fragmentStatePagerAdapterRoutineDay);
         fragmentRoutineEditorBinding.tabLayout.setupWithViewPager(fragmentRoutineEditorBinding.viewPager);
         fragmentRoutineEditorBinding.floatingActionButtonAdd.setOnClickListener(

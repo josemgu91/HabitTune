@@ -19,6 +19,9 @@
 
 package com.josemgu91.habittune.android.ui.routine_editor;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,8 +34,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.databinding.FragmentRoutineDayBinding;
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,22 +51,76 @@ import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class FragmentRoutineDay extends Fragment {
 
-    private FragmentRoutineDayBinding fragmentRoutineDayBinding;
+    private final static String ARG_ROUTINE_DAY = "routineDay";
+    private final static String ARG_ROUTINE_ID = "routineId";
+
+    public static FragmentRoutineDay newInstance(final String routineId, final int day) {
+        final Bundle args = new Bundle();
+        args.putInt(ARG_ROUTINE_DAY, day);
+        args.putString(ARG_ROUTINE_ID, routineId);
+        FragmentRoutineDay fragment = new FragmentRoutineDay();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private FlexibleAdapter<RoutineEntryItem> routineEntryItemFlexibleAdapter;
-    private List<RoutineEntryItem> routineEntryItems;
+    private ViewModelRoutineDay viewModelRoutineDay;
+    private int routineDay;
+    private String routineId;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        @NonNull final Bundle arguments = getArguments();
+        routineDay = arguments.getInt(ARG_ROUTINE_DAY);
+        routineId = arguments.getString(ARG_ROUTINE_ID);
+        final ViewModelProvider.Factory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
+        viewModelRoutineDay = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineDay.class);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentRoutineDayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_day, container, false);
-        routineEntryItemFlexibleAdapter = new FlexibleAdapter<>(routineEntryItems);
+        FragmentRoutineDayBinding fragmentRoutineDayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_day, container, false);
+        routineEntryItemFlexibleAdapter = new FlexibleAdapter<>(null);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setAdapter(routineEntryItemFlexibleAdapter);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setLayoutManager(new LinearLayoutManager(getContext()));
         return fragmentRoutineDayBinding.getRoot();
     }
 
-    public void setRoutineEntries(List<RoutineEntryItem> routineEntries) {
-        this.routineEntryItems = routineEntries;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModelRoutineDay.fetchRoutineEntries(routineId, routineDay);
+        viewModelRoutineDay.getGetRoutineEntriesResponse().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case LOADING:
+                    break;
+                case ERROR:
+                    break;
+                case SUCCESS:
+                    response.successData.observe(getViewLifecycleOwner(), this::updateRoutineEntries);
+                    break;
+            }
+        });
+    }
+
+    private void updateRoutineEntries(List<GetRoutineEntries.Output> routineEntries) {
+        final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        final List<RoutineEntryItem> routineEntryItems = new ArrayList<>();
+        for (final GetRoutineEntries.Output routineEntry : routineEntries) {
+            final Calendar calendarStartTime = Calendar.getInstance();
+            calendarStartTime.set(Calendar.SECOND, routineEntry.getStartTime());
+            final Calendar calendarEndTime = Calendar.getInstance();
+            calendarEndTime.set(Calendar.SECOND, routineEntry.getEndTime());
+            routineEntryItems.add(new RoutineEntryItem(
+                    routineEntry.getId(),
+                    dateFormat.format(calendarStartTime.getTime()),
+                    dateFormat.format(calendarEndTime.getTime()),
+                    routineEntry.getActivity().getName()
+            ));
+        }
+        routineEntryItemFlexibleAdapter.updateDataSet(routineEntryItems);
     }
 
     public static class RoutineEntryItem extends AbstractFlexibleItem<RoutineEntryItem.RoutineEntryViewHolder> {

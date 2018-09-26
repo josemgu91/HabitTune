@@ -25,44 +25,18 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
-import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
-import java.util.List;
-
 public class ViewModelRoutineEditor extends ViewModel {
 
-    private final GetRoutineEntries getRoutineEntries;
     private final GetRoutine getRoutine;
 
-    private final MutableLiveData<Response<LiveData<List<GetRoutineEntries.Output>>, Void>> getRoutineEntriesResponse;
     private final MutableLiveData<Response<GetRoutine.Output, Void>> getRoutineResponse;
 
-    public ViewModelRoutineEditor(GetRoutine getRoutine, GetRoutineEntries getRoutineEntries) {
-        this.getRoutineEntries = getRoutineEntries;
+    public ViewModelRoutineEditor(GetRoutine getRoutine) {
         this.getRoutine = getRoutine;
-        getRoutineEntriesResponse = new MutableLiveData<>();
         getRoutineResponse = new MutableLiveData<>();
-    }
-
-    public void fetchRoutineEntries(final String routineId) {
-        getRoutineEntries.execute(new GetRoutineEntries.Input(routineId), new UseCaseOutput<LiveData<List<GetRoutineEntries.Output>>>() {
-            @Override
-            public void onSuccess(@Nullable LiveData<List<GetRoutineEntries.Output>> listLiveData) {
-                getRoutineEntriesResponse.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
-            }
-
-            @Override
-            public void inProgress() {
-                getRoutineEntriesResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
-            }
-
-            @Override
-            public void onError() {
-                getRoutineEntriesResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
-            }
-        });
     }
 
     public void fetchRoutine(final String routineId) {
@@ -82,10 +56,6 @@ public class ViewModelRoutineEditor extends ViewModel {
                 getRoutineResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
             }
         });
-    }
-
-    public LiveData<Response<LiveData<List<GetRoutineEntries.Output>>, Void>> getGetRoutineEntriesResponse() {
-        return getRoutineEntriesResponse;
     }
 
     public LiveData<Response<GetRoutine.Output, Void>> getGetRoutineResponse() {

@@ -28,6 +28,7 @@ import com.josemgu91.habittune.android.ui.activity_selection.ViewModelActivitySe
 import com.josemgu91.habittune.android.ui.new_activity.ViewModelNewActivity;
 import com.josemgu91.habittune.android.ui.new_routine.ViewModelNewRoutine;
 import com.josemgu91.habittune.android.ui.routine_add_activity.ViewModelRoutineAddActivity;
+import com.josemgu91.habittune.android.ui.routine_editor.ViewModelRoutineDay;
 import com.josemgu91.habittune.android.ui.routine_editor.ViewModelRoutineEditor;
 import com.josemgu91.habittune.android.ui.routines.ViewModelRoutines;
 import com.josemgu91.habittune.android.ui.tag_editor.ViewModelTagEditor;
@@ -61,7 +62,10 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new ViewModelNewRoutine(useCaseFactory.createCreateRoutine());
         }
         if (modelClass.isAssignableFrom(ViewModelRoutineEditor.class)) {
-            return (T) new ViewModelRoutineEditor(useCaseFactory.createGetRoutine(), useCaseFactory.createGetRoutineEntries());
+            return (T) new ViewModelRoutineEditor(useCaseFactory.createGetRoutine());
+        }
+        if (modelClass.isAssignableFrom(ViewModelRoutineDay.class)) {
+            return (T) new ViewModelRoutineDay(useCaseFactory.createGetRoutineEntries());
         }
         if (modelClass.isAssignableFrom(ViewModelRoutineAddActivity.class)) {
             return (T) new ViewModelRoutineAddActivity(useCaseFactory.createCreateRoutineEntry(), useCaseFactory.createGetActivity());

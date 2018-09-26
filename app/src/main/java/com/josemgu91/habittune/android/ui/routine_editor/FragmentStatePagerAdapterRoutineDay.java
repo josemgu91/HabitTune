@@ -25,55 +25,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class FragmentStatePagerAdapterRoutineDay extends FragmentStatePagerAdapter {
 
     private int numberOfDays;
     @NonNull
-    private List<GetRoutineEntries.Output> routineEntries;
+    private String routineId;
 
     public void updateNumberOfDays(final int numberOfDays) {
         this.numberOfDays = numberOfDays;
         notifyDataSetChanged();
     }
 
-    public void updateRoutineEntries(@NonNull final List<GetRoutineEntries.Output> routineEntries) {
-        this.routineEntries = routineEntries;
-        notifyDataSetChanged();
-    }
-
-    @NonNull
-    public List<GetRoutineEntries.Output> getRoutineEntries() {
-        return routineEntries;
-    }
-
-    public FragmentStatePagerAdapterRoutineDay(FragmentManager fm) {
+    public FragmentStatePagerAdapterRoutineDay(FragmentManager fm, @NonNull final String routineId) {
         super(fm);
+        this.routineId = routineId;
         this.numberOfDays = 0;
-        routineEntries = new ArrayList<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-        final FragmentRoutineDay fragmentRoutineDay = new FragmentRoutineDay();
-        /*final List<FragmentRoutineDay.RoutineEntryItem> items = new ArrayList<>();
-        for(final GetRoutineEntries.Output routineEntry : routineEntries){
-
-        }*/
-        fragmentRoutineDay.setRoutineEntries(createTestData());
-        return fragmentRoutineDay;
-    }
-
-    private List<FragmentRoutineDay.RoutineEntryItem> createTestData() {
-        final List<FragmentRoutineDay.RoutineEntryItem> items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            items.add(new FragmentRoutineDay.RoutineEntryItem("", "08:00", "13:00", "Test"));
-        }
-        return items;
+        return FragmentRoutineDay.newInstance(routineId, position);
     }
 
     @Override
