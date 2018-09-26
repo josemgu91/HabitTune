@@ -33,10 +33,16 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentRoutineEditorBinding;
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
+import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
+
+import java.util.List;
 
 public class FragmentRoutineEditor extends BaseFragment {
 
     private final static String ARG_ROUTINE_ID = "routineId";
+
+    private FragmentStatePagerAdapterRoutineDay fragmentStatePagerAdapterRoutineDay;
 
     public static FragmentRoutineEditor newInstance(final String routineId) {
         Bundle args = new Bundle();
@@ -47,7 +53,6 @@ public class FragmentRoutineEditor extends BaseFragment {
     }
 
     private String routineId;
-    private int currentRoutineDay;
     private ViewModelRoutineEditor viewModelRoutineEditor;
     private FragmentRoutineEditorBinding fragmentRoutineEditorBinding;
 
@@ -63,6 +68,38 @@ public class FragmentRoutineEditor extends BaseFragment {
         super.onStart();
         fragmentInteractionListener.updateToolbar(getString(R.string.routine_editor_title), FragmentInteractionListener.IC_NAVIGATION_UP);
         fragmentInteractionListener.updateNavigationDrawer(false);
+        viewModelRoutineEditor.fetchRoutine(routineId);
+        viewModelRoutineEditor.getGetRoutineResponse().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case LOADING:
+                    break;
+                case ERROR:
+                    break;
+                case SUCCESS:
+                    updateRoutine(response.successData);
+                    break;
+            }
+        });
+        viewModelRoutineEditor.fetchRoutineEntries(routineId);
+        viewModelRoutineEditor.getGetRoutineEntriesResponse().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case LOADING:
+                    break;
+                case ERROR:
+                    break;
+                case SUCCESS:
+                    response.successData.observe(getViewLifecycleOwner(), this::updateRoutineEntries);
+                    break;
+            }
+        });
+    }
+
+    private void updateRoutine(GetRoutine.Output routine) {
+        fragmentStatePagerAdapterRoutineDay.updateNumberOfDays(routine.getNumberOfDays());
+    }
+
+    private void updateRoutineEntries(List<GetRoutineEntries.Output> routineEntries) {
+
     }
 
     @Override
@@ -74,9 +111,16 @@ public class FragmentRoutineEditor extends BaseFragment {
     @Override
     public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineEditorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_editor, container, false);
-        fragmentRoutineEditorBinding.viewPager.setAdapter(new FragmentStatePagerAdapterRoutineDay(getChildFragmentManager()));
+        fragmentStatePagerAdapterRoutineDay = new FragmentStatePagerAdapterRoutineDay(getChildFragmentManager());
+        fragmentRoutineEditorBinding.viewPager.setAdapter(fragmentStatePagerAdapterRoutineDay);
         fragmentRoutineEditorBinding.tabLayout.setupWithViewPager(fragmentRoutineEditorBinding.viewPager);
-        fragmentRoutineEditorBinding.floatingActionButtonAdd.setOnClickListener(v -> fragmentInteractionListener.navigateToRoutineAddActivity(routineId, currentRoutineDay));
+        fragmentRoutineEditorBinding.floatingActionButtonAdd.setOnClickListener(
+                v -> fragmentInteractionListener.navigateToRoutineAddActivity(routineId, getCurrentRoutineDay())
+        );
         return fragmentRoutineEditorBinding.getRoot();
+    }
+
+    private int getCurrentRoutineDay() {
+        return fragmentRoutineEditorBinding.viewPager.getCurrentItem();
     }
 }

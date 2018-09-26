@@ -26,10 +26,16 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class FragmentStatePagerAdapterRoutineDay extends FragmentStatePagerAdapter {
 
-    private final static int PAGE_COUNT = 7;
+    private int numberOfDays;
+
+    public void updateNumberOfDays(int numberOfDays) {
+        this.numberOfDays = numberOfDays;
+        notifyDataSetChanged();
+    }
 
     public FragmentStatePagerAdapterRoutineDay(FragmentManager fm) {
         super(fm);
+        this.numberOfDays = 0;
     }
 
     @Override
@@ -39,7 +45,7 @@ public class FragmentStatePagerAdapterRoutineDay extends FragmentStatePagerAdapt
 
     @Override
     public int getCount() {
-        return PAGE_COUNT;
+        return numberOfDays;
     }
 
     @Nullable
