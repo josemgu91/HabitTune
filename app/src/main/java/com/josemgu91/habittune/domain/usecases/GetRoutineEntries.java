@@ -51,7 +51,12 @@ public class GetRoutineEntries extends AbstractUseCase<GetRoutineEntries.Input, 
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
         output.inProgress();
         try {
-            final LiveData<List<RoutineEntry>> result = routineDataGateway.subscribeToAllRoutineEntriesByRoutineId(input.routineId);
+            final LiveData<List<RoutineEntry>> result;
+            if (input.dayNumber == Input.ALL_DAYS) {
+                result = routineDataGateway.subscribeToAllRoutineEntriesByRoutineId(input.routineId);
+            } else {
+                result = routineDataGateway.subscribeToAllRoutineEntriesByRoutineIdAndDay(input.routineId, input.dayNumber);
+            }
             final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
             output.onSuccess(outputLiveData);
         } catch (DataGatewayException e) {
@@ -81,10 +86,19 @@ public class GetRoutineEntries extends AbstractUseCase<GetRoutineEntries.Input, 
 
     public static final class Input {
 
+        public final static int ALL_DAYS = -1;
+
         private final String routineId;
+        private final int dayNumber;
+
+        public Input(String routineId, int dayNumber) {
+            this.routineId = routineId;
+            this.dayNumber = dayNumber;
+        }
 
         public Input(String routineId) {
             this.routineId = routineId;
+            this.dayNumber = ALL_DAYS;
         }
 
         @Override
@@ -92,18 +106,20 @@ public class GetRoutineEntries extends AbstractUseCase<GetRoutineEntries.Input, 
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Input input = (Input) o;
-            return Objects.equals(routineId, input.routineId);
+            return dayNumber == input.dayNumber &&
+                    Objects.equals(routineId, input.routineId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(routineId);
+            return Objects.hash(routineId, dayNumber);
         }
 
         @Override
         public String toString() {
             return "Input{" +
                     "routineId='" + routineId + '\'' +
+                    ", dayNumber=" + dayNumber +
                     '}';
         }
     }

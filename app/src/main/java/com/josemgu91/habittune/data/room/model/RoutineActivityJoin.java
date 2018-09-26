@@ -28,7 +28,10 @@ import android.arch.persistence.room.PrimaryKey;
 import java.util.Objects;
 
 @Entity(tableName = "routineActivityJoins",
-        indices = {@Index(value = {"activityId", "routineId", "day", "startTime", "endTime"}, unique = true)},
+        indices = {
+                @Index(value = {"activityId", "routineId", "day", "startTime", "endTime"}, unique = true),
+                @Index(value = {"routineId", "day", "startTime"})
+        },
         foreignKeys = {
                 @ForeignKey(entity = Routine.class,
                         parentColumns = "id",
