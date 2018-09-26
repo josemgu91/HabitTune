@@ -107,20 +107,27 @@ public class FragmentRoutineDay extends Fragment {
 
     private void updateRoutineEntries(List<GetRoutineEntries.Output> routineEntries) {
         final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        final Calendar calendar = Calendar.getInstance();
         final List<RoutineEntryItem> routineEntryItems = new ArrayList<>();
         for (final GetRoutineEntries.Output routineEntry : routineEntries) {
-            final Calendar calendarStartTime = Calendar.getInstance();
-            calendarStartTime.set(Calendar.SECOND, routineEntry.getStartTime());
-            final Calendar calendarEndTime = Calendar.getInstance();
-            calendarEndTime.set(Calendar.SECOND, routineEntry.getEndTime());
+            final String formattedStartTime = formatHour(dateFormat, calendar, routineEntry.getStartTime());
+            final String formattedEndTime = formatHour(dateFormat, calendar, routineEntry.getEndTime());
             routineEntryItems.add(new RoutineEntryItem(
                     routineEntry.getId(),
-                    dateFormat.format(calendarStartTime.getTime()),
-                    dateFormat.format(calendarEndTime.getTime()),
+                    formattedStartTime,
+                    formattedEndTime,
                     routineEntry.getActivity().getName()
             ));
         }
         routineEntryItemFlexibleAdapter.updateDataSet(routineEntryItems);
+    }
+
+    private String formatHour(final DateFormat dateFormat, final Calendar calendar, final int hourInSeconds) {
+        final int hours = hourInSeconds / 3600;
+        final int minutes = (hourInSeconds % 3600) / 60;
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, minutes);
+        return dateFormat.format(calendar.getTime());
     }
 
     public static class RoutineEntryItem extends AbstractFlexibleItem<RoutineEntryItem.RoutineEntryViewHolder> {
