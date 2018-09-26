@@ -223,27 +223,35 @@ public class RoomRepository implements Repository {
     public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException {
         try {
             final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData = localRoomDatabase.getRoutineActivityJoinDao().subscribeToAllRoutineActivityJoinsByRoutineId(Long.valueOf(routineId));
-            final LiveData<List<RoutineEntry>> routineEntriesLiveData = Transformations.map(routineActivityJoinsLiveData, input -> {
-                final List<RoutineEntry> routineEntries = new ArrayList<>();
-                for (final RoutineActivityJoin routineActivityJoin : input) {
-                    try {
-                        final Activity activity = getActivityById(String.valueOf(routineActivityJoin.activityId));
-                        routineEntries.add(mapRoutineActivityJoinToRoutineEntry(routineActivityJoin, activity));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                return routineEntries;
-            });
-            return routineEntriesLiveData;
+            return transformRoutineActivityJoinListLiveDataToRoutineEntryListLiveData(routineActivityJoinsLiveData);
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
     }
 
     @Override
-    public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull String routineId, int dayNumber) {
-        return null;
+    public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull String routineId, int dayNumber) throws DataGatewayException {
+        try {
+            final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData = localRoomDatabase.getRoutineActivityJoinDao().subscribeToAllRoutineActivityJoinsByRoutineIdAndDay(Long.valueOf(routineId), dayNumber);
+            return transformRoutineActivityJoinListLiveDataToRoutineEntryListLiveData(routineActivityJoinsLiveData);
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    private LiveData<List<RoutineEntry>> transformRoutineActivityJoinListLiveDataToRoutineEntryListLiveData(final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData) {
+        return Transformations.map(routineActivityJoinsLiveData, input -> {
+            final List<RoutineEntry> routineEntries = new ArrayList<>();
+            for (final RoutineActivityJoin routineActivityJoin : input) {
+                try {
+                    final Activity activity = getActivityById(String.valueOf(routineActivityJoin.activityId));
+                    routineEntries.add(mapRoutineActivityJoinToRoutineEntry(routineActivityJoin, activity));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return routineEntries;
+        });
     }
 
     @Override
