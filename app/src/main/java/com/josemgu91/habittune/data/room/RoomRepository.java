@@ -21,6 +21,7 @@ package com.josemgu91.habittune.data.room;
 
 import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
@@ -36,13 +37,17 @@ import com.josemgu91.habittune.domain.entities.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class RoomRepository implements Repository {
 
     private final LocalRoomDatabase localRoomDatabase;
 
-    public RoomRepository(LocalRoomDatabase localRoomDatabase) {
+    private final Executor repositoryExecutor;
+
+    public RoomRepository(LocalRoomDatabase localRoomDatabase, Executor repositoryExecutor) {
         this.localRoomDatabase = localRoomDatabase;
+        this.repositoryExecutor = repositoryExecutor;
     }
 
     @NonNull
@@ -240,9 +245,10 @@ public class RoomRepository implements Repository {
     }
 
     private LiveData<List<RoutineEntry>> transformRoutineActivityJoinListLiveDataToRoutineEntryListLiveData(final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData) {
-        return Transformations.map(routineActivityJoinsLiveData, input -> {
+        final MediatorLiveData<List<RoutineEntry>> result = new MediatorLiveData<>();
+        result.addSource(routineActivityJoinsLiveData, routineActivityJoins -> repositoryExecutor.execute(() -> {
             final List<RoutineEntry> routineEntries = new ArrayList<>();
-            for (final RoutineActivityJoin routineActivityJoin : input) {
+            for (final RoutineActivityJoin routineActivityJoin : routineActivityJoins) {
                 try {
                     final Activity activity = getActivityById(String.valueOf(routineActivityJoin.activityId));
                     routineEntries.add(mapRoutineActivityJoinToRoutineEntry(routineActivityJoin, activity));
@@ -250,8 +256,9 @@ public class RoomRepository implements Repository {
                     e.printStackTrace();
                 }
             }
-            return routineEntries;
-        });
+            result.postValue(routineEntries);
+        }));
+        return result;
     }
 
     @Override

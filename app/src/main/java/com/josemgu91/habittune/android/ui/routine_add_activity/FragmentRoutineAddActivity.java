@@ -174,10 +174,21 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionAssignActivity) {
+            createRoutineEntry();
             fragmentInteractionListener.finishFragment();
             return true;
         }
         return false;
+    }
+
+    private void createRoutineEntry() {
+        viewModelRoutineAddActivity.createRoutineEntry(
+                routineId,
+                selectedActivityId,
+                routineDay,
+                startHour.inSeconds(),
+                endHour.inSeconds()
+        );
     }
 
     private void showTimePicker(@IdRes final int viewThatStartedTimePicker) {
@@ -247,6 +258,10 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(hourOfDay);
             dest.writeInt(minute);
+        }
+
+        public int inSeconds() {
+            return (hourOfDay * 3600) + (minute * 60);
         }
     }
 }

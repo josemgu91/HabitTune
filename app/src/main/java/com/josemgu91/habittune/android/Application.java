@@ -54,7 +54,7 @@ public class Application extends android.app.Application {
                         LocalRoomDatabase.class)
                 .openHelperFactory(new RequerySQLiteOpenHelperFactory())
                 .build();
-        repository = new RoomRepository(localRoomDatabase);
+        repository = new RoomRepository(localRoomDatabase, defaultThreadPoolExecutor);
         useCaseFactory = new DefaultUseCaseFactory(uiThreadExecutor, defaultThreadPoolExecutor, repository);
         viewModelFactory = new ViewModelFactory(useCaseFactory);
     }
