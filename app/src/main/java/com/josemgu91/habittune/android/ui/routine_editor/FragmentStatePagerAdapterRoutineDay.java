@@ -19,23 +19,42 @@
 
 package com.josemgu91.habittune.android.ui.routine_editor;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class FragmentStatePagerAdapterRoutineDay extends FragmentStatePagerAdapter {
 
     private int numberOfDays;
+    @NonNull
+    private List<GetRoutineEntries.Output> routineEntries;
 
-    public void updateNumberOfDays(int numberOfDays) {
+    public void updateNumberOfDays(final int numberOfDays) {
         this.numberOfDays = numberOfDays;
         notifyDataSetChanged();
+    }
+
+    public void updateRoutineEntries(@NonNull final List<GetRoutineEntries.Output> routineEntries) {
+        this.routineEntries = routineEntries;
+        notifyDataSetChanged();
+    }
+
+    @NonNull
+    public List<GetRoutineEntries.Output> getRoutineEntries() {
+        return routineEntries;
     }
 
     public FragmentStatePagerAdapterRoutineDay(FragmentManager fm) {
         super(fm);
         this.numberOfDays = 0;
+        routineEntries = new ArrayList<>();
     }
 
     @Override
