@@ -26,8 +26,8 @@ android {
         applicationId "com.josemgu91.habittune"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 8
-        versionName "pre-1.0-vc8"
+        versionCode 9
+        versionName "pre-1.0-vc9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     dataBinding {
