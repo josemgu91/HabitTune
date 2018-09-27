@@ -25,6 +25,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
 
@@ -45,5 +46,8 @@ public interface RoutineActivityJoinDao {
 
     @Query("SELECT * FROM routineActivityJoins WHERE routineId = :routineId AND day = :day ORDER BY startTime ASC")
     LiveData<List<RoutineActivityJoin>> subscribeToAllRoutineActivityJoinsByRoutineIdAndDay(final long routineId, final int day);
+
+    @Update
+    int updateRoutineActivityJoin(final RoutineActivityJoin routineActivityJoin);
 
 }

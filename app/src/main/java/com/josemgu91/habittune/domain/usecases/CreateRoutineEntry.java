@@ -45,17 +45,10 @@ public class CreateRoutineEntry extends AbstractUseCase<CreateRoutineEntry.Input
         output.inProgress();
         try {
             final RoutineEntry routineEntry = routineDataGateway.createRoutineEntry(new RoutineEntry(
-                    "",
                     new RoutineEntry.Day(input.day),
                     new RoutineEntry.Time(input.startTime),
                     new RoutineEntry.Time(input.endTime),
-                    new Activity(
-                            input.activityId,
-                            "",
-                            "",
-                            0,
-                            null
-                    )
+                    new Activity(input.activityId)
             ), input.routineId);
             if (routineEntry != null) {
                 output.onSuccess(null);

@@ -292,6 +292,24 @@ public class RoomRepository implements Repository {
         }
     }
 
+    @Override
+    public boolean updateRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException {
+        try {
+            return localRoomDatabase.getRoutineActivityJoinDao().updateRoutineActivityJoin(
+                    new RoutineActivityJoin(
+                            Long.valueOf(routineEntry.getId()),
+                            Long.valueOf(routineId),
+                            Long.valueOf(routineEntry.getActivity().getId()),
+                            routineEntry.getDay().getDay(),
+                            routineEntry.getStartTime().getTime(),
+                            routineEntry.getEndTime().getTime()
+                    )
+            ) != 0;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
         final List<O> outList = new ArrayList<>();
         for (final I element : inList) {

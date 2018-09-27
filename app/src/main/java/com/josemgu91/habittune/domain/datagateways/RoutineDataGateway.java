@@ -46,5 +46,7 @@ public interface RoutineDataGateway {
     boolean deleteRoutineEntry(@NonNull final String id) throws DataGatewayException;
 
     RoutineEntry createRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException;
+
+    boolean updateRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException;
 }
 
