@@ -35,7 +35,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -59,8 +58,6 @@ public class FragmentTagEditor extends BaseFragment {
 
     private TagEditorFlexibleAdapter recyclerViewTagsAdapter;
 
-    private InputMethodManager inputMethodManager;
-
     private ConfirmationDialog tagDeletionConfirmationDialog;
 
     private FragmentManager fragmentManager;
@@ -81,7 +78,6 @@ public class FragmentTagEditor extends BaseFragment {
         super.onAttach(context);
         viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
         sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
-        inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -191,7 +187,7 @@ public class FragmentTagEditor extends BaseFragment {
         });
         recyclerViewTagsAdapter.setOnCreateTagItemClickListener(() -> createTagAndClearAndDismissKeyboard(fragmentTagEditorBinding.editTextToolbarTextInput.getText().toString()));
         recyclerViewTagsAdapter.setOnTagNameEditionFinishedListener((position, view, tagId, newName) -> {
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            fragmentInteractionListener.hideSoftKeyboard();
             if (tags.contains(new GetTags.Output(tagId, newName))) {
                 recyclerViewTagsAdapter.notifyItemChanged(position);
                 return;
@@ -246,6 +242,6 @@ public class FragmentTagEditor extends BaseFragment {
     private void createTagAndClearAndDismissKeyboard(final String tagName) {
         viewModelTagEditor.createTag(tagName);
         fragmentTagEditorBinding.editTextToolbarTextInput.getText().clear();
-        inputMethodManager.hideSoftInputFromWindow(fragmentTagEditorBinding.editTextToolbarTextInput.getWindowToken(), 0);
+        fragmentInteractionListener.hideSoftKeyboard();
     }
 }
