@@ -95,7 +95,7 @@ public class FragmentRoutineDay extends Fragment {
     }
 
     private void updateRoutineEntry(final String routineEntryId) {
-        fragmentInteractionListener.navigateToFragmentUpdateRoutineEntry(routineEntryId);
+        fragmentInteractionListener.navigateToFragmentUpdateRoutineEntry(routineEntryId, routineId);
     }
 
     @Override

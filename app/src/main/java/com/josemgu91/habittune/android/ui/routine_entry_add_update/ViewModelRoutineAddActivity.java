@@ -111,8 +111,8 @@ public class ViewModelRoutineAddActivity extends ViewModel {
         });
     }
 
-    public void setUpdateRoutineEntry(final String routineEntryId, final String routineId, final String activityId, int day, int startTime, int endTime) {
-        updateRoutineEntry.execute(new UpdateRoutineEntry.Input(routineId, routineId, activityId, day, startTime, endTime), new UseCaseOutput<Void>() {
+    public void updateRoutineEntry(final String routineEntryId, final String routineId, final String activityId, int day, int startTime, int endTime) {
+        updateRoutineEntry.execute(new UpdateRoutineEntry.Input(routineEntryId, routineId, activityId, day, startTime, endTime), new UseCaseOutput<Void>() {
             @Override
             public void onSuccess(@Nullable Void aVoid) {
                 updateRoutineEntryResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));

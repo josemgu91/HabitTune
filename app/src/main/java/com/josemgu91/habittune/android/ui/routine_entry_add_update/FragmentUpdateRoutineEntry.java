@@ -43,6 +43,7 @@ import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
 public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePickerDialog.OnTimeSetListener {
 
     private final static String ARG_ROUTINE_ENTRY_ID = "routineEntryId";
+    private final static String ARG_ROUTINE_ID = "routineId";
 
     private final static String FRAGMENT_TAG_TIME_PICKER_DIALOG = "timePickerDialog";
 
@@ -51,17 +52,19 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
     private final static String SAVED_INSTANCE_STATE_END_HOUR = "endHour";
     private final static String SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID = "selectedActivityId";
 
-    public static FragmentUpdateRoutineEntry newInstance(@NonNull final String routineEntryId) {
+    public static FragmentUpdateRoutineEntry newInstance(@NonNull final String routineEntryId, @NonNull final String routineId) {
         final Bundle args = new Bundle();
         args.putString(ARG_ROUTINE_ENTRY_ID, routineEntryId);
+        args.putString(ARG_ROUTINE_ID, routineId);
         FragmentUpdateRoutineEntry fragment = new FragmentUpdateRoutineEntry();
         fragment.setArguments(args);
         return fragment;
     }
 
-    private GetRoutineEntry.Output routineToUpdate;
+    private GetRoutineEntry.Output routineEntryToUpdate;
 
     private String routineEntryId;
+    private String routineId;
 
     @IdRes
     private int viewThatStartedTimePicker;
@@ -85,6 +88,7 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
         sharedViewModelActivitySelection = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
         final Bundle arguments = getArguments();
         routineEntryId = arguments.getString(ARG_ROUTINE_ENTRY_ID);
+        routineId = arguments.getString(ARG_ROUTINE_ID);
     }
 
     @Override
@@ -92,8 +96,6 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (savedInstanceState == null) {
-            startHour = Hour.currentHour();
-            endHour = new Hour((startHour.hourOfDay + 1) % 24, startHour.minute);
             return;
         }
         selectedActivityId = savedInstanceState.getString(SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID);
@@ -132,24 +134,6 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewModelRoutineAddActivity.fetchRoutineEntry(routineEntryId);
-        viewModelRoutineAddActivity.getGetRoutineEntryResponse().observe(getViewLifecycleOwner(), output -> {
-            switch (output.status) {
-                case LOADING:
-                    break;
-                case ERROR:
-                    break;
-                case SUCCESS:
-                    routineToUpdate = output.successData;
-                    showRoutineToUpdateOriginalData();
-                    break;
-            }
-        });
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         fragmentInteractionListener.updateToolbar(getString(R.string.update_routine_entry_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
@@ -164,17 +148,19 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
             selectedActivityId = newSelectedActivityId;
             sharedViewModelActivitySelection.clear();
         }
-        if (selectedActivityId != null) {
-            fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setText(selectedActivityId);
-            viewModelRoutineAddActivity.fetchActivity(selectedActivityId);
-            viewModelRoutineAddActivity.getGetActivityResponse().observe(getViewLifecycleOwner(), response -> {
-                switch (response.status) {
-                    case SUCCESS:
-                        fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setText(response.successData.getName());
-                        break;
-                }
-            });
-        }
+        viewModelRoutineAddActivity.fetchRoutineEntry(routineEntryId);
+        viewModelRoutineAddActivity.getGetRoutineEntryResponse().observe(getViewLifecycleOwner(), output -> {
+            switch (output.status) {
+                case LOADING:
+                    break;
+                case ERROR:
+                    break;
+                case SUCCESS:
+                    routineEntryToUpdate = output.successData;
+                    onRoutineToUpdateRetrieved();
+                    break;
+            }
+        });
     }
 
     @Override
@@ -190,7 +176,7 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionUpdateRoutineEntry) {
-            if (routineToUpdate == null) {
+            if (routineEntryToUpdate == null) {
                 return true;
             }
             updateRoutineEntry();
@@ -200,12 +186,18 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
         return false;
     }
 
-    private void showRoutineToUpdateOriginalData() {
-        startHour = new Hour(routineToUpdate.getStartTime());
-        endHour = new Hour(routineToUpdate.getEndTime());
+    private void onRoutineToUpdateRetrieved() {
+        if (startHour == null) {
+            startHour = new Hour(routineEntryToUpdate.getStartTime());
+        }
+        if (endHour == null) {
+            endHour = new Hour(routineEntryToUpdate.getEndTime());
+        }
         fragmentRoutineAddActivityBinding.textViewStartHour.setText(startHour.format());
         fragmentRoutineAddActivityBinding.textViewEndHour.setText(endHour.format());
-        selectedActivityId = routineToUpdate.getActivity().getId();
+        if (selectedActivityId == null) {
+            selectedActivityId = routineEntryToUpdate.getActivity().getId();
+        }
         viewModelRoutineAddActivity.fetchActivity(selectedActivityId);
         viewModelRoutineAddActivity.getGetActivityResponse().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
@@ -217,7 +209,14 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
     }
 
     private void updateRoutineEntry() {
-
+        viewModelRoutineAddActivity.updateRoutineEntry(
+                routineEntryId,
+                routineId,
+                selectedActivityId,
+                routineEntryToUpdate.getDay(),
+                startHour.inSeconds(),
+                endHour.inSeconds()
+        );
     }
 
     private void showTimePicker(@IdRes final int viewThatStartedTimePicker, final Hour hour) {
