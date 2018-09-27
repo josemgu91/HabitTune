@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
@@ -84,10 +85,14 @@ public class FragmentRoutineDay extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentRoutineDayBinding fragmentRoutineDayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_day, container, false);
-        routineEntryItemFlexibleAdapter = new RoutineEntriesFlexibleAdapter(viewModelRoutineDay::deleteRoutineEntry);
+        routineEntryItemFlexibleAdapter = new RoutineEntriesFlexibleAdapter(viewModelRoutineDay::deleteRoutineEntry, this::updateRoutineEntry);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setAdapter(routineEntryItemFlexibleAdapter);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setLayoutManager(new LinearLayoutManager(getContext()));
         return fragmentRoutineDayBinding.getRoot();
+    }
+
+    private void updateRoutineEntry(final String routineEntryId) {
+        Toast.makeText(getContext(), routineEntryId, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -137,15 +142,27 @@ public class FragmentRoutineDay extends Fragment {
         @NonNull
         private final OnRoutineEntryDeleteListener onRoutineEntryDeleteListener;
 
-        public RoutineEntriesFlexibleAdapter(@NonNull final OnRoutineEntryDeleteListener onRoutineEntryDeleteListener) {
+        public RoutineEntriesFlexibleAdapter(@NonNull final OnRoutineEntryDeleteListener onRoutineEntryDeleteListener, @NonNull final OnRoutineEntryClickListener onRoutineEntryClickListener) {
             super(null);
             this.onRoutineEntryDeleteListener = onRoutineEntryDeleteListener;
+            addListener(new OnItemClickListener() {
+                @Override
+                public boolean onItemClick(View view, int position) {
+                    final RoutineEntryItem routineEntryItem = getItem(position);
+                    onRoutineEntryClickListener.onRoutineEntryClick(routineEntryItem.routineEntryId);
+                    return true;
+                }
+            });
         }
 
         public interface OnRoutineEntryDeleteListener {
 
             void onRoutineEntryDelete(final String routineEntryId);
+        }
 
+        public interface OnRoutineEntryClickListener {
+
+            void onRoutineEntryClick(final String routineEntryId);
         }
     }
 

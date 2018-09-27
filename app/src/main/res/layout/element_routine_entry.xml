@@ -25,6 +25,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
         android:paddingStart="@dimen/listElementMarginStart"
         android:paddingTop="@dimen/listElementMarginTop"
         android:paddingEnd="@dimen/listElementMarginEnd"
@@ -70,6 +71,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/routine_editor_element_overflow_button"
             app:layout_constraintBottom_toTopOf="@+id/textViewActivityName"
             app:layout_constraintEnd_toEndOf="parent"
