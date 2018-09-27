@@ -63,5 +63,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="13:00" />
 
+        <ImageView
+            android:id="@+id/imageViewOverflowButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/routine_editor_element_overflow_button"
+            app:layout_constraintBottom_toTopOf="@+id/textViewActivityName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_action_overflow_24dp" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>

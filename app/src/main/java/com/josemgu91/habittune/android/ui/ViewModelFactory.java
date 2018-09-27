@@ -65,7 +65,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new ViewModelRoutineEditor(useCaseFactory.createGetRoutine());
         }
         if (modelClass.isAssignableFrom(ViewModelRoutineDay.class)) {
-            return (T) new ViewModelRoutineDay(useCaseFactory.createGetRoutineEntries());
+            return (T) new ViewModelRoutineDay(useCaseFactory.createGetRoutineEntries(), useCaseFactory.createDeleteRoutineEntry());
         }
         if (modelClass.isAssignableFrom(ViewModelRoutineAddActivity.class)) {
             return (T) new ViewModelRoutineAddActivity(useCaseFactory.createCreateRoutineEntry(), useCaseFactory.createGetActivity());

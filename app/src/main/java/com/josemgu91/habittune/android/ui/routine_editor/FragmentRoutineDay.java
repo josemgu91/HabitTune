@@ -31,6 +31,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
@@ -82,7 +84,7 @@ public class FragmentRoutineDay extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentRoutineDayBinding fragmentRoutineDayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_day, container, false);
-        routineEntryItemFlexibleAdapter = new FlexibleAdapter<>(null);
+        routineEntryItemFlexibleAdapter = new RoutineEntriesFlexibleAdapter(viewModelRoutineDay::deleteRoutineEntry);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setAdapter(routineEntryItemFlexibleAdapter);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setLayoutManager(new LinearLayoutManager(getContext()));
         return fragmentRoutineDayBinding.getRoot();
@@ -130,10 +132,27 @@ public class FragmentRoutineDay extends Fragment {
         return dateFormat.format(calendar.getTime());
     }
 
+    public static class RoutineEntriesFlexibleAdapter extends FlexibleAdapter<RoutineEntryItem> {
+
+        @NonNull
+        private final OnRoutineEntryDeleteListener onRoutineEntryDeleteListener;
+
+        public RoutineEntriesFlexibleAdapter(@NonNull final OnRoutineEntryDeleteListener onRoutineEntryDeleteListener) {
+            super(null);
+            this.onRoutineEntryDeleteListener = onRoutineEntryDeleteListener;
+        }
+
+        public interface OnRoutineEntryDeleteListener {
+
+            void onRoutineEntryDelete(final String routineEntryId);
+
+        }
+    }
+
     public static class RoutineEntryItem extends AbstractFlexibleItem<RoutineEntryItem.RoutineEntryViewHolder> {
 
         @NonNull
-        private final String activityId;
+        private final String routineEntryId;
         @NonNull
         private final String activityStartHour;
         @NonNull
@@ -141,8 +160,8 @@ public class FragmentRoutineDay extends Fragment {
         @NonNull
         private final String activityName;
 
-        public RoutineEntryItem(@NonNull String activityId, @NonNull String activityStartHour, @NonNull String activityEndHour, @NonNull String activityName) {
-            this.activityId = activityId;
+        public RoutineEntryItem(@NonNull String routineEntryId, @NonNull String activityStartHour, @NonNull String activityEndHour, @NonNull String activityName) {
+            this.routineEntryId = routineEntryId;
             this.activityStartHour = activityStartHour;
             this.activityEndHour = activityEndHour;
             this.activityName = activityName;
@@ -153,7 +172,7 @@ public class FragmentRoutineDay extends Fragment {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             RoutineEntryItem that = (RoutineEntryItem) o;
-            return Objects.equals(activityId, that.activityId) &&
+            return Objects.equals(routineEntryId, that.routineEntryId) &&
                     Objects.equals(activityStartHour, that.activityStartHour) &&
                     Objects.equals(activityEndHour, that.activityEndHour) &&
                     Objects.equals(activityName, that.activityName);
@@ -161,7 +180,7 @@ public class FragmentRoutineDay extends Fragment {
 
         @Override
         public int hashCode() {
-            return Objects.hash(activityId, activityStartHour, activityEndHour, activityName);
+            return Objects.hash(routineEntryId, activityStartHour, activityEndHour, activityName);
         }
 
         @Override
@@ -176,6 +195,7 @@ public class FragmentRoutineDay extends Fragment {
 
         @Override
         public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, RoutineEntryViewHolder holder, int position, List<Object> payloads) {
+            holder.routineEntryId = routineEntryId;
             holder.textViewActivityStartHour.setText(activityStartHour);
             holder.textViewActivityEndtHour.setText(activityEndHour);
             holder.textViewActivityName.setText(activityName);
@@ -183,15 +203,29 @@ public class FragmentRoutineDay extends Fragment {
 
         public static class RoutineEntryViewHolder extends FlexibleViewHolder {
 
+            private String routineEntryId;
+
             private final TextView textViewActivityStartHour;
             private final TextView textViewActivityEndtHour;
             private final TextView textViewActivityName;
+            private final ImageView imageViewOverflowButton;
 
             public RoutineEntryViewHolder(View view, FlexibleAdapter adapter) {
                 super(view, adapter);
                 textViewActivityStartHour = view.findViewById(R.id.textViewActivityStartHour);
                 textViewActivityEndtHour = view.findViewById(R.id.textViewActivityEndHour);
                 textViewActivityName = view.findViewById(R.id.textViewActivityName);
+                imageViewOverflowButton = view.findViewById(R.id.imageViewOverflowButton);
+                final PopupMenu popupMenu = new PopupMenu(view.getContext(), imageViewOverflowButton);
+                popupMenu.inflate(R.menu.element_routine_entry);
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.actionDeleteRoutineEntry) {
+                        ((RoutineEntriesFlexibleAdapter) adapter).onRoutineEntryDeleteListener.onRoutineEntryDelete(routineEntryId);
+                        return true;
+                    }
+                    return false;
+                });
+                imageViewOverflowButton.setOnClickListener(v -> popupMenu.show());
             }
         }
     }

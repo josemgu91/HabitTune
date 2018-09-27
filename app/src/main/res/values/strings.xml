@@ -67,6 +67,8 @@
     <string name="new_routine_create">Save</string>
 
     <string name="routine_editor_title">Routine Editor</string>
+    <string name="routine_editor_element_overflow_button">More options&#8230;</string>
+    <string name="routine_editor_element_delete">Delete</string>
 
     <string name="routine_add_activity_title">Assign Activity</string>
     <string name="routine_add_activity_action_add">Assign</string>

@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.usecases.DeleteRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
@@ -34,11 +35,13 @@ import java.util.List;
 public class ViewModelRoutineDay extends ViewModel {
 
     private final GetRoutineEntries getRoutineEntries;
+    private final DeleteRoutineEntry deleteRoutineEntry;
 
     private final MutableLiveData<Response<LiveData<List<GetRoutineEntries.Output>>, Void>> getRoutineEntriesResponse;
 
-    public ViewModelRoutineDay(@NonNull final GetRoutineEntries getRoutineEntries) {
+    public ViewModelRoutineDay(@NonNull final GetRoutineEntries getRoutineEntries, @NonNull final DeleteRoutineEntry deleteRoutineEntry) {
         this.getRoutineEntries = getRoutineEntries;
+        this.deleteRoutineEntry = deleteRoutineEntry;
         getRoutineEntriesResponse = new MutableLiveData<>();
     }
 
@@ -57,6 +60,22 @@ public class ViewModelRoutineDay extends ViewModel {
             @Override
             public void onError() {
                 getRoutineEntriesResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
+    public void deleteRoutineEntry(final String id) {
+        deleteRoutineEntry.execute(new DeleteRoutineEntry.Input(id), new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+            }
+
+            @Override
+            public void inProgress() {
+            }
+
+            @Override
+            public void onError() {
             }
         });
     }

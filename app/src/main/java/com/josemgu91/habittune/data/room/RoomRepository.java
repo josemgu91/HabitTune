@@ -281,6 +281,17 @@ public class RoomRepository implements Repository {
         }
     }
 
+    @Override
+    public boolean deleteRoutineEntry(@NonNull String id) throws DataGatewayException {
+        try {
+            return localRoomDatabase.getRoutineActivityJoinDao().deleteRoutineActivityJoin(
+                    new RoutineActivityJoin(Long.valueOf(id))
+            ) != 0;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
         final List<O> outList = new ArrayList<>();
         for (final I element : inList) {
