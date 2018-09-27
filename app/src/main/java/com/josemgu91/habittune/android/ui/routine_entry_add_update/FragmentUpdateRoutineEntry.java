@@ -40,8 +40,6 @@ import com.josemgu91.habittune.android.ui.activity_selection.SharedViewModelActi
 import com.josemgu91.habittune.databinding.FragmentRoutineAddActivityBinding;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
 
-import java.util.Calendar;
-
 public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePickerDialog.OnTimeSetListener {
 
     private final static String ARG_ROUTINE_ENTRY_ID = "routineEntryId";
@@ -94,11 +92,8 @@ public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePick
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (savedInstanceState == null) {
-            final Calendar calendar = Calendar.getInstance();
-            final int currentHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-            final int currentMinute = calendar.get(Calendar.MINUTE);
-            startHour = new Hour(currentHourOfDay, currentMinute);
-            endHour = new Hour((currentHourOfDay + 1) % 24, currentMinute);
+            startHour = Hour.currentHour();
+            endHour = new Hour((startHour.hourOfDay + 1) % 24, startHour.minute);
             return;
         }
         selectedActivityId = savedInstanceState.getString(SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID);

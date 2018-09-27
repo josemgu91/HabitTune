@@ -30,6 +30,13 @@ public class Hour implements Parcelable {
     protected final int hourOfDay;
     protected final int minute;
 
+    public static Hour currentHour() {
+        final Calendar calendar = Calendar.getInstance();
+        final int currentHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        final int currentMinute = calendar.get(Calendar.MINUTE);
+        return new Hour(currentHourOfDay, currentMinute);
+    }
+
     public Hour(int timeInSeconds) {
         this.hourOfDay = timeInSeconds / 3600;
         this.minute = (timeInSeconds % 3600) / 60;
