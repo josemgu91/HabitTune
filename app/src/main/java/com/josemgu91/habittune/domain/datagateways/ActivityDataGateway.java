@@ -36,6 +36,7 @@ public interface ActivityDataGateway {
 
     boolean deleteActivityById(@NonNull final String id) throws DataGatewayException;
 
+    @NonNull
     Activity createActivity(@NonNull final Activity activity) throws DataGatewayException;
 
     boolean updateActivity(@NonNull final Activity updatedActivity) throws DataGatewayException;

@@ -27,11 +27,13 @@ import android.support.annotation.Nullable;
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.domain.usecases.CreateRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.GetActivity;
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.UpdateRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 public class ViewModelRoutineAddActivity extends ViewModel {
 
+    private final GetRoutineEntry getRoutineEntry;
     private final CreateRoutineEntry createRoutineEntry;
     private final GetActivity getActivity;
     private final UpdateRoutineEntry updateRoutineEntry;
@@ -39,14 +41,36 @@ public class ViewModelRoutineAddActivity extends ViewModel {
     private final MutableLiveData<Response<GetActivity.Output, Void>> getActivityResponse;
     private final MutableLiveData<Response<Void, Void>> createRoutineEntryResponse;
     private final MutableLiveData<Response<Void, Void>> updateRoutineEntryResponse;
+    private final MutableLiveData<Response<GetRoutineEntry.Output, Void>> getRoutineEntryResponse;
 
-    public ViewModelRoutineAddActivity(final CreateRoutineEntry createRoutineEntry, final GetActivity getActivity, final UpdateRoutineEntry updateRoutineEntry) {
+    public ViewModelRoutineAddActivity(final CreateRoutineEntry createRoutineEntry, final GetActivity getActivity, final UpdateRoutineEntry updateRoutineEntry, final GetRoutineEntry getRoutineEntry) {
         this.createRoutineEntry = createRoutineEntry;
         this.getActivity = getActivity;
         this.updateRoutineEntry = updateRoutineEntry;
+        this.getRoutineEntry = getRoutineEntry;
         this.getActivityResponse = new MutableLiveData<>();
         this.createRoutineEntryResponse = new MutableLiveData<>();
         this.updateRoutineEntryResponse = new MutableLiveData<>();
+        this.getRoutineEntryResponse = new MutableLiveData<>();
+    }
+
+    public void getRoutineEntry(final String id) {
+        getRoutineEntry.execute(new GetRoutineEntry.Input(id), new UseCaseOutput<GetRoutineEntry.Output>() {
+            @Override
+            public void onSuccess(@Nullable GetRoutineEntry.Output output) {
+                getRoutineEntryResponse.setValue(new Response<>(Response.Status.SUCCESS, output, null));
+            }
+
+            @Override
+            public void inProgress() {
+                getRoutineEntryResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                getRoutineEntryResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
     }
 
     public void getActivity(final String id) {
@@ -116,5 +140,9 @@ public class ViewModelRoutineAddActivity extends ViewModel {
 
     public LiveData<Response<Void, Void>> getUpdateRoutineEntryResponse() {
         return updateRoutineEntryResponse;
+    }
+
+    public LiveData<Response<GetRoutineEntry.Output, Void>> getGetRoutineEntryResponse() {
+        return getRoutineEntryResponse;
     }
 }

@@ -47,6 +47,9 @@ public interface RoutineActivityJoinDao {
     @Query("SELECT * FROM routineActivityJoins WHERE routineId = :routineId AND day = :day ORDER BY startTime ASC")
     LiveData<List<RoutineActivityJoin>> subscribeToAllRoutineActivityJoinsByRoutineIdAndDay(final long routineId, final int day);
 
+    @Query("SELECT * FROM routineActivityJoins WHERE id = :id")
+    RoutineActivityJoin getRoutineActivityJoin(final long id);
+
     @Update
     int updateRoutineActivityJoin(final RoutineActivityJoin routineActivityJoin);
 

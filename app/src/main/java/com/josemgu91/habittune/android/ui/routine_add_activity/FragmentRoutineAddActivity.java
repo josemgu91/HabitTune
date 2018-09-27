@@ -49,12 +49,26 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
     private final static String ARG_ROUTINE_ID = "routineId";
     private final static String ARG_ROUTINE_DAY = "routineDay";
 
+    private final static String ARG_ROUTINE_ENTRY_ID = "routineEntryId";
+
+    private final static String ARG_MODE = "mode";
+
+    private final static int ARG_MODE_CREATE = 1;
+    private final static int ARG_MODE_UPDATE = 2;
+
     private final static String FRAGMENT_TAG_TIME_PICKER_DIALOG = "timePickerDialog";
 
     private final static String SAVED_INSTANCE_STATE_KEY_VIEW_THAT_STARTED_TIME_PICKER = "viewThatStartedTimePicker";
     private final static String SAVED_INSTANCE_STATE_START_HOUR = "startHour";
     private final static String SAVED_INSTANCE_STATE_END_HOUR = "endHour";
     private final static String SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID = "selectedActivityId";
+
+    public static FragmentRoutineAddActivity newInstance() {
+        Bundle args = new Bundle();
+        FragmentRoutineAddActivity fragment = new FragmentRoutineAddActivity();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public static FragmentRoutineAddActivity newInstance(@NonNull final String routineId, final int routineDay) {
         final Bundle args = new Bundle();

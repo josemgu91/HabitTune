@@ -71,7 +71,7 @@ public class RoomRepository implements Repository {
     }
 
     @Override
-    public boolean deleteActivityById(String id) throws DataGatewayException {
+    public boolean deleteActivityById(@NonNull String id) throws DataGatewayException {
         try {
             return localRoomDatabase.getActivityDao().deleteActivity(new com.josemgu91.habittune.data.room.model.Activity(Long.valueOf(id))) != 0;
         } catch (Exception e) {
@@ -80,6 +80,7 @@ public class RoomRepository implements Repository {
     }
 
     @Override
+    @NonNull
     public Activity createActivity(@NonNull Activity activity) throws DataGatewayException {
         try {
             final long activityId = localRoomDatabase.getActivityDao().insertActivity(new com.josemgu91.habittune.data.room.model.Activity(
@@ -121,7 +122,7 @@ public class RoomRepository implements Repository {
 
     @NonNull
     @Override
-    public LiveData<List<Tag>> subscribeToTagsByIds(List<String> tagIds) throws DataGatewayException {
+    public LiveData<List<Tag>> subscribeToTagsByIds(@NonNull List<String> tagIds) throws DataGatewayException {
         final long[] ids = new long[tagIds.size()];
         for (int i = 0; i < ids.length; i++) {
             ids[i] = Long.valueOf(tagIds.get(i));
@@ -134,6 +135,7 @@ public class RoomRepository implements Repository {
     }
 
     @Override
+    @NonNull
     public Tag createTag(@NonNull Tag tag) throws DataGatewayException {
         try {
             final long insertedTagId = localRoomDatabase.getTagDao().insertTag(new com.josemgu91.habittune.data.room.model.Tag(
@@ -147,7 +149,7 @@ public class RoomRepository implements Repository {
     }
 
     @Override
-    public boolean deleteTagById(String id) throws DataGatewayException {
+    public boolean deleteTagById(@NonNull String id) throws DataGatewayException {
         try {
             return localRoomDatabase.getTagDao().deleteTag(
                     new com.josemgu91.habittune.data.room.model.Tag(
@@ -193,6 +195,7 @@ public class RoomRepository implements Repository {
     }
 
     @Override
+    @NonNull
     public Routine createRoutine(@NonNull Routine routine) throws DataGatewayException {
         try {
             final long insertedRoutineId = localRoomDatabase.getRoutineDao().insertRoutine(new com.josemgu91.habittune.data.room.model.Routine(
@@ -225,6 +228,7 @@ public class RoomRepository implements Repository {
     }
 
     @Override
+    @NonNull
     public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException {
         try {
             final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData = localRoomDatabase.getRoutineActivityJoinDao().subscribeToAllRoutineActivityJoinsByRoutineId(Long.valueOf(routineId));
@@ -235,6 +239,7 @@ public class RoomRepository implements Repository {
     }
 
     @Override
+    @NonNull
     public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull String routineId, int dayNumber) throws DataGatewayException {
         try {
             final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData = localRoomDatabase.getRoutineActivityJoinDao().subscribeToAllRoutineActivityJoinsByRoutineIdAndDay(Long.valueOf(routineId), dayNumber);
@@ -261,7 +266,21 @@ public class RoomRepository implements Repository {
         return result;
     }
 
+    @NonNull
     @Override
+    public RoutineEntry getRoutineEntryById(@NonNull final String id) throws DataGatewayException {
+        try {
+            final RoutineActivityJoin routineActivityJoin = localRoomDatabase.getRoutineActivityJoinDao().getRoutineActivityJoin(Long.valueOf(id));
+            final Activity activity = getActivityById(String.valueOf(routineActivityJoin.activityId));
+            return mapRoutineActivityJoinToRoutineEntry(routineActivityJoin, activity);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
+    @NonNull
     public RoutineEntry createRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException {
         try {
             final long id = localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(new RoutineActivityJoin(

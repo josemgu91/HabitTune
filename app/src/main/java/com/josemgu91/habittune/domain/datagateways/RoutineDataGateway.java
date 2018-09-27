@@ -37,14 +37,21 @@ public interface RoutineDataGateway {
 
     boolean deleteRoutineById(@NonNull final String id) throws DataGatewayException;
 
+    @NonNull
     Routine createRoutine(@NonNull final Routine routine) throws DataGatewayException;
 
+    @NonNull
     LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException;
 
+    @NonNull
     LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull final String routineId, final int dayNumber) throws DataGatewayException;
+
+    @NonNull
+    RoutineEntry getRoutineEntryById(@NonNull final String id) throws DataGatewayException;
 
     boolean deleteRoutineEntry(@NonNull final String id) throws DataGatewayException;
 
+    @NonNull
     RoutineEntry createRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException;
 
     boolean updateRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException;
