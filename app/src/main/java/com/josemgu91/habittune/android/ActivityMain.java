@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.navigation.FragmentKey;
@@ -52,6 +54,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     private FragmentKeyFactory fragmentKeyFactory;
 
+    private InputMethodManager inputMethodManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         fragmentKeyFactory = new FragmentKeyFactory();
@@ -71,6 +75,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
         fragmentStateChanger = new FragmentStateChanger(getSupportFragmentManager(), R.id.fragmentContainer, new FragmentKeyFactory.FragmentFactory());
         backstackDelegate.setStateChanger(this);
+
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -83,6 +89,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     private void goBack() {
+        hideSoftKeyboard();
         if (!backstackDelegate.onBackPressed()) {
             super.onBackPressed();
         }
@@ -244,5 +251,10 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public void removeToolbar() {
         setSupportActionBar(null);
+    }
+
+    @Override
+    public void hideSoftKeyboard() {
+        inputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
     }
 }

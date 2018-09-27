@@ -53,7 +53,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater, @NonNull final ViewGroup container, @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         if (toolbarOptions.hasDefaultToolbar) {
             final View view = new DefaultToolbarViewFactory((layoutInflater, root) -> createView(layoutInflater, root, savedInstanceState)).createView(inflater, container);
             toolbar = view.findViewById(R.id.toolbar);

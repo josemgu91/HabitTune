@@ -59,4 +59,6 @@ public interface FragmentInteractionListener {
 
     void finishFragment();
 
+    void hideSoftKeyboard();
+
 }
