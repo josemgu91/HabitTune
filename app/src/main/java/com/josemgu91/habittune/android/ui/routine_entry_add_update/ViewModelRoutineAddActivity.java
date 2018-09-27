@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui.routine_add_activity;
+package com.josemgu91.habittune.android.ui.routine_entry_add_update;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -54,7 +54,7 @@ public class ViewModelRoutineAddActivity extends ViewModel {
         this.getRoutineEntryResponse = new MutableLiveData<>();
     }
 
-    public void getRoutineEntry(final String id) {
+    public void fetchRoutineEntry(final String id) {
         getRoutineEntry.execute(new GetRoutineEntry.Input(id), new UseCaseOutput<GetRoutineEntry.Output>() {
             @Override
             public void onSuccess(@Nullable GetRoutineEntry.Output output) {
@@ -73,7 +73,7 @@ public class ViewModelRoutineAddActivity extends ViewModel {
         });
     }
 
-    public void getActivity(final String id) {
+    public void fetchActivity(final String id) {
         getActivity.execute(new GetActivity.Input(id), new UseCaseOutput<GetActivity.Output>() {
             @Override
             public void onSuccess(@Nullable GetActivity.Output output) {

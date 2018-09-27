@@ -21,8 +21,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/actionAssignActivity"
-        android:title="@string/routine_add_activity_action_add"
+        android:id="@+id/actionUpdateRoutineEntry"
+        android:title="@string/update_routine_entry_action_update"
         app:showAsAction="withText|ifRoom" />
 
 </menu>

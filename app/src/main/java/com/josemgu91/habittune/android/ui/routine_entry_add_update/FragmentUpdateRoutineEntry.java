@@ -17,14 +17,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui.routine_add_activity;
+package com.josemgu91.habittune.android.ui.routine_entry_add_update;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,21 +38,13 @@ import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.activity_selection.SharedViewModelActivitySelection;
 import com.josemgu91.habittune.databinding.FragmentRoutineAddActivityBinding;
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 
-public class FragmentRoutineAddActivity extends BaseFragment implements TimePickerDialog.OnTimeSetListener {
-
-    private final static String ARG_ROUTINE_ID = "routineId";
-    private final static String ARG_ROUTINE_DAY = "routineDay";
+public class FragmentUpdateRoutineEntry extends BaseFragment implements TimePickerDialog.OnTimeSetListener {
 
     private final static String ARG_ROUTINE_ENTRY_ID = "routineEntryId";
-
-    private final static String ARG_MODE = "mode";
-
-    private final static int ARG_MODE_CREATE = 1;
-    private final static int ARG_MODE_UPDATE = 2;
 
     private final static String FRAGMENT_TAG_TIME_PICKER_DIALOG = "timePickerDialog";
 
@@ -63,24 +53,17 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
     private final static String SAVED_INSTANCE_STATE_END_HOUR = "endHour";
     private final static String SAVED_INSTANCE_STATE_SELECTED_ACTIVITY_ID = "selectedActivityId";
 
-    public static FragmentRoutineAddActivity newInstance() {
-        Bundle args = new Bundle();
-        FragmentRoutineAddActivity fragment = new FragmentRoutineAddActivity();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static FragmentRoutineAddActivity newInstance(@NonNull final String routineId, final int routineDay) {
+    public static FragmentUpdateRoutineEntry newInstance(@NonNull final String routineEntryId) {
         final Bundle args = new Bundle();
-        args.putString(ARG_ROUTINE_ID, routineId);
-        args.putInt(ARG_ROUTINE_DAY, routineDay);
-        FragmentRoutineAddActivity fragment = new FragmentRoutineAddActivity();
+        args.putString(ARG_ROUTINE_ENTRY_ID, routineEntryId);
+        FragmentUpdateRoutineEntry fragment = new FragmentUpdateRoutineEntry();
         fragment.setArguments(args);
         return fragment;
     }
 
-    private String routineId;
-    private int routineDay;
+    private GetRoutineEntry.Output routineToUpdate;
+
+    private String routineEntryId;
 
     @IdRes
     private int viewThatStartedTimePicker;
@@ -103,8 +86,7 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         viewModelRoutineAddActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineAddActivity.class);
         sharedViewModelActivitySelection = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
         final Bundle arguments = getArguments();
-        routineId = arguments.getString(ARG_ROUTINE_ID);
-        routineDay = arguments.getInt(ARG_ROUTINE_DAY);
+        routineEntryId = arguments.getString(ARG_ROUTINE_ENTRY_ID);
     }
 
     @Override
@@ -146,20 +128,36 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
                 v -> fragmentInteractionListener.navigateToActivitySelection()
         );
         fragmentRoutineAddActivityBinding.textViewStartHour.setOnClickListener(
-                v -> showTimePicker(v.getId(), startHour.hourOfDay, startHour.minute)
+                v -> showTimePicker(v.getId(), startHour)
         );
         fragmentRoutineAddActivityBinding.textViewEndHour.setOnClickListener(
-                v -> showTimePicker(v.getId(), endHour.hourOfDay, endHour.minute)
+                v -> showTimePicker(v.getId(), endHour)
         );
-        fragmentRoutineAddActivityBinding.textViewStartHour.setText(getFormattedHour(startHour.hourOfDay, startHour.minute));
-        fragmentRoutineAddActivityBinding.textViewEndHour.setText(getFormattedHour(endHour.hourOfDay, endHour.minute));
         return fragmentRoutineAddActivityBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModelRoutineAddActivity.fetchRoutineEntry(routineEntryId);
+        viewModelRoutineAddActivity.getGetRoutineEntryResponse().observe(getViewLifecycleOwner(), output -> {
+            switch (output.status) {
+                case LOADING:
+                    break;
+                case ERROR:
+                    break;
+                case SUCCESS:
+                    routineToUpdate = output.successData;
+                    showRoutineToUpdateOriginalData();
+                    break;
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        fragmentInteractionListener.updateToolbar(getString(R.string.routine_add_activity_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
+        fragmentInteractionListener.updateToolbar(getString(R.string.update_routine_entry_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
         fragmentInteractionListener.updateNavigationDrawer(false);
     }
 
@@ -173,7 +171,7 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
         }
         if (selectedActivityId != null) {
             fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setText(selectedActivityId);
-            viewModelRoutineAddActivity.getActivity(selectedActivityId);
+            viewModelRoutineAddActivity.fetchActivity(selectedActivityId);
             viewModelRoutineAddActivity.getGetActivityResponse().observe(getViewLifecycleOwner(), response -> {
                 switch (response.status) {
                     case SUCCESS:
@@ -191,100 +189,61 @@ public class FragmentRoutineAddActivity extends BaseFragment implements TimePick
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_routine_add_activity, menu);
+        inflater.inflate(R.menu.fragment_update_routine_entry, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.actionAssignActivity) {
-            createRoutineEntry();
+        if (item.getItemId() == R.id.actionUpdateRoutineEntry) {
+            if (routineToUpdate == null) {
+                return true;
+            }
+            updateRoutineEntry();
             fragmentInteractionListener.finishFragment();
             return true;
         }
         return false;
     }
 
-    private void createRoutineEntry() {
-        viewModelRoutineAddActivity.createRoutineEntry(
-                routineId,
-                selectedActivityId,
-                routineDay,
-                startHour.inSeconds(),
-                endHour.inSeconds()
-        );
+    private void showRoutineToUpdateOriginalData() {
+        startHour = new Hour(routineToUpdate.getStartTime());
+        endHour = new Hour(routineToUpdate.getEndTime());
+        fragmentRoutineAddActivityBinding.textViewStartHour.setText(startHour.format());
+        fragmentRoutineAddActivityBinding.textViewEndHour.setText(endHour.format());
+        selectedActivityId = routineToUpdate.getActivity().getId();
+        viewModelRoutineAddActivity.fetchActivity(selectedActivityId);
+        viewModelRoutineAddActivity.getGetActivityResponse().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case SUCCESS:
+                    fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setText(response.successData.getName());
+                    break;
+            }
+        });
     }
 
-    private void showTimePicker(@IdRes final int viewThatStartedTimePicker, final int hourOfDay, final int minute) {
+    private void updateRoutineEntry() {
+
+    }
+
+    private void showTimePicker(@IdRes final int viewThatStartedTimePicker, final Hour hour) {
         this.viewThatStartedTimePicker = viewThatStartedTimePicker;
-        timePickerDialog = TimePickerDialog.newInstance(hourOfDay, minute);
+        timePickerDialog = TimePickerDialog.newInstance(hour.hourOfDay, hour.minute);
         timePickerDialog.setOnTimeSetListener(this);
         timePickerDialog.show(getFragmentManager(), FRAGMENT_TAG_TIME_PICKER_DIALOG);
     }
 
     @Override
     public void onTimeSet(final int hourOfDay, final int minute) {
-        final String formattedHour = getFormattedHour(hourOfDay, minute);
         final Hour hour = new Hour(hourOfDay, minute);
         switch (viewThatStartedTimePicker) {
             case R.id.textViewStartHour:
                 startHour = hour;
-                fragmentRoutineAddActivityBinding.textViewStartHour.setText(formattedHour);
+                fragmentRoutineAddActivityBinding.textViewStartHour.setText(hour.format());
                 break;
             case R.id.textViewEndHour:
                 endHour = hour;
-                fragmentRoutineAddActivityBinding.textViewEndHour.setText(formattedHour);
+                fragmentRoutineAddActivityBinding.textViewEndHour.setText(hour.format());
                 break;
-        }
-    }
-
-    private String getFormattedHour(final int hourOfDay, final int minute) {
-        final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        return dateFormat.format(calendar.getTime());
-    }
-
-    private final static class Hour implements Parcelable {
-
-        private final int hourOfDay;
-        private final int minute;
-
-        public Hour(int hourOfDay, int minute) {
-            this.hourOfDay = hourOfDay;
-            this.minute = minute;
-        }
-
-        protected Hour(Parcel in) {
-            hourOfDay = in.readInt();
-            minute = in.readInt();
-        }
-
-        public static final Creator<Hour> CREATOR = new Creator<Hour>() {
-            @Override
-            public Hour createFromParcel(Parcel in) {
-                return new Hour(in);
-            }
-
-            @Override
-            public Hour[] newArray(int size) {
-                return new Hour[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(hourOfDay);
-            dest.writeInt(minute);
-        }
-
-        public int inSeconds() {
-            return (hourOfDay * 3600) + (minute * 60);
         }
     }
 }

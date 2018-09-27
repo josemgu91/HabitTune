@@ -34,10 +34,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.databinding.FragmentRoutineDayBinding;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 
@@ -71,6 +71,8 @@ public class FragmentRoutineDay extends Fragment {
     private int routineDay;
     private String routineId;
 
+    private FragmentInteractionListener fragmentInteractionListener;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -79,6 +81,7 @@ public class FragmentRoutineDay extends Fragment {
         routineId = arguments.getString(ARG_ROUTINE_ID);
         final ViewModelProvider.Factory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelRoutineDay = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineDay.class);
+        fragmentInteractionListener = (FragmentInteractionListener) context;
     }
 
     @Nullable
@@ -92,7 +95,7 @@ public class FragmentRoutineDay extends Fragment {
     }
 
     private void updateRoutineEntry(final String routineEntryId) {
-        Toast.makeText(getContext(), routineEntryId, Toast.LENGTH_SHORT).show();
+        fragmentInteractionListener.navigateToFragmentUpdateRoutineEntry(routineEntryId);
     }
 
     @Override

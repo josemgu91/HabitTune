@@ -96,7 +96,7 @@ public class FragmentRoutineEditor extends BaseFragment {
         fragmentRoutineEditorBinding.viewPager.setAdapter(fragmentStatePagerAdapterRoutineDay);
         fragmentRoutineEditorBinding.tabLayout.setupWithViewPager(fragmentRoutineEditorBinding.viewPager);
         fragmentRoutineEditorBinding.floatingActionButtonAdd.setOnClickListener(
-                v -> fragmentInteractionListener.navigateToRoutineAddActivity(routineId, getCurrentRoutineDay())
+                v -> fragmentInteractionListener.navigateToFragmentAddRoutineEntry(routineId, getCurrentRoutineDay())
         );
         return fragmentRoutineEditorBinding.getRoot();
     }

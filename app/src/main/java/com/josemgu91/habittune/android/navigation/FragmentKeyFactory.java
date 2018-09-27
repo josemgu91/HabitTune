@@ -31,8 +31,9 @@ import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
 import com.josemgu91.habittune.android.ui.activity_selection.FragmentActivitySelection;
 import com.josemgu91.habittune.android.ui.new_activity.FragmentNewActivity;
 import com.josemgu91.habittune.android.ui.new_routine.FragmentNewRoutine;
-import com.josemgu91.habittune.android.ui.routine_add_activity.FragmentRoutineAddActivity;
 import com.josemgu91.habittune.android.ui.routine_editor.FragmentRoutineEditor;
+import com.josemgu91.habittune.android.ui.routine_entry_add_update.FragmentAddRoutineEntry;
+import com.josemgu91.habittune.android.ui.routine_entry_add_update.FragmentUpdateRoutineEntry;
 import com.josemgu91.habittune.android.ui.routines.FragmentRoutines;
 import com.josemgu91.habittune.android.ui.tag_editor.FragmentTagEditor;
 
@@ -49,13 +50,16 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_TAG_EDITOR = "fragmentTagEditor";
     public static final String FRAGMENT_TAG_NEW_ROUTINE = "fragmentNewRoutine";
     public static final String FRAGMENT_TAG_ROUTINE_EDITOR = "fragmentRoutineEditor";
-    public static final String FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY = "fragmentRoutineAddActivity";
+    public static final String FRAGMENT_TAG_ADD_ROUTINE_ENTRY = "fragmentAddRoutineEntry";
+    public static final String FRAGMENT_TAG_UPDATE_ROUTINE_ENTRY = "fragmentUpdateRoutineEntry";
     public static final String FRAGMENT_TAG_ACTIVITY_SELECTION = "fragmentActivitySelection";
 
     private static final String FRAGMENT_ARG_ROUTINE_EDITOR_ROUTINE_ID = "routineId";
 
-    private static final String FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_ID = "routineId";
-    private static final String FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_DAY = "routineDay";
+    private static final String FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_ID = "routineId";
+    private static final String FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_DAY = "routineDay";
+
+    private static final String FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ENTRY_ID = "routineEntryId";
 
     public FragmentKey createScheduleKey() {
         return new FragmentKey(FRAGMENT_TAG_SCHEDULE, null);
@@ -91,12 +95,19 @@ public class FragmentKeyFactory {
         return new FragmentKey(FRAGMENT_TAG_ROUTINE_EDITOR, arguments);
     }
 
-    public FragmentKey createRoutineAddActivityKey(@NonNull final String routineId, final int routineDay) {
+    public FragmentKey createAddRoutineEntryKey(@NonNull final String routineId, final int routineDay) {
         final Bundle arguments = new Bundle();
-        arguments.putString(FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_ID, routineId);
-        arguments.putInt(FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_DAY, routineDay);
-        return new FragmentKey(FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY, arguments);
+        arguments.putString(FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_ID, routineId);
+        arguments.putInt(FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_DAY, routineDay);
+        return new FragmentKey(FRAGMENT_TAG_ADD_ROUTINE_ENTRY, arguments);
     }
+
+    public FragmentKey createUpdateRoutineEntryKey(@NonNull final String id) {
+        final Bundle arguments = new Bundle();
+        arguments.putString(FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ENTRY_ID, id);
+        return new FragmentKey(FRAGMENT_TAG_UPDATE_ROUTINE_ENTRY, arguments);
+    }
+
 
     public FragmentKey createFragmentActivitySelection() {
         return new FragmentKey(FRAGMENT_TAG_ACTIVITY_SELECTION, null);
@@ -136,10 +147,14 @@ public class FragmentKeyFactory {
                     return FragmentRoutineEditor.newInstance(
                             arguments.getString(FRAGMENT_ARG_ROUTINE_EDITOR_ROUTINE_ID)
                     );
-                case FRAGMENT_TAG_ROUTINE_ADD_ACTIVITY:
-                    return FragmentRoutineAddActivity.newInstance(
-                            arguments.getString(FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_ID),
-                            arguments.getInt(FRAGMENT_ARG_ROUTINE_ADD_ACTIVITY_ROUTINE_DAY)
+                case FRAGMENT_TAG_ADD_ROUTINE_ENTRY:
+                    return FragmentAddRoutineEntry.newInstance(
+                            arguments.getString(FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_ID),
+                            arguments.getInt(FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_DAY)
+                    );
+                case FRAGMENT_TAG_UPDATE_ROUTINE_ENTRY:
+                    return FragmentUpdateRoutineEntry.newInstance(
+                            arguments.getString(FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ENTRY_ID)
                     );
                 case FRAGMENT_TAG_ACTIVITY_SELECTION:
                     return new FragmentActivitySelection();
