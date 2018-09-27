@@ -128,7 +128,10 @@ public class FragmentNewActivity extends BaseFragment implements ColorPickerDial
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fragmentNewActivityBinding.viewColor.setOnClickListener(v -> colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER));
+        fragmentNewActivityBinding.viewColor.setOnClickListener(v -> {
+            fragmentInteractionListener.hideSoftKeyboard();
+            colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
+        });
     }
 
     @Override

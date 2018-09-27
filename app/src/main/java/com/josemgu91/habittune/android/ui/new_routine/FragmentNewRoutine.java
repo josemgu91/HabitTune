@@ -175,6 +175,7 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
     }
 
     private void showColorPicker() {
+        fragmentInteractionListener.hideSoftKeyboard();
         colorPickerDialog = ColorPickerDialog.newBuilder().setColor(selectedColor).create();
         colorPickerDialog.setColorPickerDialogListener(this);
         colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
