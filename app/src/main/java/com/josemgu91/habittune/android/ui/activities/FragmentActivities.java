@@ -74,7 +74,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
 
     @Override
     protected void onItemSelected(ActivityItem item) {
-
+        fragmentInteractionListener.navigateToFragmentUpdateActivity(item.getId());
     }
 
     @Override

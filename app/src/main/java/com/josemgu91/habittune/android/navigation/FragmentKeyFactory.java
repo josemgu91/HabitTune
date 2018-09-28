@@ -28,8 +28,9 @@ import com.josemgu91.habittune.android.FragmentSchedule;
 import com.josemgu91.habittune.android.FragmentSettings;
 import com.josemgu91.habittune.android.FragmentStatistics;
 import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
-import com.josemgu91.habittune.android.ui.activity_selection.FragmentActivitySelection;
 import com.josemgu91.habittune.android.ui.activity_create_update.FragmentNewActivity;
+import com.josemgu91.habittune.android.ui.activity_create_update.FragmentUpdateActivity;
+import com.josemgu91.habittune.android.ui.activity_selection.FragmentActivitySelection;
 import com.josemgu91.habittune.android.ui.new_routine.FragmentNewRoutine;
 import com.josemgu91.habittune.android.ui.routine_editor.FragmentRoutineEditor;
 import com.josemgu91.habittune.android.ui.routine_entry_add_update.FragmentAddRoutineEntry;
@@ -47,12 +48,15 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_HELP = "fragmentHelp";
 
     public static final String FRAGMENT_TAG_NEW_ACTIVITY = "fragmentNewActivity";
+    public static final String FRAGMENT_TAG_UPDATE_ACTIVITY = "fragmentUpdateActivity";
     public static final String FRAGMENT_TAG_TAG_EDITOR = "fragmentTagEditor";
     public static final String FRAGMENT_TAG_NEW_ROUTINE = "fragmentNewRoutine";
     public static final String FRAGMENT_TAG_ROUTINE_EDITOR = "fragmentRoutineEditor";
     public static final String FRAGMENT_TAG_ADD_ROUTINE_ENTRY = "fragmentAddRoutineEntry";
     public static final String FRAGMENT_TAG_UPDATE_ROUTINE_ENTRY = "fragmentUpdateRoutineEntry";
     public static final String FRAGMENT_TAG_ACTIVITY_SELECTION = "fragmentActivitySelection";
+
+    private static final String FRAGMENT_ARG_UPDATE_ACTIVITY_ACTIVITY_ID = "activityId";
 
     private static final String FRAGMENT_ARG_ROUTINE_EDITOR_ROUTINE_ID = "routineId";
 
@@ -80,6 +84,12 @@ public class FragmentKeyFactory {
 
     public FragmentKey createNewActivityKey() {
         return new FragmentKey(FRAGMENT_TAG_NEW_ACTIVITY, null);
+    }
+
+    public FragmentKey createUpdateActivityKey(@NonNull final String activityId) {
+        final Bundle arguments = new Bundle();
+        arguments.putString(FRAGMENT_ARG_UPDATE_ACTIVITY_ACTIVITY_ID, activityId);
+        return new FragmentKey(FRAGMENT_TAG_UPDATE_ACTIVITY, arguments);
     }
 
     public FragmentKey createTagEditorKey() {
@@ -141,6 +151,10 @@ public class FragmentKeyFactory {
                     return new FragmentHelp();
                 case FRAGMENT_TAG_NEW_ACTIVITY:
                     return new FragmentNewActivity();
+                case FRAGMENT_TAG_UPDATE_ACTIVITY:
+                    return FragmentUpdateActivity.newInstance(
+                            arguments.getString(FRAGMENT_ARG_UPDATE_ACTIVITY_ACTIVITY_ID)
+                    );
                 case FRAGMENT_TAG_TAG_EDITOR:
                     return new FragmentTagEditor();
                 case FRAGMENT_TAG_NEW_ROUTINE:

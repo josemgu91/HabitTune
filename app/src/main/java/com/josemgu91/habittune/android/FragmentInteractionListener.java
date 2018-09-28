@@ -47,6 +47,8 @@ public interface FragmentInteractionListener {
 
     void navigateToFragmentNewActivity();
 
+    void navigateToFragmentUpdateActivity(@NonNull final String activityId);
+
     void navigateToFragmentNewRoutine();
 
     void navigateToFragmentTagEditor();

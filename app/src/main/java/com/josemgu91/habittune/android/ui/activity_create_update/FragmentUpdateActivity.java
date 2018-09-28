@@ -185,8 +185,8 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
         for (final GetActivity.Output.Tag tag : activityToUpdate.getTags()) {
             tagsIds.add(tag.getId());
         }
-        fragmentNewActivityBinding.editTextActivityName = activityToUpdate.getName();
-        fragmentNewActivityBinding.editTextActivityDescription = activityToUpdate.getDescription();
+        fragmentNewActivityBinding.editTextActivityName.setText(activityToUpdate.getName());
+        fragmentNewActivityBinding.editTextActivityDescription.setText(activityToUpdate.getDescription());
         selectedTagsIds = tagsIds;
         updateColor(activityToUpdate.getColor());
         activityToUpdateRetrieved = true;
