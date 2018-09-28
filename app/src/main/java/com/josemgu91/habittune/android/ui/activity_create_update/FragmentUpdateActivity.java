@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui.new_activity;
+package com.josemgu91.habittune.android.ui.activity_create_update;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -48,7 +48,17 @@ import com.josemgu91.habittune.domain.usecases.GetTags;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentNewActivity extends BaseFragment implements ColorPickerDialogListener {
+public class FragmentUpdateActivity extends BaseFragment implements ColorPickerDialogListener {
+
+    public static final String ARG_ACTIVITY_ID = "activityId";
+
+    public static FragmentUpdateActivity newInstance(final String activityId) {
+        final Bundle args = new Bundle();
+        args.putString(ARG_ACTIVITY_ID, activityId);
+        final FragmentUpdateActivity fragment = new FragmentUpdateActivity();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     private ViewModelNewActivity viewModelNewActivity;
     private FragmentNewActivityBinding fragmentNewActivityBinding;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui.new_activity;
+package com.josemgu91.habittune.android.ui.activity_create_update;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -28,7 +28,9 @@ import android.support.annotation.Nullable;
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.android.ui.RestorableViewModel;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
+import com.josemgu91.habittune.domain.usecases.GetActivity;
 import com.josemgu91.habittune.domain.usecases.GetTags;
+import com.josemgu91.habittune.domain.usecases.UpdateActivity;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 import java.util.ArrayList;
@@ -39,19 +41,27 @@ public class ViewModelNewActivity extends ViewModel implements RestorableViewMod
     private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
     private final static String SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS = "selectedTagsIds";
 
+    private final GetActivity getActivity;
+    private final UpdateActivity updateActivity;
     private final CreateActivity createActivity;
     private final GetTags getTags;
 
     private final MutableLiveData<Response<Void, Void>> createActivityResponse;
+    private final MutableLiveData<Response<GetActivity.Output, Void>> getActivityResponse;
+    private final MutableLiveData<Response<Void, Void>> updateActivityResponse;
     private final MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getTagsResponse;
     private final MutableLiveData<Integer> selectedColor;
 
-    public ViewModelNewActivity(final CreateActivity createActivity, final GetTags getTags) {
+    public ViewModelNewActivity(final CreateActivity createActivity, final GetTags getTags, final UpdateActivity updateActivity, final GetActivity getActivity) {
+        this.getActivity = getActivity;
         this.createActivity = createActivity;
         this.getTags = getTags;
+        this.updateActivity = updateActivity;
         this.createActivityResponse = new MutableLiveData<>();
         this.getTagsResponse = new MutableLiveData<>();
         this.selectedColor = new MutableLiveData<>();
+        this.updateActivityResponse = new MutableLiveData<>();
+        this.getActivityResponse = new MutableLiveData<>();
     }
 
     public void createActivity(final CreateActivity.Input activity) {
@@ -92,12 +102,58 @@ public class ViewModelNewActivity extends ViewModel implements RestorableViewMod
         });
     }
 
-    public MutableLiveData<Response<Void, Void>> getCreateActivityResponse() {
+    public void updateActivity(final UpdateActivity.Input activity) {
+        updateActivity.execute(activity, new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+                updateActivityResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
+            }
+
+            @Override
+            public void inProgress() {
+                updateActivityResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                updateActivityResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
+    public void getActivity(final String activityId) {
+        getActivity.execute(new GetActivity.Input(activityId), new UseCaseOutput<GetActivity.Output>() {
+            @Override
+            public void onSuccess(@Nullable GetActivity.Output output) {
+                getActivityResponse.setValue(new Response<>(Response.Status.SUCCESS, output, null));
+            }
+
+            @Override
+            public void inProgress() {
+                getActivityResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                getActivityResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
+    public LiveData<Response<Void, Void>> getCreateActivityResponse() {
         return createActivityResponse;
     }
 
-    public MutableLiveData<Response<LiveData<List<GetTags.Output>>, Void>> getGetTagsResponse() {
+    public LiveData<Response<LiveData<List<GetTags.Output>>, Void>> getGetTagsResponse() {
         return getTagsResponse;
+    }
+
+    public LiveData<Response<Void, Void>> getUpdateActivityResponse() {
+        return updateActivityResponse;
+    }
+
+    public LiveData<Response<GetActivity.Output, Void>> getGetActivityResponse() {
+        return getActivityResponse;
     }
 
     public MutableLiveData<Integer> getSelectedColor() {

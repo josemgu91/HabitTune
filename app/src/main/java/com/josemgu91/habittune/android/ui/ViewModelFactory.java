@@ -24,12 +24,12 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.android.ui.activities.ViewModelActivities;
+import com.josemgu91.habittune.android.ui.activity_create_update.ViewModelNewActivity;
 import com.josemgu91.habittune.android.ui.activity_selection.ViewModelActivitySelection;
-import com.josemgu91.habittune.android.ui.new_activity.ViewModelNewActivity;
 import com.josemgu91.habittune.android.ui.new_routine.ViewModelNewRoutine;
-import com.josemgu91.habittune.android.ui.routine_entry_add_update.ViewModelRoutineAddActivity;
 import com.josemgu91.habittune.android.ui.routine_editor.ViewModelRoutineDay;
 import com.josemgu91.habittune.android.ui.routine_editor.ViewModelRoutineEditor;
+import com.josemgu91.habittune.android.ui.routine_entry_add_update.ViewModelRoutineAddActivity;
 import com.josemgu91.habittune.android.ui.routines.ViewModelRoutines;
 import com.josemgu91.habittune.android.ui.tag_editor.ViewModelTagEditor;
 import com.josemgu91.habittune.android.usecases.UseCaseFactory;
@@ -50,7 +50,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new ViewModelActivities(useCaseFactory.createGetActivities(), useCaseFactory.createDeleteActivity());
         }
         if (modelClass.isAssignableFrom(ViewModelNewActivity.class)) {
-            return (T) new ViewModelNewActivity(useCaseFactory.createCreateActivity(), useCaseFactory.createGetTags());
+            return (T) new ViewModelNewActivity(useCaseFactory.createCreateActivity(), useCaseFactory.createGetTags(), useCaseFactory.createUpdateActivity(), useCaseFactory.createGetActivity());
         }
         if (modelClass.isAssignableFrom(ViewModelTagEditor.class)) {
             return (T) new ViewModelTagEditor(useCaseFactory.createGetTags(), useCaseFactory.createCreateTag(), useCaseFactory.createDeleteTag(), useCaseFactory.createUpdateTag());
