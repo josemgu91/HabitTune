@@ -24,6 +24,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
@@ -114,20 +115,21 @@ public class RoomRepository implements Repository {
     }
 
     @Override
-    public boolean updateActivity(@NonNull Activity updatedActivity) throws DataGatewayException {
+    public boolean updateActivity(@NonNull Activity activity) throws DataGatewayException {
         try {
-            localRoomDatabase.getActivityTagJoinDao().deleteActivityTagJoinsByActivityId(Long.valueOf(updatedActivity.getId()));
-            for (final Tag tag : updatedActivity.getTags()) {
+            Log.d("RoomRepository", activity.toString());
+            localRoomDatabase.getActivityTagJoinDao().deleteActivityTagJoinsByActivityId(Long.valueOf(activity.getId()));
+            for (final Tag tag : activity.getTags()) {
                 localRoomDatabase.getActivityTagJoinDao().insertActivityTagJoin(new ActivityTagJoin(
-                        Long.valueOf(updatedActivity.getId()),
+                        Long.valueOf(activity.getId()),
                         Long.valueOf(tag.getId())
                 ));
             }
             localRoomDatabase.getActivityDao().updateActivity(new com.josemgu91.habittune.data.room.model.Activity(
-                    Long.valueOf(updatedActivity.getId()),
-                    updatedActivity.getName(),
-                    updatedActivity.getDescription(),
-                    updatedActivity.getColor()
+                    Long.valueOf(activity.getId()),
+                    activity.getName(),
+                    activity.getDescription(),
+                    activity.getColor()
             ));
             return true;
         } catch (Exception e) {

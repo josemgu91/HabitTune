@@ -51,14 +51,13 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
 
     private static final String ARG_ACTIVITY_ID = "activityId";
 
-    public static FragmentUpdateActivity newInstance(final String activityId) {
+    public static FragmentUpdateActivity newInstance(@NonNull final String activityId) {
         final Bundle args = new Bundle();
         args.putString(ARG_ACTIVITY_ID, activityId);
         final FragmentUpdateActivity fragment = new FragmentUpdateActivity();
         fragment.setArguments(args);
         return fragment;
     }
-
 
     private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
     private final static String SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS = "selectedTagsIds";
@@ -97,7 +96,6 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
             activityToUpdateRetrieved = savedInstanceState.getBoolean(SAVED_INSTANCE_STATE_KEY_ACTIVITY_TO_UPDATE_RETRIEVED);
             selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
             selectedTagsIds = savedInstanceState.getStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS);
-            updateTagsNames(selectedTagsIds);
         }
         colorPickerDialog = (ColorPickerDialog) getActivity().getFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
         if (colorPickerDialog == null) {
@@ -163,7 +161,11 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
             sharedViewModelTagEditor.clear();
             updateTagsNames(selectedTagsIds);
         }
+        if (selectedTagsIds != null) {
+            updateTagsNames(selectedTagsIds);
+        }
         if (activityToUpdateRetrieved) {
+            updateColor(selectedColor);
             return;
         }
         viewModelNewActivity.getActivity(activityId);
@@ -190,6 +192,7 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
         selectedTagsIds = tagsIds;
         updateColor(activityToUpdate.getColor());
         activityToUpdateRetrieved = true;
+        updateTagsNames(tagsIds);
     }
 
     private void showColorPicker() {
