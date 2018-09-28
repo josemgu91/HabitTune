@@ -114,8 +114,26 @@ public class RoomRepository implements Repository {
     }
 
     @Override
-    public boolean updateActivity(@NonNull Activity updatedActivity) {
-        return false;
+    public boolean updateActivity(@NonNull Activity updatedActivity) throws DataGatewayException {
+        try {
+            localRoomDatabase.getActivityTagJoinDao().deleteActivityTagJoinsByActivityId(Long.valueOf(updatedActivity.getId()));
+            for (final Tag tag : updatedActivity.getTags()) {
+                localRoomDatabase.getActivityTagJoinDao().insertActivityTagJoin(new ActivityTagJoin(
+                        Long.valueOf(updatedActivity.getId()),
+                        Long.valueOf(tag.getId())
+                ));
+            }
+            localRoomDatabase.getActivityDao().updateActivity(new com.josemgu91.habittune.data.room.model.Activity(
+                    Long.valueOf(updatedActivity.getId()),
+                    updatedActivity.getName(),
+                    updatedActivity.getDescription(),
+                    updatedActivity.getColor()
+            ));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DataGatewayException(e.getMessage());
+        }
     }
 
     @NonNull

@@ -36,6 +36,9 @@ public interface ActivityTagJoinDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertActivityTagJoin(final ActivityTagJoin activityTagJoin);
 
+    @Query("DELETE FROM activityTagJoins WHERE activityId = :activityId")
+    int deleteActivityTagJoinsByActivityId(final long activityId);
+
     @Query("SELECT tags.id AS `id`, tags.name AS `name` FROM tags INNER JOIN activityTagJoins ON tags.id = activityTagJoins.tagId WHERE activityTagJoins.activityId = :activityId")
     List<Tag> getAllTagsByActivityId(final long activityId);
 
