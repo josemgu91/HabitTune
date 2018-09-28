@@ -21,7 +21,6 @@ package com.josemgu91.habittune.domain.usecases;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.josemgu91.habittune.domain.datagateways.ActivityDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
@@ -48,7 +47,6 @@ public class UpdateActivity extends AbstractUseCase<UpdateActivity.Input, Void> 
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Void> output) {
         output.inProgress();
         try {
-            Log.d("UpdateActivity", input.toString());
             final List<Tag> tags = new ArrayList<>();
             for (final String tagId : input.tagIds) {
                 tags.add(new Tag(tagId, ""));
