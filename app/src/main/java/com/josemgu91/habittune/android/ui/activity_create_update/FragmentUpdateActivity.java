@@ -23,10 +23,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,8 +40,9 @@ import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.android.ui.tag_editor.SharedViewModelTagEditor;
 import com.josemgu91.habittune.databinding.FragmentNewActivityBinding;
-import com.josemgu91.habittune.domain.usecases.CreateActivity;
+import com.josemgu91.habittune.domain.usecases.GetActivity;
 import com.josemgu91.habittune.domain.usecases.GetTags;
+import com.josemgu91.habittune.domain.usecases.UpdateActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,13 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
         return fragment;
     }
 
-    private final static String SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR = "selectedColor";
+
+    private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
+    private final static String SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS = "selectedTagsIds";
+
+    private final static String SAVED_INSTANCE_STATE_KEY_ACTIVITY_TO_UPDATE_RETRIEVED = "activityToUpdateRetrieved";
+
+    private boolean activityToUpdateRetrieved;
 
     private String activityId;
 
@@ -70,18 +75,15 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
 
     private final static String FRAGMENT_TAG_COLOR_PICKER = "colorPickerDialog";
 
-    private int selectedColor;
-    @ColorInt
-    private int defaultColor;
-
     private SharedViewModelTagEditor sharedViewModelTagEditor;
 
-    private List<GetTags.Output> tags;
+    private ArrayList<String> selectedTagsIds;
+
+    private int selectedColor;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        defaultColor = ContextCompat.getColor(context, R.color.secondary);
         viewModelNewActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelNewActivity.class);
         sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
         activityId = getArguments().getString(ARG_ACTIVITY_ID);
@@ -91,10 +93,11 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (savedInstanceState == null) {
-            selectedColor = defaultColor;
-        } else {
-            selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR);
+        if (savedInstanceState != null) {
+            activityToUpdateRetrieved = savedInstanceState.getBoolean(SAVED_INSTANCE_STATE_KEY_ACTIVITY_TO_UPDATE_RETRIEVED);
+            selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
+            selectedTagsIds = savedInstanceState.getStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS);
+            updateTagsNames(selectedTagsIds);
         }
         colorPickerDialog = (ColorPickerDialog) getActivity().getFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
         if (colorPickerDialog == null) {
@@ -106,7 +109,9 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR, selectedColor);
+        outState.putBoolean(SAVED_INSTANCE_STATE_KEY_ACTIVITY_TO_UPDATE_RETRIEVED, activityToUpdateRetrieved);
+        outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, selectedColor);
+        outState.putStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS, selectedTagsIds);
     }
 
     @Override
@@ -140,10 +145,7 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fragmentNewActivityBinding.viewColor.setOnClickListener(v -> {
-            fragmentInteractionListener.hideSoftKeyboard();
-            colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
-        });
+        fragmentNewActivityBinding.viewColor.setOnClickListener(v -> showColorPicker());
     }
 
     @Override
@@ -157,13 +159,68 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
     public void onResume() {
         super.onResume();
         if (sharedViewModelTagEditor.getSelectedTagIds() != null) {
-            viewModelNewActivity.getTags(sharedViewModelTagEditor.getSelectedTagIds());
+            selectedTagsIds = new ArrayList<>(sharedViewModelTagEditor.getSelectedTagIds());
             sharedViewModelTagEditor.clear();
+            updateTagsNames(selectedTagsIds);
         }
+        if (activityToUpdateRetrieved) {
+            return;
+        }
+        viewModelNewActivity.getActivity(activityId);
+        viewModelNewActivity.getGetActivityResponse().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case LOADING:
+                    break;
+                case ERROR:
+                    break;
+                case SUCCESS:
+                    onActivityToUpdateRetrieved(response.successData);
+                    break;
+            }
+        });
+    }
+
+    private void onActivityToUpdateRetrieved(GetActivity.Output activityToUpdate) {
+        final ArrayList<String> tagsIds = new ArrayList<>();
+        for (final GetActivity.Output.Tag tag : activityToUpdate.getTags()) {
+            tagsIds.add(tag.getId());
+        }
+        fragmentNewActivityBinding.editTextActivityName = activityToUpdate.getName();
+        fragmentNewActivityBinding.editTextActivityDescription = activityToUpdate.getDescription();
+        selectedTagsIds = tagsIds;
+        updateColor(activityToUpdate.getColor());
+        activityToUpdateRetrieved = true;
+    }
+
+    private void showColorPicker() {
+        fragmentInteractionListener.hideSoftKeyboard();
+        colorPickerDialog = ColorPickerDialog.newBuilder().setColor(selectedColor).create();
+        colorPickerDialog.setColorPickerDialogListener(this);
+        colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
+    }
+
+    @Override
+    public void onColorSelected(int dialogId, int color) {
+        updateColor(color);
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+
+    }
+
+    private void updateColor(int color) {
+        selectedColor = color;
+        fragmentNewActivityBinding.viewColor.setBackgroundColor(color);
+        colorPickerDialog = ColorPickerDialog.newBuilder().setColor(color).create();
+        colorPickerDialog.setColorPickerDialogListener(this);
+    }
+
+    private void updateTagsNames(final List<String> tagsIds) {
+        viewModelNewActivity.getTags(tagsIds);
         viewModelNewActivity.getGetTagsResponse().observe(getViewLifecycleOwner(), response -> {
             if (response.status == Response.Status.SUCCESS) {
                 response.successData.observe(getViewLifecycleOwner(), outputs -> {
-                    tags = outputs;
                     final List<String> tagNames = new ArrayList<>();
                     for (final GetTags.Output output : outputs) {
                         tagNames.add(output.getName());
@@ -172,21 +229,6 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
                 });
             }
         });
-        viewModelNewActivity.getSelectedColor().observe(getViewLifecycleOwner(), color -> {
-            fragmentNewActivityBinding.viewColor.setBackgroundColor(color);
-            colorPickerDialog = ColorPickerDialog.newBuilder().setColor(color).create();
-            colorPickerDialog.setColorPickerDialogListener(this);
-        });
-    }
-
-    @Override
-    public void onColorSelected(int dialogId, int color) {
-        viewModelNewActivity.getSelectedColor().setValue(color);
-    }
-
-    @Override
-    public void onDialogDismissed(int dialogId) {
-
     }
 
     private void showTagNames(final List<String> tagNames) {
@@ -202,37 +244,22 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
     }
 
     private void goToTagEditor() {
-        if (tags != null) {
-            final List<String> selectedTagIds = new ArrayList<>();
-            for (final GetTags.Output tag : tags) {
-                selectedTagIds.add(tag.getId());
-            }
-            sharedViewModelTagEditor.setSelectedTagIds(selectedTagIds);
-        }
+        sharedViewModelTagEditor.setSelectedTagIds(selectedTagsIds);
         fragmentInteractionListener.navigateToFragmentTagEditor();
     }
 
     private void updateActivity() {
-
-    }
-
-    private void createActivity() {
         final String activityName = fragmentNewActivityBinding.editTextActivityName.getText().toString();
         final String activityDescription = fragmentNewActivityBinding.editTextActivityDescription.getText().toString();
-        final int activityColor = viewModelNewActivity.getSelectedColor().getValue();
-        final List<String> tagIds = new ArrayList<>();
-        if (tags != null) {
-            for (final GetTags.Output tag : tags) {
-                tagIds.add(tag.getId());
-            }
-        }
-        final CreateActivity.Input input = new CreateActivity.Input(
+        final UpdateActivity.Input input = new UpdateActivity.Input(
+                activityId,
                 activityName,
                 activityDescription,
-                activityColor,
-                tagIds
+                selectedColor,
+                selectedTagsIds
         );
-        viewModelNewActivity.createActivity(input);
+        viewModelNewActivity.updateActivity(input);
         fragmentInteractionListener.finishFragment();
     }
+
 }
