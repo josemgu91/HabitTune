@@ -19,7 +19,6 @@
 
 package com.josemgu91.habittune.data.room.dao;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -38,7 +37,7 @@ public interface ActivityTagJoinDao {
     long insertActivityTagJoin(final ActivityTagJoin activityTagJoin);
 
     @Query("SELECT tags.id AS `id`, tags.name AS `name` FROM tags INNER JOIN activityTagJoins ON tags.id = activityTagJoins.tagId WHERE activityTagJoins.activityId = :activityId")
-    LiveData<List<Tag>> subscribeToAllTagsByActivityId(final long activityId);
+    List<Tag> getAllTagsByActivityId(final long activityId);
 
     @Delete
     int deleteActivityTagJoin(final ActivityTagJoin activityTagJoin);

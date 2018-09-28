@@ -46,7 +46,10 @@
     <string name="new_activity_label_activity_color">Color</string>
     <string name="new_activity_hint_activity_color">Color</string>
     <string name="new_activity_hint_activity_tags">Tags&#8230;</string>
-    <string name="new_activity_create">Save</string>
+    <string name="new_activity_action_create">Save</string>
+
+    <string name="update_activity_title">Update Activity</string>
+    <string name="update_activity_action_update">Update</string>
 
     <string name="tag_editor_title">Tags</string>
     <string name="tag_editor_tag_hint">Enter tag name</string>

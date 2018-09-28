@@ -52,9 +52,14 @@ public class RoomRepository implements Repository {
 
     @NonNull
     @Override
-    public LiveData<List<Activity>> subscribeToAllActivitiesButWithoutTags() throws DataGatewayException {
+    public LiveData<List<Activity>> subscribeToAllActivities() throws DataGatewayException {
         try {
-            return Transformations.map(localRoomDatabase.getActivityDao().subscribeToAllActivities(), input -> mapList(input, RoomRepository::mapToEntityActivity));
+            final MediatorLiveData<List<Activity>> result = new MediatorLiveData<>();
+            result.addSource(localRoomDatabase.getActivityDao().subscribeToAllActivities(), roomActivities -> repositoryExecutor.execute(() -> {
+                final List<Activity> activities = mapList(roomActivities, roomActivity -> mapToEntityActivity(roomActivity, localRoomDatabase.getActivityTagJoinDao().getAllTagsByActivityId(roomActivity.id)));
+                result.postValue(activities);
+            }));
+            return result;
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -64,7 +69,10 @@ public class RoomRepository implements Repository {
     @Override
     public Activity getActivityById(@NonNull String id) throws DataGatewayException {
         try {
-            return mapToEntityActivity(localRoomDatabase.getActivityDao().getActivityById(Long.valueOf(id)));
+            return mapToEntityActivity(
+                    localRoomDatabase.getActivityDao().getActivityById(Long.valueOf(id)),
+                    localRoomDatabase.getActivityTagJoinDao().getAllTagsByActivityId(Long.valueOf(id))
+            );
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -347,27 +355,13 @@ public class RoomRepository implements Repository {
         );
     }
 
-    private static Activity mapToEntityActivity(final com.josemgu91.habittune.data.room.model.Activity roomActivity) {
-        return new Activity(
-                String.valueOf(roomActivity.id),
-                roomActivity.name,
-                roomActivity.description,
-                roomActivity.color,
-                null
-        );
-    }
-
     private static Activity mapToEntityActivity(final com.josemgu91.habittune.data.room.model.Activity roomActivity, final List<com.josemgu91.habittune.data.room.model.Tag> roomTags) {
-        final ArrayList<Tag> tags = new ArrayList<>();
-        for (final com.josemgu91.habittune.data.room.model.Tag roomTag : roomTags) {
-            tags.add(mapToEntityTag(roomTag));
-        }
         return new Activity(
                 String.valueOf(roomActivity.id),
                 roomActivity.name,
                 roomActivity.description,
                 roomActivity.color,
-                tags
+                mapList(roomTags, RoomRepository::mapToEntityTag)
         );
     }
 

@@ -50,7 +50,7 @@ import java.util.List;
 
 public class FragmentUpdateActivity extends BaseFragment implements ColorPickerDialogListener {
 
-    public static final String ARG_ACTIVITY_ID = "activityId";
+    private static final String ARG_ACTIVITY_ID = "activityId";
 
     public static FragmentUpdateActivity newInstance(final String activityId) {
         final Bundle args = new Bundle();
@@ -60,12 +60,17 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
         return fragment;
     }
 
+    private final static String SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR = "selectedColor";
+
+    private String activityId;
+
     private ViewModelNewActivity viewModelNewActivity;
     private FragmentNewActivityBinding fragmentNewActivityBinding;
     private ColorPickerDialog colorPickerDialog;
 
     private final static String FRAGMENT_TAG_COLOR_PICKER = "colorPickerDialog";
 
+    private int selectedColor;
     @ColorInt
     private int defaultColor;
 
@@ -79,6 +84,7 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
         defaultColor = ContextCompat.getColor(context, R.color.secondary);
         viewModelNewActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelNewActivity.class);
         sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
+        activityId = getArguments().getString(ARG_ACTIVITY_ID);
     }
 
     @Override
@@ -86,9 +92,9 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (savedInstanceState == null) {
-            viewModelNewActivity.getSelectedColor().setValue(defaultColor);
+            selectedColor = defaultColor;
         } else {
-            onRestoreInstanceState(savedInstanceState);
+            selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR);
         }
         colorPickerDialog = (ColorPickerDialog) getActivity().getFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
         if (colorPickerDialog == null) {
@@ -97,26 +103,22 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
         colorPickerDialog.setColorPickerDialogListener(this);
     }
 
-    public void onRestoreInstanceState(final Bundle savedInstanceState) {
-        viewModelNewActivity.onRestoreInstanceState(savedInstanceState);
-    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        viewModelNewActivity.onSaveInstanceState(outState);
+        outState.putInt(SAVED_INSTANCE_STATE_KEY_SELECTED_COLOR, selectedColor);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_new_activity, menu);
+        inflater.inflate(R.menu.fragment_update_activity, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.actionCreateActivity) {
-            createActivity();
+        if (item.getItemId() == R.id.actionUpdateActivity) {
+            updateActivity();
             return true;
         }
         return false;
@@ -208,6 +210,10 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
             sharedViewModelTagEditor.setSelectedTagIds(selectedTagIds);
         }
         fragmentInteractionListener.navigateToFragmentTagEditor();
+    }
+
+    private void updateActivity() {
+
     }
 
     private void createActivity() {

@@ -35,6 +35,7 @@ import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentActivitySelectionBinding;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
+import com.josemgu91.habittune.domain.usecases.GetActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,9 +106,9 @@ public class FragmentActivitySelection extends BaseFragment {
         return new ToolbarOptions(true);
     }
 
-    private void updateActivities(List<GetActivities.Output> outputs) {
+    private void updateActivities(List<GetActivity.Output> outputs) {
         final List<ActivityItem> activities = new ArrayList<>();
-        for (final GetActivities.Output output : outputs) {
+        for (final GetActivity.Output output : outputs) {
             activities.add(new ActivityItem(output.getId(), output.getName()));
         }
         flexibleAdapterActivities.updateDataSet(activities);

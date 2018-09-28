@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.domain.usecases.DeleteActivity;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
+import com.josemgu91.habittune.domain.usecases.GetActivity;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class ViewModelActivities extends ViewModel {
     private final GetActivities getActivities;
     private final DeleteActivity deleteActivity;
 
-    private final MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> getActivitiesResponse;
+    private final MutableLiveData<Response<LiveData<List<GetActivity.Output>>, Void>> getActivitiesResponse;
 
     public ViewModelActivities(final GetActivities getActivities, final DeleteActivity deleteActivity) {
         this.getActivities = getActivities;
@@ -61,9 +62,9 @@ public class ViewModelActivities extends ViewModel {
     }
 
     public void fetchActivities() {
-        getActivities.execute(null, new UseCaseOutput<LiveData<List<GetActivities.Output>>>() {
+        getActivities.execute(null, new UseCaseOutput<LiveData<List<GetActivity.Output>>>() {
             @Override
-            public void onSuccess(@Nullable LiveData<List<GetActivities.Output>> listLiveData) {
+            public void onSuccess(@Nullable LiveData<List<GetActivity.Output>> listLiveData) {
                 getActivitiesResponse.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
             }
 
@@ -79,7 +80,7 @@ public class ViewModelActivities extends ViewModel {
         });
     }
 
-    public MutableLiveData<Response<LiveData<List<GetActivities.Output>>, Void>> getGetActivitiesResponse() {
+    public MutableLiveData<Response<LiveData<List<GetActivity.Output>>, Void>> getGetActivitiesResponse() {
         return getActivitiesResponse;
     }
 }

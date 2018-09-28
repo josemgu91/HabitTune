@@ -33,100 +33,29 @@ import com.josemgu91.habittune.domain.util.Function;
 import com.josemgu91.habittune.domain.util.ListMapper;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 
-public class GetActivities extends AbstractUseCase<Void, LiveData<List<GetActivities.Output>>> {
+public class GetActivities extends AbstractUseCase<Void, LiveData<List<GetActivity.Output>>> {
 
     private final ActivityDataGateway activityDataGateway;
-    private final Function<List<Activity>, List<Output>> listMapper;
+    private final Function<List<Activity>, List<GetActivity.Output>> listMapper;
 
     public GetActivities(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull ActivityDataGateway activityDataGateway) {
         super(outputExecutor, useCaseExecutor);
         this.activityDataGateway = activityDataGateway;
-        this.listMapper = new ListMapper<>(new ActivityMapper());
+        this.listMapper = new ListMapper<>(new GetActivity.ActivityMapper());
     }
 
     @Override
-    protected void executeUseCase(@Nullable Void aVoid, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
+    protected void executeUseCase(@Nullable Void aVoid, @NonNull UseCaseOutput<LiveData<List<GetActivity.Output>>> output) {
         output.inProgress();
         try {
-            final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivitiesButWithoutTags();
-            final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
+            final LiveData<List<Activity>> result = activityDataGateway.subscribeToAllActivities();
+            final LiveData<List<GetActivity.Output>> outputLiveData = Transformations.map(result, listMapper::apply);
             output.onSuccess(outputLiveData);
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.onError();
-        }
-    }
-
-    private final class ActivityMapper implements Function<Activity, Output> {
-
-        @Override
-        public Output apply(Activity input) {
-            return new Output(
-                    input.getId(),
-                    input.getName(),
-                    input.getDescription(),
-                    input.getColor()
-            );
-        }
-    }
-
-    public static final class Output {
-
-        private final String id;
-        private final String name;
-        private final String description;
-        private final int color;
-
-        public Output(String id, String name, String description, int color) {
-            this.id = id;
-            this.name = name;
-            this.description = description;
-            this.color = color;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public int getColor() {
-            return color;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Output output = (Output) o;
-            return color == output.color &&
-                    Objects.equals(id, output.id) &&
-                    Objects.equals(name, output.name) &&
-                    Objects.equals(description, output.description);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name, description, color);
-        }
-
-        @Override
-        public String toString() {
-            return "Output{" +
-                    "id='" + id + '\'' +
-                    ", name='" + name + '\'' +
-                    ", description='" + description + '\'' +
-                    ", color=" + color +
-                    '}';
         }
     }
 

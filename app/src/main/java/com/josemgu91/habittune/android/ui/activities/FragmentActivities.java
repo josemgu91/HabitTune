@@ -28,7 +28,7 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.common.ConfirmationDialog;
 import com.josemgu91.habittune.android.ui.common.FragmentList;
-import com.josemgu91.habittune.domain.usecases.GetActivities;
+import com.josemgu91.habittune.domain.usecases.GetActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,9 +111,9 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
         fragmentInteractionListener.updateNavigationDrawer(true);
     }
 
-    private void updateActivities(List<GetActivities.Output> outputs) {
+    private void updateActivities(List<GetActivity.Output> outputs) {
         final List<ActivityItem> activities = new ArrayList<>();
-        for (final GetActivities.Output output : outputs) {
+        for (final GetActivity.Output output : outputs) {
             activities.add(new ActivityItem(output.getId(), output.getName()));
         }
         recyclerViewFlexibleAdapter.updateDataSet(activities);
