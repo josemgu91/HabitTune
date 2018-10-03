@@ -73,6 +73,7 @@
     <string name="routine_editor_title">Editor de Rutina</string>
     <string name="routine_editor_element_overflow_button">Más opciones&#8230;</string>
     <string name="routine_editor_element_delete">Eliminar</string>
+    <string name="routine_editor_action_update_routine">Modificar</string>
 
     <string name="add_routine_entry_title">Asignar Actividad</string>
     <string name="add_routine_entry_action_add">Asignar</string>

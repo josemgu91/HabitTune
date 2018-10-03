@@ -26,6 +26,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -58,6 +61,26 @@ public class FragmentRoutineEditor extends BaseFragment {
         super.onAttach(context);
         viewModelRoutineEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineEditor.class);
         routineId = getArguments().getString(ARG_ROUTINE_ID);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_routine_editor, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.actionUpdateRoutine) {
+            fragmentInteractionListener.navigateToFragmentUpdateRoutine(routineId);
+            return true;
+        }
+        return false;
     }
 
     @Override
