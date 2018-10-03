@@ -35,6 +35,7 @@ import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 import com.josemgu91.habittune.domain.usecases.UpdateActivity;
+import com.josemgu91.habittune.domain.usecases.UpdateRoutine;
 import com.josemgu91.habittune.domain.usecases.UpdateRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.UpdateTag;
 import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
@@ -164,6 +165,15 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     @Override
     public CreateRoutine createCreateRoutine() {
         return new CreateRoutine(
+                uiThreadExecutor,
+                defaultThreadPoolExecutor,
+                repository
+        );
+    }
+
+    @Override
+    public UpdateRoutine createUpdateRoutine() {
+        return new UpdateRoutine(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
                 repository

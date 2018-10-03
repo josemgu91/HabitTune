@@ -55,5 +55,7 @@ public interface RoutineDataGateway {
     RoutineEntry createRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException;
 
     boolean updateRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException;
+
+    boolean updateRoutine(@NonNull final String id, @NonNull final String name, @NonNull final String description, final int color) throws DataGatewayException;
 }
 

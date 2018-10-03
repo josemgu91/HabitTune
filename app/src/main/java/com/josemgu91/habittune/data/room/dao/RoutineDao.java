@@ -45,4 +45,7 @@ public interface RoutineDao {
     @Delete
     int deleteRoutine(final Routine routine);
 
+    @Query("UPDATE routines SET name = :name, description = :description, color = :color WHERE id = :routineId")
+    int updateRoutine(final String routineId, final String name, final String description, final int color);
+
 }

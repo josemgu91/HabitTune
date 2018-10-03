@@ -254,6 +254,15 @@ public class RoomRepository implements Repository {
     }
 
     @Override
+    public boolean updateRoutine(@NonNull String id, @NonNull String name, @NonNull String description, int color) throws DataGatewayException {
+        try {
+            return localRoomDatabase.getRoutineDao().updateRoutine(id, name, description, color) != 0;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
     @NonNull
     public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException {
         try {
