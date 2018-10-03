@@ -67,6 +67,9 @@
     <string name="new_routine_hint_routine_color">Color</string>
     <string name="new_routine_create">Crear</string>
 
+    <string name="update_routine_title">Modificar Rutina</string>
+    <string name="update_routine_action_update">Modificar</string>
+
     <string name="routine_editor_title">Editor de Rutina</string>
     <string name="routine_editor_element_overflow_button">Más opciones&#8230;</string>
     <string name="routine_editor_element_delete">Eliminar</string>

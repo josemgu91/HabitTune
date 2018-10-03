@@ -51,6 +51,8 @@ public interface FragmentInteractionListener {
 
     void navigateToFragmentNewRoutine();
 
+    void navigateToFragmentUpdateRoutine(@NonNull final String routineId);
+
     void navigateToFragmentTagEditor();
 
     void navigateToFragmentRoutineEditor(@NonNull final String routineId);

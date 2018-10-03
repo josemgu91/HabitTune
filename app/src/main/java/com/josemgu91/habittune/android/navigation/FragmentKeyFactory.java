@@ -35,6 +35,7 @@ import com.josemgu91.habittune.android.ui.new_routine.FragmentNewRoutine;
 import com.josemgu91.habittune.android.ui.routine_editor.FragmentRoutineEditor;
 import com.josemgu91.habittune.android.ui.routine_entry_add_update.FragmentAddRoutineEntry;
 import com.josemgu91.habittune.android.ui.routine_entry_add_update.FragmentUpdateRoutineEntry;
+import com.josemgu91.habittune.android.ui.routine_update.FragmentUpdateRoutine;
 import com.josemgu91.habittune.android.ui.routines.FragmentRoutines;
 import com.josemgu91.habittune.android.ui.tag_editor.FragmentTagEditor;
 
@@ -51,12 +52,15 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_UPDATE_ACTIVITY = "fragmentUpdateActivity";
     public static final String FRAGMENT_TAG_TAG_EDITOR = "fragmentTagEditor";
     public static final String FRAGMENT_TAG_NEW_ROUTINE = "fragmentNewRoutine";
+    public static final String FRAGMENT_TAG_UPDATE_ROUTINE = "fragmentUpdateRoutine";
     public static final String FRAGMENT_TAG_ROUTINE_EDITOR = "fragmentRoutineEditor";
     public static final String FRAGMENT_TAG_ADD_ROUTINE_ENTRY = "fragmentAddRoutineEntry";
     public static final String FRAGMENT_TAG_UPDATE_ROUTINE_ENTRY = "fragmentUpdateRoutineEntry";
     public static final String FRAGMENT_TAG_ACTIVITY_SELECTION = "fragmentActivitySelection";
 
     private static final String FRAGMENT_ARG_UPDATE_ACTIVITY_ACTIVITY_ID = "activityId";
+
+    private static final String FRAGMENT_ARG_UPDATE_ROUTINE_ROUTINE_ID = "routineId";
 
     private static final String FRAGMENT_ARG_ROUTINE_EDITOR_ROUTINE_ID = "routineId";
 
@@ -98,6 +102,12 @@ public class FragmentKeyFactory {
 
     public FragmentKey createNewRoutineKey() {
         return new FragmentKey(FRAGMENT_TAG_NEW_ROUTINE, null);
+    }
+
+    public FragmentKey createUpdateRoutineKey(@NonNull final String routineId) {
+        final Bundle arguments = new Bundle();
+        arguments.putString(FRAGMENT_ARG_UPDATE_ROUTINE_ROUTINE_ID, routineId);
+        return new FragmentKey(FRAGMENT_TAG_UPDATE_ROUTINE, arguments);
     }
 
     public FragmentKey createRoutineEditorKey(@NonNull final String routineId) {
@@ -159,6 +169,10 @@ public class FragmentKeyFactory {
                     return new FragmentTagEditor();
                 case FRAGMENT_TAG_NEW_ROUTINE:
                     return new FragmentNewRoutine();
+                case FRAGMENT_TAG_UPDATE_ROUTINE:
+                    return FragmentUpdateRoutine.newInstance(
+                            arguments.getString(FRAGMENT_ARG_UPDATE_ROUTINE_ROUTINE_ID)
+                    );
                 case FRAGMENT_TAG_ROUTINE_EDITOR:
                     return FragmentRoutineEditor.newInstance(
                             arguments.getString(FRAGMENT_ARG_ROUTINE_EDITOR_ROUTINE_ID)

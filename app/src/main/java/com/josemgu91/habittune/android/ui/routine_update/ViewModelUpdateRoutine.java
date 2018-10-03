@@ -30,14 +30,14 @@ import com.josemgu91.habittune.domain.usecases.UpdateRoutine;
 import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
-public class ViewModelRoutineUpdate extends ViewModel {
+public class ViewModelUpdateRoutine extends ViewModel {
 
     private final GetRoutine getRoutine;
     private final UpdateRoutine updateRoutine;
 
     private final MutableLiveData<Response<GetRoutine.Output, Void>> getRoutineResponse;
 
-    public ViewModelRoutineUpdate(GetRoutine getRoutine, UpdateRoutine updateRoutine) {
+    public ViewModelUpdateRoutine(GetRoutine getRoutine, UpdateRoutine updateRoutine) {
         this.getRoutine = getRoutine;
         this.updateRoutine = updateRoutine;
         getRoutineResponse = new MutableLiveData<>();
