@@ -17,8 +17,15 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:text="Schedule" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/listMarginStart"
+        android:paddingTop="@dimen/listMarginTop"
+        android:paddingEnd="@dimen/listMarginEnd"
+        android:paddingBottom="@dimen/listMarginBottom" />
+</layout>

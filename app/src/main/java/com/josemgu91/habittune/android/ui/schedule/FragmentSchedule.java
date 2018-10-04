@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android;
+package com.josemgu91.habittune.android.ui.schedule;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 
 public class FragmentSchedule extends BaseFragment {

@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.josemgu91.habittune.android.FragmentHelp;
-import com.josemgu91.habittune.android.FragmentSchedule;
+import com.josemgu91.habittune.android.ui.schedule.FragmentSchedule;
 import com.josemgu91.habittune.android.FragmentSettings;
 import com.josemgu91.habittune.android.FragmentStatistics;
 import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
