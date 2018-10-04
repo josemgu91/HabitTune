@@ -34,8 +34,10 @@ import android.view.ViewGroup;
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentUpdateRoutineBinding;
+import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
 
 public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDialogListener {
 
@@ -51,6 +53,8 @@ public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDi
 
     private final static String SAVED_INSTANCE_STATE_KEY_COLOR = "color";
 
+    private final static String SAVED_INSTANCE_STATE_KEY_ROUTINE_TO_UPDATE_RETRIEVED = "routineToUpdateRetrieved";
+
     private final static String FRAGMENT_TAG_COLOR_PICKER = "colorPickerDialog";
 
     private ViewModelUpdateRoutine viewModelUpdateRoutine;
@@ -58,6 +62,8 @@ public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDi
     private ColorPickerDialog colorPickerDialog;
 
     private String routineId;
+
+    private boolean routineToUpdateRetrieved;
 
     private int selectedColor;
 
@@ -73,6 +79,7 @@ public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDi
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (savedInstanceState != null) {
+            routineToUpdateRetrieved = savedInstanceState.getBoolean(SAVED_INSTANCE_STATE_KEY_ROUTINE_TO_UPDATE_RETRIEVED);
             selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
         }
         colorPickerDialog = (ColorPickerDialog) getActivity().getFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
@@ -85,6 +92,7 @@ public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDi
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_INSTANCE_STATE_KEY_ROUTINE_TO_UPDATE_RETRIEVED, routineToUpdateRetrieved);
         outState.putInt(SAVED_INSTANCE_STATE_KEY_COLOR, selectedColor);
     }
 
@@ -106,7 +114,43 @@ public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDi
     @Override
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentUpdateRoutineBinding = FragmentUpdateRoutineBinding.inflate(inflater, container, false);
+        fragmentUpdateRoutineBinding.viewColor.setOnClickListener(v -> showColorPicker());
         return fragmentUpdateRoutineBinding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        fragmentInteractionListener.updateToolbar(getString(R.string.update_routine_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
+        fragmentInteractionListener.updateNavigationDrawer(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (routineToUpdateRetrieved) {
+            updateColor(selectedColor);
+            return;
+        }
+        viewModelUpdateRoutine.fetchRoutine(routineId);
+        viewModelUpdateRoutine.getGetRoutineResponse().observe(getViewLifecycleOwner(), response -> {
+            switch (response.status) {
+                case LOADING:
+                    break;
+                case ERROR:
+                    break;
+                case SUCCESS:
+                    onRoutineToUpdateRetrieved(response.successData);
+                    break;
+            }
+        });
+    }
+
+    private void onRoutineToUpdateRetrieved(final GetRoutine.Output routine) {
+        fragmentUpdateRoutineBinding.editTextRoutineDescription.setText(routine.getDescription());
+        fragmentUpdateRoutineBinding.editTextRoutineName.setText(routine.getName());
+        updateColor(routine.getColor());
+        routineToUpdateRetrieved = true;
     }
 
     @Override
@@ -115,16 +159,36 @@ public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDi
     }
 
     private void updateRoutine() {
+        viewModelUpdateRoutine.updateRoutine(
+                routineId,
+                fragmentUpdateRoutineBinding.editTextRoutineName.getText().toString(),
+                fragmentUpdateRoutineBinding.editTextRoutineDescription.getText().toString(),
+                selectedColor
+        );
+        fragmentInteractionListener.finishFragment();
+    }
 
+    private void showColorPicker() {
+        fragmentInteractionListener.hideSoftKeyboard();
+        colorPickerDialog = ColorPickerDialog.newBuilder().setColor(selectedColor).create();
+        colorPickerDialog.setColorPickerDialogListener(this);
+        colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
     }
 
     @Override
     public void onColorSelected(int dialogId, int color) {
-
+        updateColor(color);
     }
 
     @Override
     public void onDialogDismissed(int dialogId) {
 
+    }
+
+    private void updateColor(int color) {
+        selectedColor = color;
+        fragmentUpdateRoutineBinding.viewColor.setBackgroundColor(color);
+        colorPickerDialog = ColorPickerDialog.newBuilder().setColor(color).create();
+        colorPickerDialog.setColorPickerDialogListener(this);
     }
 }
