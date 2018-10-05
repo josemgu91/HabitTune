@@ -24,23 +24,37 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentScheduleBinding;
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+import eu.davidea.flexibleadapter.items.IFlexible;
+import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class FragmentSchedule extends BaseFragment {
 
     private ViewModelSchedule viewModelSchedule;
     private FragmentScheduleBinding fragmentScheduleBinding;
+
+    private FlexibleAdapter<ActivityItem> activityItemFlexibleAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -57,6 +71,9 @@ public class FragmentSchedule extends BaseFragment {
     @Override
     public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentScheduleBinding = FragmentScheduleBinding.inflate(inflater, container, false);
+        activityItemFlexibleAdapter = new FlexibleAdapter<>(null);
+        fragmentScheduleBinding.recyclerView.setAdapter(activityItemFlexibleAdapter);
+        fragmentScheduleBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return fragmentScheduleBinding.getRoot();
     }
 
@@ -86,7 +103,98 @@ public class FragmentSchedule extends BaseFragment {
         });
     }
 
+    private String formatHour(final DateFormat dateFormat, final Calendar calendar, final int hourInSeconds) {
+        final int hours = hourInSeconds / 3600;
+        final int minutes = (hourInSeconds % 3600) / 60;
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, minutes);
+        return dateFormat.format(calendar.getTime());
+    }
+
     private void onRoutinesUpdated(final List<GetRoutines.Output> routines) {
-        Log.d("FragmentSchedule", routines.toString());
+        final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        final Calendar calendar = Calendar.getInstance();
+        final List<GetRoutineEntries.Output> routineEntries = new ArrayList<>();
+        for (final GetRoutines.Output routine : routines) {
+            routineEntries.addAll(routine.getRoutineEntries());
+        }
+        Collections.sort(routineEntries, (o1, o2) -> o1.getStartTime() - o2.getStartTime());
+        final ArrayList<ActivityItem> activityItems = new ArrayList<>();
+        for (final GetRoutineEntries.Output routineEntry : routineEntries) {
+            activityItems.add(new ActivityItem(
+                    routineEntry.getId(),
+                    formatHour(dateFormat, calendar, routineEntry.getStartTime()),
+                    formatHour(dateFormat, calendar, routineEntry.getEndTime()),
+                    routineEntry.getActivity().getName()
+            ));
+        }
+        activityItemFlexibleAdapter.updateDataSet(activityItems);
+    }
+
+    private static class ActivityItem extends AbstractFlexibleItem<ActivityItem.ViewHolder> {
+
+        @NonNull
+        private final String routineEntryId;
+        @NonNull
+        private final String activityStartHour;
+        @NonNull
+        private final String activityEndHour;
+        @NonNull
+        private final String activityName;
+
+        public ActivityItem(@NonNull String routineEntryId, @NonNull String activityStartHour, @NonNull String activityEndHour, @NonNull String activityName) {
+            this.routineEntryId = routineEntryId;
+            this.activityStartHour = activityStartHour;
+            this.activityEndHour = activityEndHour;
+            this.activityName = activityName;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ActivityItem that = (ActivityItem) o;
+            return Objects.equals(routineEntryId, that.routineEntryId) &&
+                    Objects.equals(activityStartHour, that.activityStartHour) &&
+                    Objects.equals(activityEndHour, that.activityEndHour) &&
+                    Objects.equals(activityName, that.activityName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(routineEntryId, activityStartHour, activityEndHour, activityName);
+        }
+
+        @Override
+        public int getLayoutRes() {
+            return R.layout.element_schedule_entry;
+        }
+
+        @Override
+        public ViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
+            return new ViewHolder(view, adapter);
+        }
+
+        @Override
+        public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, ViewHolder holder, int position, List<Object> payloads) {
+            holder.textViewName.setText(activityName);
+            holder.textViewStartHour.setText(activityStartHour);
+            holder.textViewEndHour.setText(activityEndHour);
+        }
+
+        public static class ViewHolder extends FlexibleViewHolder {
+
+            private final TextView textViewStartHour;
+            private final TextView textViewEndHour;
+            private final TextView textViewName;
+
+            public ViewHolder(View view, FlexibleAdapter adapter) {
+                super(view, adapter);
+                textViewStartHour = view.findViewById(R.id.textViewActivityStartHour);
+                textViewEndHour = view.findViewById(R.id.textViewActivityEndHour);
+                textViewName = view.findViewById(R.id.textViewActivityName);
+            }
+        }
+
     }
 }
