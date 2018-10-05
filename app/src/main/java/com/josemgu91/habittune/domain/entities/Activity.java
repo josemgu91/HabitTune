@@ -19,18 +19,33 @@
 
 package com.josemgu91.habittune.domain.entities;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.util.List;
 import java.util.Objects;
 
 public class Activity {
 
+    @NonNull
     private final String id;
+    @NonNull
     private final String name;
+    @NonNull
     private final String description;
     private final int color;
+    @Nullable
     private final List<Tag> tags;
 
-    public Activity(String name, String description, int color, List<Tag> tags) {
+    public Activity(@NonNull String id, @NonNull String name, @NonNull String description, int color, @Nullable List<Tag> tags) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.tags = tags;
+    }
+
+    public Activity(@NonNull String name, @NonNull String description, int color, @Nullable List<Tag> tags) {
         this.id = "";
         this.name = name;
         this.description = description;
@@ -38,15 +53,7 @@ public class Activity {
         this.tags = tags;
     }
 
-    public Activity(String id, String name, String description, int color, List<Tag> tags) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.color = color;
-        this.tags = tags;
-    }
-
-    public Activity(String id) {
+    public Activity(@NonNull String id) {
         this.id = id;
         this.name = "";
         this.description = "";
@@ -54,14 +61,17 @@ public class Activity {
         this.tags = null;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
+    @NonNull
     public String getDescription() {
         return description;
     }
@@ -70,6 +80,7 @@ public class Activity {
         return color;
     }
 
+    @Nullable
     public List<Tag> getTags() {
         return tags;
     }

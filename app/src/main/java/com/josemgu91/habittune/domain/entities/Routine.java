@@ -38,15 +38,6 @@ public class Routine {
     @Nullable
     private final List<RoutineEntry> routineEntries;
 
-    public Routine(@NonNull String id) {
-        this.id = id;
-        this.name = "";
-        this.description = "";
-        this.color = 0;
-        this.numberOfDays = 0;
-        this.routineEntries = null;
-    }
-
     public Routine(@NonNull String id, @NonNull String name, @NonNull String description, int color, int numberOfDays, @Nullable List<RoutineEntry> routineEntries) {
         this.id = id;
         this.name = name;
@@ -63,6 +54,15 @@ public class Routine {
         this.color = color;
         this.numberOfDays = numberOfDays;
         this.routineEntries = routineEntries;
+    }
+
+    public Routine(@NonNull String id) {
+        this.id = id;
+        this.name = "";
+        this.description = "";
+        this.color = 0;
+        this.numberOfDays = 0;
+        this.routineEntries = null;
     }
 
     @NonNull

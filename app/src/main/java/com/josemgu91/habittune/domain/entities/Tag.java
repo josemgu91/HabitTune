@@ -19,27 +19,33 @@
 
 package com.josemgu91.habittune.domain.entities;
 
+import android.support.annotation.NonNull;
+
 import java.util.Objects;
 
 public class Tag {
 
+    @NonNull
     private final String id;
+    @NonNull
     private final String name;
 
-    public Tag(String id, String name) {
+    public Tag(@NonNull String id, @NonNull String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Tag(String name) {
+    public Tag(@NonNull String name) {
         this.id = "";
         this.name = name;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
