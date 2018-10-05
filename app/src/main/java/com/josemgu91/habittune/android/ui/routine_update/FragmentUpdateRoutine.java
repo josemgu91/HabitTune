@@ -37,7 +37,7 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentUpdateRoutineBinding;
-import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
+import com.josemgu91.habittune.domain.usecases.GetRoutine;
 
 public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDialogListener {
 

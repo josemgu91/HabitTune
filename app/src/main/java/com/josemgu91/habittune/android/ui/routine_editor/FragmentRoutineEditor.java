@@ -36,7 +36,7 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentRoutineEditorBinding;
-import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
+import com.josemgu91.habittune.domain.usecases.GetRoutine;
 
 public class FragmentRoutineEditor extends BaseFragment {
 

@@ -25,7 +25,7 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
-import com.josemgu91.habittune.domain.usecases.common.GetRoutine;
+import com.josemgu91.habittune.domain.usecases.GetRoutine;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 public class ViewModelRoutineEditor extends ViewModel {

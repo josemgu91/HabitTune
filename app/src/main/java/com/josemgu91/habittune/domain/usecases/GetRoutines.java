@@ -49,7 +49,8 @@ public class GetRoutines extends AbstractUseCase<Void, LiveData<List<GetRoutines
                 routine.getName(),
                 routine.getDescription(),
                 routine.getColor(),
-                routine.getNumberOfDays()
+                routine.getNumberOfDays(),
+                null
         ));
     }
 
@@ -57,7 +58,7 @@ public class GetRoutines extends AbstractUseCase<Void, LiveData<List<GetRoutines
     protected void executeUseCase(@Nullable Void input, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
         output.inProgress();
         try {
-            final LiveData<List<Routine>> result = routineDataGateway.subscribeToAllRoutines();
+            final LiveData<List<Routine>> result = routineDataGateway.subscribeToAllRoutines(false);
             final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
             output.onSuccess(outputLiveData);
         } catch (DataGatewayException e) {
@@ -73,13 +74,15 @@ public class GetRoutines extends AbstractUseCase<Void, LiveData<List<GetRoutines
         private final String description;
         private final int color;
         private final int numberOfDays;
+        private final List<GetRoutineEntries.Output> routineEntries;
 
-        public Output(String id, String name, String description, int color, int numberOfDays) {
+        public Output(String id, String name, String description, int color, int numberOfDays, List<GetRoutineEntries.Output> routineEntries) {
             this.id = id;
             this.name = name;
             this.description = description;
             this.color = color;
             this.numberOfDays = numberOfDays;
+            this.routineEntries = routineEntries;
         }
 
         public String getId() {
@@ -102,21 +105,8 @@ public class GetRoutines extends AbstractUseCase<Void, LiveData<List<GetRoutines
             return numberOfDays;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Output output = (Output) o;
-            return color == output.color &&
-                    numberOfDays == output.numberOfDays &&
-                    Objects.equals(id, output.id) &&
-                    Objects.equals(name, output.name) &&
-                    Objects.equals(description, output.description);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name, description, color, numberOfDays);
+        public List<GetRoutineEntries.Output> getRoutineEntries() {
+            return routineEntries;
         }
 
         @Override
@@ -127,7 +117,26 @@ public class GetRoutines extends AbstractUseCase<Void, LiveData<List<GetRoutines
                     ", description='" + description + '\'' +
                     ", color=" + color +
                     ", numberOfDays=" + numberOfDays +
+                    ", routineEntries=" + routineEntries +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Output output = (Output) o;
+            return color == output.color &&
+                    numberOfDays == output.numberOfDays &&
+                    Objects.equals(id, output.id) &&
+                    Objects.equals(name, output.name) &&
+                    Objects.equals(description, output.description) &&
+                    Objects.equals(routineEntries, output.routineEntries);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name, description, color, numberOfDays, routineEntries);
         }
     }
 

@@ -24,6 +24,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
@@ -202,9 +203,36 @@ public class RoomRepository implements Repository {
 
     @NonNull
     @Override
-    public LiveData<List<Routine>> subscribeToAllRoutines() throws DataGatewayException {
+    public LiveData<List<Routine>> subscribeToAllRoutines(final boolean includeRoutineEntries) throws DataGatewayException {
         try {
-            return Transformations.map(localRoomDatabase.getRoutineDao().subscribeToAllRoutines(), input -> mapList(input, RoomRepository::mapToEntityRoutine));
+            if (includeRoutineEntries) {
+                final MediatorLiveData<List<Routine>> result = new MediatorLiveData<>();
+                result.addSource(localRoomDatabase.getRoutineDao().subscribeToAllRoutines(), roomRoutines -> repositoryExecutor.execute(() -> {
+                    final List<Routine> routines = mapList(roomRoutines, roomRoutine -> {
+                        final List<RoutineEntry> routineEntries = mapList(
+                                localRoomDatabase.getRoutineActivityJoinDao().getAllRoutineActivityJoinsByRoutineId(roomRoutine.id),
+                                routineActivityJoin -> {
+                                    try {
+                                        return mapRoutineActivityJoinToRoutineEntry(
+                                                routineActivityJoin,
+                                                getActivityById(String.valueOf(routineActivityJoin.activityId))
+                                        );
+                                    } catch (DomainException e) {
+                                        e.printStackTrace();
+                                        throw new RuntimeException(e.getMessage());
+                                    }
+                                }
+                        );
+                        return mapToEntityRoutine(roomRoutine, routineEntries);
+                    });
+                    result.postValue(routines);
+                }));
+                return result;
+            }
+            return Transformations.map(
+                    localRoomDatabase.getRoutineDao().subscribeToAllRoutines(),
+                    roomRoutines -> mapList(roomRoutines, roomRoutine -> mapToEntityRoutine(roomRoutine, null))
+            );
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -212,9 +240,9 @@ public class RoomRepository implements Repository {
 
     @NonNull
     @Override
-    public Routine getRoutineById(@NonNull String id) throws DataGatewayException {
+    public Routine getRoutineWithoutEntriesById(@NonNull String id) throws DataGatewayException {
         try {
-            return mapToEntityRoutine(localRoomDatabase.getRoutineDao().getRoutineById(id));
+            return mapToEntityRoutine(localRoomDatabase.getRoutineDao().getRoutineById(id), null);
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -400,14 +428,14 @@ public class RoomRepository implements Repository {
         );
     }
 
-    private static Routine mapToEntityRoutine(final com.josemgu91.habittune.data.room.model.Routine roomRoutine) {
+    private static Routine mapToEntityRoutine(@NonNull final com.josemgu91.habittune.data.room.model.Routine roomRoutine, @Nullable final List<RoutineEntry> routineEntries) {
         return new Routine(
                 String.valueOf(roomRoutine.id),
                 roomRoutine.name,
                 roomRoutine.description,
                 roomRoutine.color,
                 roomRoutine.numberOfDays,
-                null
+                routineEntries
         );
     }
 }

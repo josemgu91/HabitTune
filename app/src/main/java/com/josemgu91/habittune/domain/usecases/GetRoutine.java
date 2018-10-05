@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.domain.usecases.common;
+package com.josemgu91.habittune.domain.usecases;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +25,8 @@ import android.support.annotation.Nullable;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
 import com.josemgu91.habittune.domain.entities.Routine;
+import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
+import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 import com.josemgu91.habittune.domain.util.Function;
 
 import java.util.Objects;
@@ -45,7 +47,7 @@ public class GetRoutine extends AbstractUseCase<GetRoutine.Input, GetRoutine.Out
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Output> output) {
         output.inProgress();
         try {
-            final Routine result = routineDataGateway.getRoutineById(input.id);
+            final Routine result = routineDataGateway.getRoutineWithoutEntriesById(input.id);
             output.onSuccess(routineMapper.apply(result));
         } catch (DataGatewayException e) {
             e.printStackTrace();

@@ -30,10 +30,10 @@ import java.util.List;
 public interface RoutineDataGateway {
 
     @NonNull
-    LiveData<List<Routine>> subscribeToAllRoutines() throws DataGatewayException;
+    LiveData<List<Routine>> subscribeToAllRoutines(final boolean includeRoutineEntries) throws DataGatewayException;
 
     @NonNull
-    Routine getRoutineById(@NonNull final String id) throws DataGatewayException;
+    Routine getRoutineWithoutEntriesById(@NonNull final String id) throws DataGatewayException;
 
     boolean deleteRoutineById(@NonNull final String id) throws DataGatewayException;
 
