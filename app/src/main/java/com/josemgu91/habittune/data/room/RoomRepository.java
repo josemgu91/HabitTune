@@ -222,7 +222,7 @@ public class RoomRepository implements Repository {
 
     @Override
     @NonNull
-    public Routine createRoutine(@NonNull Routine routine) throws DataGatewayException {
+    public Routine createRoutineWithoutEntries(@NonNull Routine routine) throws DataGatewayException {
         try {
             final long insertedRoutineId = localRoomDatabase.getRoutineDao().insertRoutine(new com.josemgu91.habittune.data.room.model.Routine(
                     routine.getName(),
@@ -235,7 +235,8 @@ public class RoomRepository implements Repository {
                     routine.getName(),
                     routine.getDescription(),
                     routine.getColor(),
-                    routine.getNumberOfDays()
+                    routine.getNumberOfDays(),
+                    null
             );
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
@@ -405,7 +406,8 @@ public class RoomRepository implements Repository {
                 roomRoutine.name,
                 roomRoutine.description,
                 roomRoutine.color,
-                roomRoutine.numberOfDays
+                roomRoutine.numberOfDays,
+                null
         );
     }
 }

@@ -44,11 +44,12 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, CreateRo
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Output> output) {
         output.inProgress();
         try {
-            final Routine routineCreated = routineDataGateway.createRoutine(new Routine(
+            final Routine routineCreated = routineDataGateway.createRoutineWithoutEntries(new Routine(
                     input.name,
                     input.description,
                     input.color,
-                    input.numberOfDays
+                    input.numberOfDays,
+                    null
             ));
             if (routineCreated != null) {
                 output.onSuccess(new Output(routineCreated.getId()));

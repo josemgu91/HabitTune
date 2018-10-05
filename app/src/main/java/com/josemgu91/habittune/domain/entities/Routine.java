@@ -19,48 +19,63 @@
 
 package com.josemgu91.habittune.domain.entities;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.util.List;
 import java.util.Objects;
 
 public class Routine {
 
+    @NonNull
     private final String id;
+    @NonNull
     private final String name;
+    @NonNull
     private final String description;
     private final int color;
     private final int numberOfDays;
+    @Nullable
+    private final List<RoutineEntry> routineEntries;
 
-    public Routine(String name, String description, int color, int numberOfDays) {
-        this.id = "";
-        this.name = name;
-        this.description = description;
-        this.color = color;
-        this.numberOfDays = numberOfDays;
-    }
-
-    public Routine(String id, String name, String description, int color, int numberOfDays) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.color = color;
-        this.numberOfDays = numberOfDays;
-    }
-
-    public Routine(String id) {
+    public Routine(@NonNull String id) {
         this.id = id;
         this.name = "";
         this.description = "";
         this.color = 0;
         this.numberOfDays = 0;
+        this.routineEntries = null;
     }
 
+    public Routine(@NonNull String id, @NonNull String name, @NonNull String description, int color, int numberOfDays, @Nullable List<RoutineEntry> routineEntries) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.numberOfDays = numberOfDays;
+        this.routineEntries = routineEntries;
+    }
+
+    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays, @Nullable List<RoutineEntry> routineEntries) {
+        this.id = "";
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.numberOfDays = numberOfDays;
+        this.routineEntries = routineEntries;
+    }
+
+    @NonNull
     public String getId() {
         return id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
+    @NonNull
     public String getDescription() {
         return description;
     }
@@ -73,6 +88,11 @@ public class Routine {
         return numberOfDays;
     }
 
+    @Nullable
+    public List<RoutineEntry> getRoutineEntries() {
+        return routineEntries;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,12 +102,13 @@ public class Routine {
                 numberOfDays == routine.numberOfDays &&
                 Objects.equals(id, routine.id) &&
                 Objects.equals(name, routine.name) &&
-                Objects.equals(description, routine.description);
+                Objects.equals(description, routine.description) &&
+                Objects.equals(routineEntries, routine.routineEntries);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, color, numberOfDays);
+        return Objects.hash(id, name, description, color, numberOfDays, routineEntries);
     }
 
     @Override
@@ -98,6 +119,7 @@ public class Routine {
                 ", description='" + description + '\'' +
                 ", color=" + color +
                 ", numberOfDays=" + numberOfDays +
+                ", routineEntries=" + routineEntries +
                 '}';
     }
 }
