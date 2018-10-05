@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
 import com.josemgu91.habittune.domain.entities.Routine;
+import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 import com.josemgu91.habittune.domain.util.Function;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-public class GetRoutines extends AbstractUseCase<Void, LiveData<List<GetRoutines.Output>>> {
+public class GetRoutines extends AbstractUseCase<GetRoutines.Input, LiveData<List<GetRoutines.Output>>> {
 
     private final RoutineDataGateway routineDataGateway;
     private final Function<List<Routine>, List<Output>> listMapper;
@@ -50,20 +51,45 @@ public class GetRoutines extends AbstractUseCase<Void, LiveData<List<GetRoutines
                 routine.getDescription(),
                 routine.getColor(),
                 routine.getNumberOfDays(),
-                null
+                routine.getRoutineEntries() != null ?
+                        new ListMapper<>((Function<RoutineEntry, GetRoutineEntries.Output>) input -> new GetRoutineEntries.Output(
+                                input.getId(),
+                                input.getDay().getDay(),
+                                input.getStartTime().getTime(),
+                                input.getEndTime().getTime(),
+                                new GetRoutineEntries.Output.Activity(
+                                        input.getActivity().getId(),
+                                        input.getActivity().getName(),
+                                        input.getActivity().getDescription(),
+                                        input.getActivity().getColor()
+                                )
+                        )).apply(routine.getRoutineEntries()) :
+                        null
         ));
     }
 
     @Override
-    protected void executeUseCase(@Nullable Void input, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
+    protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
         output.inProgress();
         try {
-            final LiveData<List<Routine>> result = routineDataGateway.subscribeToAllRoutines(false);
+            final LiveData<List<Routine>> result = routineDataGateway.subscribeToAllRoutines(input.type == Input.WITH_ROUTINE_ENTRIES);
             final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
             output.onSuccess(outputLiveData);
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.onError();
+        }
+    }
+
+    public static final class Input {
+
+        public final static int WITH_ROUTINE_ENTRIES = 1;
+        public final static int WITHOUT_ROUTINE_ENTRIES = 2;
+
+        private final int type;
+
+        public Input(int type) {
+            this.type = type;
         }
     }
 

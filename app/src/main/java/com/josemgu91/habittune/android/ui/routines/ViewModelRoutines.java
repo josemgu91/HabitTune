@@ -61,7 +61,7 @@ public class ViewModelRoutines extends ViewModel {
     }
 
     public void fetchRoutines() {
-        getRoutines.execute(null, new UseCaseOutput<LiveData<List<GetRoutines.Output>>>() {
+        getRoutines.execute(new GetRoutines.Input(GetRoutines.Input.WITHOUT_ROUTINE_ENTRIES), new UseCaseOutput<LiveData<List<GetRoutines.Output>>>() {
             @Override
             public void onSuccess(@Nullable LiveData<List<GetRoutines.Output>> listLiveData) {
                 getRoutinesResponse.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));

@@ -32,6 +32,7 @@ import com.josemgu91.habittune.android.ui.routine_editor.ViewModelRoutineEditor;
 import com.josemgu91.habittune.android.ui.routine_entry_add_update.ViewModelRoutineAddActivity;
 import com.josemgu91.habittune.android.ui.routine_update.ViewModelUpdateRoutine;
 import com.josemgu91.habittune.android.ui.routines.ViewModelRoutines;
+import com.josemgu91.habittune.android.ui.schedule.ViewModelSchedule;
 import com.josemgu91.habittune.android.ui.tag_editor.ViewModelTagEditor;
 import com.josemgu91.habittune.android.usecases.UseCaseFactory;
 
@@ -76,6 +77,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(ViewModelUpdateRoutine.class)) {
             return (T) new ViewModelUpdateRoutine(useCaseFactory.createGetRoutine(), useCaseFactory.createUpdateRoutine());
+        }
+        if (modelClass.isAssignableFrom(ViewModelSchedule.class)) {
+            return (T) new ViewModelSchedule(useCaseFactory.createGetRoutines());
         }
         try {
             return modelClass.newInstance();
