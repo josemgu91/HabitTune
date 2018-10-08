@@ -43,6 +43,8 @@ import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentNewRoutineBinding;
 import com.josemgu91.habittune.domain.usecases.CreateRoutine;
 
+import java.util.Date;
+
 public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialogListener {
 
     private FragmentNewRoutineBinding fragmentNewRoutineBinding;
@@ -158,7 +160,8 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
                 fragmentNewRoutineBinding.editTextRoutineName.getText().toString(),
                 fragmentNewRoutineBinding.editTextRoutineDescription.getText().toString(),
                 selectedColor,
-                numberOfDays
+                numberOfDays,
+                new Date() //TODO: Change start date dynamically.
         ));
         viewModelNewRoutine.getCreateRoutineResponse().observe(getViewLifecycleOwner(), output -> {
             switch (output.status) {

@@ -37,6 +37,7 @@ import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.entities.Tag;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -256,7 +257,8 @@ public class RoomRepository implements Repository {
                     routine.getName(),
                     routine.getDescription(),
                     routine.getColor(),
-                    routine.getNumberOfDays()
+                    routine.getNumberOfDays(),
+                    routine.getStartDate().getTime()
             ));
             return new Routine(
                     String.valueOf(insertedRoutineId),
@@ -264,6 +266,7 @@ public class RoomRepository implements Repository {
                     routine.getDescription(),
                     routine.getColor(),
                     routine.getNumberOfDays(),
+                    routine.getStartDate(),
                     null
             );
         } catch (Exception e) {
@@ -435,6 +438,7 @@ public class RoomRepository implements Repository {
                 roomRoutine.description,
                 roomRoutine.color,
                 roomRoutine.numberOfDays,
+                new Date(roomRoutine.startDateTimestamp),
                 routineEntries
         );
     }

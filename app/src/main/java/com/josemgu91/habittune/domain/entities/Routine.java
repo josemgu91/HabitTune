@@ -22,6 +22,7 @@ package com.josemgu91.habittune.domain.entities;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,24 +36,28 @@ public class Routine {
     private final String description;
     private final int color;
     private final int numberOfDays;
+    @NonNull
+    private final Date startDate;
     @Nullable
     private final List<RoutineEntry> routineEntries;
 
-    public Routine(@NonNull String id, @NonNull String name, @NonNull String description, int color, int numberOfDays, @Nullable List<RoutineEntry> routineEntries) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.color = color;
-        this.numberOfDays = numberOfDays;
-        this.routineEntries = routineEntries;
-    }
-
-    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays, @Nullable List<RoutineEntry> routineEntries) {
+    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays, @NonNull Date startDate, @Nullable List<RoutineEntry> routineEntries) {
         this.id = "";
         this.name = name;
         this.description = description;
         this.color = color;
         this.numberOfDays = numberOfDays;
+        this.startDate = startDate;
+        this.routineEntries = routineEntries;
+    }
+
+    public Routine(@NonNull String id, @NonNull String name, @NonNull String description, int color, int numberOfDays, @NonNull Date startDate, @Nullable List<RoutineEntry> routineEntries) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.numberOfDays = numberOfDays;
+        this.startDate = startDate;
         this.routineEntries = routineEntries;
     }
 
@@ -62,6 +67,7 @@ public class Routine {
         this.description = "";
         this.color = 0;
         this.numberOfDays = 0;
+        this.startDate = new Date();
         this.routineEntries = null;
     }
 
@@ -88,6 +94,11 @@ public class Routine {
         return numberOfDays;
     }
 
+    @NonNull
+    public Date getStartDate() {
+        return startDate;
+    }
+
     @Nullable
     public List<RoutineEntry> getRoutineEntries() {
         return routineEntries;
@@ -103,12 +114,13 @@ public class Routine {
                 Objects.equals(id, routine.id) &&
                 Objects.equals(name, routine.name) &&
                 Objects.equals(description, routine.description) &&
+                Objects.equals(startDate, routine.startDate) &&
                 Objects.equals(routineEntries, routine.routineEntries);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, color, numberOfDays, routineEntries);
+        return Objects.hash(id, name, description, color, numberOfDays, startDate, routineEntries);
     }
 
     @Override
@@ -119,6 +131,7 @@ public class Routine {
                 ", description='" + description + '\'' +
                 ", color=" + color +
                 ", numberOfDays=" + numberOfDays +
+                ", startDate=" + startDate +
                 ", routineEntries=" + routineEntries +
                 '}';
     }

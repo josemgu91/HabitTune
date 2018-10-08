@@ -28,6 +28,7 @@ import com.josemgu91.habittune.domain.entities.Routine;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -49,6 +50,7 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, CreateRo
                     input.description,
                     input.color,
                     input.numberOfDays,
+                    input.startDate,
                     null
             ));
             if (routineCreated != null) {
@@ -67,12 +69,14 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, CreateRo
         private final String description;
         private final int color;
         private final int numberOfDays;
+        private final Date startDate;
 
-        public Input(String name, String description, int color, int numberOfDays) {
+        public Input(String name, String description, int color, int numberOfDays, Date startDate) {
             this.name = name;
             this.description = description;
             this.color = color;
             this.numberOfDays = numberOfDays;
+            this.startDate = startDate;
         }
 
         @Override
@@ -83,13 +87,13 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, CreateRo
             return color == input.color &&
                     numberOfDays == input.numberOfDays &&
                     Objects.equals(name, input.name) &&
-                    Objects.equals(description, input.description);
+                    Objects.equals(description, input.description) &&
+                    Objects.equals(startDate, input.startDate);
         }
 
         @Override
         public int hashCode() {
-
-            return Objects.hash(name, description, color, numberOfDays);
+            return Objects.hash(name, description, color, numberOfDays, startDate);
         }
 
         @Override
@@ -99,6 +103,7 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, CreateRo
                     ", description='" + description + '\'' +
                     ", color=" + color +
                     ", numberOfDays=" + numberOfDays +
+                    ", startDate=" + startDate +
                     '}';
         }
     }

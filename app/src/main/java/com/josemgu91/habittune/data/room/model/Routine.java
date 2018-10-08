@@ -44,6 +44,7 @@ public class Routine {
     public final String description;
     public final int color;
     public final int numberOfDays;
+    public final long startDateTimestamp;
 
     @Ignore
     public Routine(long id) {
@@ -52,23 +53,26 @@ public class Routine {
         this.description = "";
         this.color = 0;
         this.numberOfDays = 0;
+        this.startDateTimestamp = 0;
     }
 
     @Ignore
-    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays) {
+    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays, long startDateTimestamp) {
         this.id = 0;
         this.name = name;
         this.description = description;
         this.color = color;
         this.numberOfDays = numberOfDays;
+        this.startDateTimestamp = startDateTimestamp;
     }
 
-    public Routine(long id, @NonNull String name, @NonNull String description, int color, int numberOfDays) {
+    public Routine(long id, @NonNull String name, @NonNull String description, int color, int numberOfDays, long startDateTimestamp) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.color = color;
         this.numberOfDays = numberOfDays;
+        this.startDateTimestamp = startDateTimestamp;
     }
 
     @Override
@@ -79,13 +83,14 @@ public class Routine {
         return id == routine.id &&
                 color == routine.color &&
                 numberOfDays == routine.numberOfDays &&
+                startDateTimestamp == routine.startDateTimestamp &&
                 Objects.equals(name, routine.name) &&
                 Objects.equals(description, routine.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, color, numberOfDays);
+        return Objects.hash(id, name, description, color, numberOfDays, startDateTimestamp);
     }
 
     @Override
@@ -96,6 +101,7 @@ public class Routine {
                 ", description='" + description + '\'' +
                 ", color=" + color +
                 ", numberOfDays=" + numberOfDays +
+                ", startDateTimestamp=" + startDateTimestamp +
                 '}';
     }
 }
