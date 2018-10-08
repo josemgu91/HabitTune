@@ -41,6 +41,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,6 +51,8 @@ import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class FragmentSchedule extends BaseFragment {
+
+    private final static int ROUTINE_ENTRY_START_DAY = Calendar.MONDAY;
 
     private ViewModelSchedule viewModelSchedule;
     private FragmentScheduleBinding fragmentScheduleBinding;
@@ -80,7 +83,10 @@ public class FragmentSchedule extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        fragmentInteractionListener.updateToolbar(getString(R.string.schedule_title), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
+        fragmentInteractionListener.updateToolbar(
+                /*getString(R.string.schedule_title)*/getCurrentDay(),
+                FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER
+        );
         fragmentInteractionListener.updateNavigationDrawer(true);
     }
 
@@ -103,7 +109,16 @@ public class FragmentSchedule extends BaseFragment {
         });
     }
 
-    private String formatHour(final DateFormat dateFormat, final Calendar calendar, final int hourInSeconds) {
+    private String getCurrentDay() {
+        final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        return dateFormat.format(calendar.getTime());
+    }
+
+    private String formatHour(final int hourInSeconds) {
+        final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        final Calendar calendar = Calendar.getInstance();
         final int hours = hourInSeconds / 3600;
         final int minutes = (hourInSeconds % 3600) / 60;
         calendar.set(Calendar.HOUR_OF_DAY, hours);
@@ -112,8 +127,6 @@ public class FragmentSchedule extends BaseFragment {
     }
 
     private void onRoutinesUpdated(final List<GetRoutines.Output> routines) {
-        final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-        final Calendar calendar = Calendar.getInstance();
         final List<GetRoutineEntries.Output> routineEntries = new ArrayList<>();
         for (final GetRoutines.Output routine : routines) {
             routineEntries.addAll(routine.getRoutineEntries());
@@ -123,13 +136,20 @@ public class FragmentSchedule extends BaseFragment {
         for (final GetRoutineEntries.Output routineEntry : routineEntries) {
             activityItems.add(new ActivityItem(
                     routineEntry.getId(),
-                    formatHour(dateFormat, calendar, routineEntry.getStartTime()),
-                    formatHour(dateFormat, calendar, routineEntry.getEndTime()),
+                    formatHour(routineEntry.getStartTime()),
+                    formatHour(routineEntry.getEndTime()),
                     routineEntry.getActivity().getName()
             ));
         }
         activityItemFlexibleAdapter.updateDataSet(activityItems);
     }
+
+    /*private List<GetRoutineEntries.Output> getRoutinesByDay(final List<GetRoutineEntries.Output> routineEntries, final Day day){
+        final List<GetRoutineEntries.Output> dailyRoutineEntries = new ArrayList<>();
+        for(final GetRoutineEntries.Output routineEntry : routineEntries){
+            routineEntry.getDay()
+        }
+    }*/
 
     private static class ActivityItem extends AbstractFlexibleItem<ActivityItem.ViewHolder> {
 
