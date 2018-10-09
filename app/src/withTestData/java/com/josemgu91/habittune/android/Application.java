@@ -20,8 +20,12 @@
 package com.josemgu91.habittune.android;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
+import android.support.annotation.NonNull;
 
+import com.josemgu91.habittune.BuildConfig;
 import com.josemgu91.habittune.android.executors.DefaultThreadPoolExecutor;
 import com.josemgu91.habittune.android.executors.UiThreadExecutor;
 import com.josemgu91.habittune.android.ui.ViewModelFactory;
@@ -43,17 +47,14 @@ public class Application extends android.app.Application {
     private UseCaseFactory useCaseFactory;
     private ViewModelProvider.Factory viewModelFactory;
 
+    private LocalRoomDatabase localRoomDatabase;
+
     @Override
     public void onCreate() {
         super.onCreate();
         uiThreadExecutor = new UiThreadExecutor();
         defaultThreadPoolExecutor = new DefaultThreadPoolExecutor();
-        final LocalRoomDatabase localRoomDatabase = Room
-                .inMemoryDatabaseBuilder(
-                        this,
-                        LocalRoomDatabase.class)
-                .openHelperFactory(new RequerySQLiteOpenHelperFactory())
-                .build();
+        localRoomDatabase = createRoomDatabaseWithTestData(BuildConfig.USE_IN_RAM_DATABASE);
         repository = new RoomRepository(localRoomDatabase, defaultThreadPoolExecutor);
         useCaseFactory = new DefaultUseCaseFactory(uiThreadExecutor, defaultThreadPoolExecutor, repository);
         viewModelFactory = new ViewModelFactory(useCaseFactory);
@@ -77,5 +78,24 @@ public class Application extends android.app.Application {
 
     public ViewModelProvider.Factory getViewModelFactory() {
         return viewModelFactory;
+    }
+
+    private LocalRoomDatabase createRoomDatabaseWithTestData(final boolean inMemory) {
+        final RoomDatabase.Builder<LocalRoomDatabase> roomDatabaseBuilder;
+        if (inMemory) {
+            roomDatabaseBuilder = Room.inMemoryDatabaseBuilder(this, LocalRoomDatabase.class);
+        } else {
+            roomDatabaseBuilder = Room.databaseBuilder(this, LocalRoomDatabase.class, "habittune-test.db");
+        }
+        return roomDatabaseBuilder
+                .openHelperFactory(new RequerySQLiteOpenHelperFactory())
+                .allowMainThreadQueries()
+                .addCallback(new RoomDatabase.Callback() {
+                    @Override
+                    public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                        uiThreadExecutor.execute(() -> new DefaultDatabasePopulator(localRoomDatabase).populate());
+                    }
+                })
+                .build();
     }
 }

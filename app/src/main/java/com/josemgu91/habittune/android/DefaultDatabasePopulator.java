@@ -67,15 +67,15 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
         );
         final long lunchActivityId = localRoomDatabase.getActivityDao().insertActivity(
                 new Activity(
-                        "Breakfast",
-                        "Daily breakfast",
+                        "Lunch",
+                        "Daily lunch",
                         pink400
                 )
         );
         final long dinnerActivityId = localRoomDatabase.getActivityDao().insertActivity(
                 new Activity(
-                        "Breakfast",
-                        "Daily breakfast",
+                        "Dinner",
+                        "Daily dinner",
                         purple400
                 )
         );
