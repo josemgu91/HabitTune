@@ -33,6 +33,7 @@ import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 import com.josemgu91.habittune.domain.util.Function;
 import com.josemgu91.habittune.domain.util.ListMapper;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -51,6 +52,7 @@ public class GetRoutines extends AbstractUseCase<GetRoutines.Input, LiveData<Lis
                 routine.getDescription(),
                 routine.getColor(),
                 routine.getNumberOfDays(),
+                routine.getStartDate(),
                 routine.getRoutineEntries() != null ?
                         new ListMapper<>((Function<RoutineEntry, GetRoutineEntries.Output>) input -> new GetRoutineEntries.Output(
                                 input.getId(),
@@ -100,14 +102,16 @@ public class GetRoutines extends AbstractUseCase<GetRoutines.Input, LiveData<Lis
         private final String description;
         private final int color;
         private final int numberOfDays;
+        private final Date startDate;
         private final List<GetRoutineEntries.Output> routineEntries;
 
-        public Output(String id, String name, String description, int color, int numberOfDays, List<GetRoutineEntries.Output> routineEntries) {
+        public Output(String id, String name, String description, int color, int numberOfDays, Date startDate, List<GetRoutineEntries.Output> routineEntries) {
             this.id = id;
             this.name = name;
             this.description = description;
             this.color = color;
             this.numberOfDays = numberOfDays;
+            this.startDate = startDate;
             this.routineEntries = routineEntries;
         }
 
@@ -131,20 +135,12 @@ public class GetRoutines extends AbstractUseCase<GetRoutines.Input, LiveData<Lis
             return numberOfDays;
         }
 
-        public List<GetRoutineEntries.Output> getRoutineEntries() {
-            return routineEntries;
+        public Date getStartDate() {
+            return startDate;
         }
 
-        @Override
-        public String toString() {
-            return "Output{" +
-                    "id='" + id + '\'' +
-                    ", name='" + name + '\'' +
-                    ", description='" + description + '\'' +
-                    ", color=" + color +
-                    ", numberOfDays=" + numberOfDays +
-                    ", routineEntries=" + routineEntries +
-                    '}';
+        public List<GetRoutineEntries.Output> getRoutineEntries() {
+            return routineEntries;
         }
 
         @Override
@@ -157,12 +153,26 @@ public class GetRoutines extends AbstractUseCase<GetRoutines.Input, LiveData<Lis
                     Objects.equals(id, output.id) &&
                     Objects.equals(name, output.name) &&
                     Objects.equals(description, output.description) &&
+                    Objects.equals(startDate, output.startDate) &&
                     Objects.equals(routineEntries, output.routineEntries);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, name, description, color, numberOfDays, routineEntries);
+            return Objects.hash(id, name, description, color, numberOfDays, startDate, routineEntries);
+        }
+
+        @Override
+        public String toString() {
+            return "Output{" +
+                    "id='" + id + '\'' +
+                    ", name='" + name + '\'' +
+                    ", description='" + description + '\'' +
+                    ", color=" + color +
+                    ", numberOfDays=" + numberOfDays +
+                    ", startDate=" + startDate +
+                    ", routineEntries=" + routineEntries +
+                    '}';
         }
     }
 

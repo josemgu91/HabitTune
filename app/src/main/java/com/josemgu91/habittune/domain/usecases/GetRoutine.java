@@ -29,6 +29,7 @@ import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 import com.josemgu91.habittune.domain.util.Function;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -64,7 +65,8 @@ public class GetRoutine extends AbstractUseCase<GetRoutine.Input, GetRoutine.Out
                     input.getName(),
                     input.getDescription(),
                     input.getColor(),
-                    input.getNumberOfDays()
+                    input.getNumberOfDays(),
+                    input.getStartDate()
             );
         }
     }
@@ -88,13 +90,15 @@ public class GetRoutine extends AbstractUseCase<GetRoutine.Input, GetRoutine.Out
         private final String description;
         private final int color;
         private final int numberOfDays;
+        private final Date startDate;
 
-        public Output(@NonNull String id, @NonNull String name, @NonNull String description, int color, int numberOfDays) {
+        public Output(@NonNull String id, @NonNull String name, @NonNull String description, int color, int numberOfDays, Date startDate) {
             this.id = id;
             this.name = name;
             this.description = description;
             this.color = color;
             this.numberOfDays = numberOfDays;
+            this.startDate = startDate;
         }
 
         @NonNull
@@ -120,6 +124,10 @@ public class GetRoutine extends AbstractUseCase<GetRoutine.Input, GetRoutine.Out
             return numberOfDays;
         }
 
+        public Date getStartDate() {
+            return startDate;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -129,12 +137,13 @@ public class GetRoutine extends AbstractUseCase<GetRoutine.Input, GetRoutine.Out
                     numberOfDays == output.numberOfDays &&
                     Objects.equals(id, output.id) &&
                     Objects.equals(name, output.name) &&
-                    Objects.equals(description, output.description);
+                    Objects.equals(description, output.description) &&
+                    Objects.equals(startDate, output.startDate);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, name, description, color, numberOfDays);
+            return Objects.hash(id, name, description, color, numberOfDays, startDate);
         }
 
         @Override
@@ -145,6 +154,7 @@ public class GetRoutine extends AbstractUseCase<GetRoutine.Input, GetRoutine.Out
                     ", description='" + description + '\'' +
                     ", color=" + color +
                     ", numberOfDays=" + numberOfDays +
+                    ", startDate=" + startDate +
                     '}';
         }
     }
