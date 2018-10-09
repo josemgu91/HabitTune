@@ -241,7 +241,7 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         "Work",
                         "Work routine.",
                         red400,
-                        5,
+                        7,
                         mondayStartDate.getTime()
                 )
         );

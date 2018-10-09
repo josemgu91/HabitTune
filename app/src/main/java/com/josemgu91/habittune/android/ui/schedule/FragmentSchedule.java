@@ -59,10 +59,13 @@ public class FragmentSchedule extends BaseFragment {
 
     private FlexibleAdapter<ActivityItem> activityItemFlexibleAdapter;
 
+    private ScheduleCalculator scheduleCalculator;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelSchedule = ViewModelProviders.of(this, viewModelFactory).get(ViewModelSchedule.class);
+        scheduleCalculator = new ScheduleCalculator();
     }
 
     @Override
@@ -127,9 +130,16 @@ public class FragmentSchedule extends BaseFragment {
     }
 
     private void onRoutinesUpdated(final List<GetRoutines.Output> routines) {
+        final Date currentDate = new Date();
         final List<GetRoutineEntries.Output> routineEntries = new ArrayList<>();
         for (final GetRoutines.Output routine : routines) {
-            routineEntries.addAll(routine.getRoutineEntries());
+            for (final GetRoutineEntries.Output routineEntry : routine.getRoutineEntries()) {
+                final int currentDayNumber = scheduleCalculator.getDayNumber(currentDate, routine.getStartDate(), routine.getNumberOfDays());
+                if (currentDayNumber != routineEntry.getDay()) {
+                    continue;
+                }
+                routineEntries.add(routineEntry);
+            }
         }
         Collections.sort(routineEntries, (o1, o2) -> o1.getStartTime() - o2.getStartTime());
         final ArrayList<ActivityItem> activityItems = new ArrayList<>();
@@ -143,13 +153,6 @@ public class FragmentSchedule extends BaseFragment {
         }
         activityItemFlexibleAdapter.updateDataSet(activityItems);
     }
-
-    /*private List<GetRoutineEntries.Output> getRoutinesByDay(final List<GetRoutineEntries.Output> routineEntries, final Day day){
-        final List<GetRoutineEntries.Output> dailyRoutineEntries = new ArrayList<>();
-        for(final GetRoutineEntries.Output routineEntry : routineEntries){
-            routineEntry.getDay()
-        }
-    }*/
 
     private static class ActivityItem extends AbstractFlexibleItem<ActivityItem.ViewHolder> {
 

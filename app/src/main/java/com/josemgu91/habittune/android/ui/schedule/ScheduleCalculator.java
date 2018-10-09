@@ -1,0 +1,36 @@
+/*
+ * Copyright (C) 2018  José Miguel García Urrutia <josemgu91@gmail.com>
+ *
+ * This file is part of HabitTune.
+ *
+ * HabitTune is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HabitTune is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package com.josemgu91.habittune.android.ui.schedule;
+
+import java.util.Date;
+
+public class ScheduleCalculator {
+
+    private final static int MILLISECONDS_IN_A_DAY = 3600 * 24 * 1000;
+
+    /**
+     * @return Number of the day starting from 0.
+     */
+    public int getDayNumber(final Date currentDate, final Date routineStartDate, final int routineTotalDays) {
+        final long daysSinceStartDate = Math.round((currentDate.getTime() - routineStartDate.getTime()) / (double) MILLISECONDS_IN_A_DAY);
+        return (int) (daysSinceStartDate % routineTotalDays);
+    }
+
+}
