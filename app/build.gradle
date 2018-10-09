@@ -96,3 +96,8 @@ dependencies {
     testImplementation "android.arch.persistence.room:testing:$roomVersion"
     testImplementation "android.arch.core:core-testing:$lifecycleVersion"
 }
+
+//TODO: Use release keystore.
+task installRelease(dependsOn: "installCleanDebug", type: Exec, group: "help") {
+    commandLine 'adb', 'shell', 'am', 'start', '-n', "com.josemgu91.habittune/.android.ActivityMain"
+}
