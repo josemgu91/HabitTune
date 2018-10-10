@@ -97,6 +97,9 @@ public class FragmentSchedule extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
+            /* FIXME: A better approach must be used. What if the process is killed by the system (savedInstanceState != null)?
+             * The ViewModel will start in a clean state but the savedInstanceState will not be null because the system saves
+             * the instance state when killing the process.*/
             viewModelSchedule.fetchRoutines();
         }
         viewModelSchedule.getGetRoutinesResponse().observe(getViewLifecycleOwner(), response -> {
