@@ -32,9 +32,11 @@ import com.josemgu91.habittune.domain.DomainException;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.entities.Activity;
+import com.josemgu91.habittune.domain.entities.Day;
 import com.josemgu91.habittune.domain.entities.Routine;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.entities.Tag;
+import com.josemgu91.habittune.domain.entities.Time;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -402,9 +404,9 @@ public class RoomRepository implements Repository {
     private static RoutineEntry mapRoutineActivityJoinToRoutineEntry(final RoutineActivityJoin routineActivityJoin, final Activity activity) throws DomainException {
         return new RoutineEntry(
                 String.valueOf(routineActivityJoin.id),
-                new RoutineEntry.Day(routineActivityJoin.day),
-                new RoutineEntry.Time(routineActivityJoin.startTime),
-                new RoutineEntry.Time(routineActivityJoin.endTime),
+                new Day(routineActivityJoin.day),
+                new Time(routineActivityJoin.startTime),
+                new Time(routineActivityJoin.endTime),
                 activity,
                 routineActivityJoin.enabled,
                 new Date(routineActivityJoin.creationDateTimestamp),

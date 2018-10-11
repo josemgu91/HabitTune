@@ -24,7 +24,9 @@ import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
 import com.josemgu91.habittune.domain.entities.Activity;
+import com.josemgu91.habittune.domain.entities.Day;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
+import com.josemgu91.habittune.domain.entities.Time;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
@@ -46,9 +48,9 @@ public class CreateRoutineEntry extends AbstractUseCase<CreateRoutineEntry.Input
         output.inProgress();
         try {
             final RoutineEntry routineEntry = routineDataGateway.createRoutineEntry(new RoutineEntry(
-                    new RoutineEntry.Day(input.day),
-                    new RoutineEntry.Time(input.startTime),
-                    new RoutineEntry.Time(input.endTime),
+                    new Day(input.day),
+                    new Time(input.startTime),
+                    new Time(input.endTime),
                     new Activity(input.activityId),
                     true,
                     new Date(),

@@ -83,8 +83,8 @@ public class RoutineEntry {
             this.creationDate = new Date();
             this.deactivationDate = null;
             this.assistanceRegisters = null;
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid RoutineEntry creation. This shouldn't occur!");
+        } catch (DomainException e) {
+            throw new RuntimeException("Invalid RoutineEntry entity. This is a default constructor, so this shouldn't occur!");
         }
     }
 
@@ -166,78 +166,6 @@ public class RoutineEntry {
                 ", deactivationDate=" + deactivationDate +
                 ", assistanceRegisters=" + assistanceRegisters +
                 '}';
-    }
-
-    public static final class Day {
-
-        private final int day;
-
-        public Day(int day) throws DomainException {
-            if (day < 0) {
-                throw new DomainException("Invalid day!");
-            }
-            this.day = day;
-        }
-
-        public int getDay() {
-            return day;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Day day1 = (Day) o;
-            return day == day1.day;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(day);
-        }
-
-        @Override
-        public String toString() {
-            return "Day{" +
-                    "day=" + day +
-                    '}';
-        }
-    }
-
-    public static final class Time {
-
-        private final int time;
-
-        public Time(int time) throws DomainException {
-            if (time < 0 || time > 86400) {
-                throw new DomainException("Invalid time. Time must be between 0 and 86400.");
-            }
-            this.time = time;
-        }
-
-        public int getTime() {
-            return time;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Time time1 = (Time) o;
-            return time == time1.time;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(time);
-        }
-
-        @Override
-        public String toString() {
-            return "Time{" +
-                    "time=" + time +
-                    '}';
-        }
     }
 
 }
