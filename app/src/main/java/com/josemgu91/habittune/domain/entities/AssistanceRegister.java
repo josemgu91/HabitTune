@@ -20,35 +20,64 @@
 package com.josemgu91.habittune.domain.entities;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import java.util.Date;
+import com.josemgu91.habittune.domain.DomainException;
+
 import java.util.Objects;
 
 public class AssistanceRegister {
 
     @NonNull
     private final String id;
+    private final int daySinceRoutineStartDate;
     @NonNull
-    private final Date startDate;
-    @NonNull
-    private final Date endDate;
+    private final Time startTime;
+    @Nullable
+    private final Time endTime;
 
-    public AssistanceRegister(@NonNull String id, @NonNull Date startDate, @NonNull Date endDate) {
+    public AssistanceRegister(@NonNull String id, int daySinceRoutineStartDate, @NonNull Time startTime, @Nullable Time endTime) {
         this.id = id;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.daySinceRoutineStartDate = daySinceRoutineStartDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
-    public AssistanceRegister(@NonNull Date startDate, @NonNull Date endDate) {
+    public AssistanceRegister(int daySinceRoutineStartDate, @NonNull Time startTime, @Nullable Time endTime) {
         this.id = "";
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.daySinceRoutineStartDate = daySinceRoutineStartDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public AssistanceRegister(@NonNull String id) {
-        this.id = id;
-        this.startDate = new Date();
-        this.endDate = new Date();
+        try {
+            this.id = id;
+            this.daySinceRoutineStartDate = 0;
+            this.startTime = new Time(0);
+            this.endTime = null;
+        } catch (DomainException e) {
+            throw new RuntimeException("Invalid AssistanceRegister entity. This is a default constructor, so this shouldn't occur!");
+        }
+    }
+
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    public int getDaySinceRoutineStartDate() {
+        return daySinceRoutineStartDate;
+    }
+
+    @NonNull
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    @Nullable
+    public Time getEndTime() {
+        return endTime;
     }
 
     @Override
@@ -56,22 +85,24 @@ public class AssistanceRegister {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AssistanceRegister that = (AssistanceRegister) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(startDate, that.startDate) &&
-                Objects.equals(endDate, that.endDate);
+        return daySinceRoutineStartDate == that.daySinceRoutineStartDate &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(startTime, that.startTime) &&
+                Objects.equals(endTime, that.endTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startDate, endDate);
+        return Objects.hash(id, daySinceRoutineStartDate, startTime, endTime);
     }
 
     @Override
     public String toString() {
         return "AssistanceRegister{" +
                 "id='" + id + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
+                ", daySinceRoutineStartDate=" + daySinceRoutineStartDate +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 '}';
     }
 }
