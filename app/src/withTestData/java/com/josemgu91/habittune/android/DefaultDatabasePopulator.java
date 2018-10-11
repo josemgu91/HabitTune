@@ -238,7 +238,7 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         "Practice",
                         "Study sessions.",
                         teal400,
-                        6,
+                        7,
                         mondayStartDateTimestamp,
                         true,
                         currentDateTimestamp,
