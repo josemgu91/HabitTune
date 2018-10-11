@@ -28,7 +28,6 @@ import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.domain.usecases.CreateRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.GetActivity;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
-import com.josemgu91.habittune.domain.usecases.UpdateRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 public class ViewModelRoutineAddActivity extends ViewModel {
@@ -36,21 +35,17 @@ public class ViewModelRoutineAddActivity extends ViewModel {
     private final GetRoutineEntry getRoutineEntry;
     private final CreateRoutineEntry createRoutineEntry;
     private final GetActivity getActivity;
-    private final UpdateRoutineEntry updateRoutineEntry;
 
     private final MutableLiveData<Response<GetActivity.Output, Void>> getActivityResponse;
     private final MutableLiveData<Response<Void, Void>> createRoutineEntryResponse;
-    private final MutableLiveData<Response<Void, Void>> updateRoutineEntryResponse;
     private final MutableLiveData<Response<GetRoutineEntry.Output, Void>> getRoutineEntryResponse;
 
-    public ViewModelRoutineAddActivity(final CreateRoutineEntry createRoutineEntry, final GetActivity getActivity, final UpdateRoutineEntry updateRoutineEntry, final GetRoutineEntry getRoutineEntry) {
+    public ViewModelRoutineAddActivity(final CreateRoutineEntry createRoutineEntry, final GetActivity getActivity, final GetRoutineEntry getRoutineEntry) {
         this.createRoutineEntry = createRoutineEntry;
         this.getActivity = getActivity;
-        this.updateRoutineEntry = updateRoutineEntry;
         this.getRoutineEntry = getRoutineEntry;
         this.getActivityResponse = new MutableLiveData<>();
         this.createRoutineEntryResponse = new MutableLiveData<>();
-        this.updateRoutineEntryResponse = new MutableLiveData<>();
         this.getRoutineEntryResponse = new MutableLiveData<>();
     }
 
@@ -111,35 +106,12 @@ public class ViewModelRoutineAddActivity extends ViewModel {
         });
     }
 
-    public void updateRoutineEntry(final String routineEntryId, final String routineId, final String activityId, int day, int startTime, int endTime) {
-        updateRoutineEntry.execute(new UpdateRoutineEntry.Input(routineEntryId, routineId, activityId, day, startTime, endTime), new UseCaseOutput<Void>() {
-            @Override
-            public void onSuccess(@Nullable Void aVoid) {
-                updateRoutineEntryResponse.setValue(new Response<>(Response.Status.SUCCESS, null, null));
-            }
-
-            @Override
-            public void inProgress() {
-                updateRoutineEntryResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
-            }
-
-            @Override
-            public void onError() {
-                updateRoutineEntryResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
-            }
-        });
-    }
-
     public LiveData<Response<GetActivity.Output, Void>> getGetActivityResponse() {
         return getActivityResponse;
     }
 
     public LiveData<Response<Void, Void>> getCreateRoutineEntryResponse() {
         return createRoutineEntryResponse;
-    }
-
-    public LiveData<Response<Void, Void>> getUpdateRoutineEntryResponse() {
-        return updateRoutineEntryResponse;
     }
 
     public LiveData<Response<GetRoutineEntry.Output, Void>> getGetRoutineEntryResponse() {

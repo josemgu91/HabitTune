@@ -258,7 +258,10 @@ public class RoomRepository implements Repository {
                     routine.getDescription(),
                     routine.getColor(),
                     routine.getNumberOfDays(),
-                    routine.getStartDate().getTime()
+                    routine.getStartDate().getTime(),
+                    routine.isEnabled(),
+                    routine.getCreationDate().getTime(),
+                    routine.isEnabled() ? 0 : routine.getDeactivationDate().getTime()
             ));
             return new Routine(
                     String.valueOf(insertedRoutineId),
@@ -267,7 +270,10 @@ public class RoomRepository implements Repository {
                     routine.getColor(),
                     routine.getNumberOfDays(),
                     routine.getStartDate(),
-                    null
+                    null,
+                    routine.isEnabled(),
+                    routine.getCreationDate(),
+                    routine.getDeactivationDate()
             );
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
@@ -355,13 +361,20 @@ public class RoomRepository implements Repository {
                     Long.valueOf(routineEntry.getActivity().getId()),
                     routineEntry.getDay().getDay(),
                     routineEntry.getStartTime().getTime(),
-                    routineEntry.getEndTime().getTime()
+                    routineEntry.getEndTime().getTime(),
+                    routineEntry.isEnabled(),
+                    routineEntry.getCreationDate().getTime(),
+                    routineEntry.isEnabled() ? 0 : routineEntry.getDeactivationDate().getTime()
             ));
             return new RoutineEntry(String.valueOf(id),
                     routineEntry.getDay(),
                     routineEntry.getStartTime(),
                     routineEntry.getEndTime(),
-                    routineEntry.getActivity());
+                    routineEntry.getActivity(),
+                    routineEntry.isEnabled(),
+                    routineEntry.getCreationDate(),
+                    routineEntry.getDeactivationDate(),
+                    null);
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -372,24 +385,6 @@ public class RoomRepository implements Repository {
         try {
             return localRoomDatabase.getRoutineActivityJoinDao().deleteRoutineActivityJoin(
                     new RoutineActivityJoin(Long.valueOf(id))
-            ) != 0;
-        } catch (Exception e) {
-            throw new DataGatewayException(e.getMessage());
-        }
-    }
-
-    @Override
-    public boolean updateRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException {
-        try {
-            return localRoomDatabase.getRoutineActivityJoinDao().updateRoutineActivityJoin(
-                    new RoutineActivityJoin(
-                            Long.valueOf(routineEntry.getId()),
-                            Long.valueOf(routineId),
-                            Long.valueOf(routineEntry.getActivity().getId()),
-                            routineEntry.getDay().getDay(),
-                            routineEntry.getStartTime().getTime(),
-                            routineEntry.getEndTime().getTime()
-                    )
             ) != 0;
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
@@ -410,7 +405,11 @@ public class RoomRepository implements Repository {
                 new RoutineEntry.Day(routineActivityJoin.day),
                 new RoutineEntry.Time(routineActivityJoin.startTime),
                 new RoutineEntry.Time(routineActivityJoin.endTime),
-                activity
+                activity,
+                routineActivityJoin.enabled,
+                new Date(routineActivityJoin.creationDateTimestamp),
+                routineActivityJoin.enabled ? null : new Date(routineActivityJoin.deactivationDateTimestamp),
+                null
         );
     }
 
@@ -439,7 +438,10 @@ public class RoomRepository implements Repository {
                 roomRoutine.color,
                 roomRoutine.numberOfDays,
                 new Date(roomRoutine.startDateTimestamp),
-                routineEntries
+                routineEntries,
+                roomRoutine.enabled,
+                new Date(roomRoutine.creationDateTimestamp),
+                roomRoutine.enabled ? null : new Date(roomRoutine.deactivationDateTimestamp)
         );
     }
 }

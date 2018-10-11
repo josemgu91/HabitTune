@@ -51,6 +51,9 @@ public class CreateRoutine extends AbstractUseCase<CreateRoutine.Input, CreateRo
                     input.color,
                     input.numberOfDays,
                     input.startDate,
+                    null,
+                    true,
+                    new Date(),
                     null
             ));
             if (routineCreated != null) {

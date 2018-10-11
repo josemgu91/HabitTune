@@ -51,25 +51,9 @@ public class RoutineActivityJoin {
     public final int day;
     public final int startTime;
     public final int endTime;
-
-    @Ignore
-    public RoutineActivityJoin(long routineId, long activityId, int day, int startTime, int endTime) {
-        this.id = 0;
-        this.routineId = routineId;
-        this.activityId = activityId;
-        this.day = day;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
-
-    public RoutineActivityJoin(long id, long routineId, long activityId, int day, int startTime, int endTime) {
-        this.id = id;
-        this.routineId = routineId;
-        this.activityId = activityId;
-        this.day = day;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
+    public final boolean enabled;
+    public final long creationDateTimestamp;
+    public final long deactivationDateTimestamp;
 
     @Ignore
     public RoutineActivityJoin(long id) {
@@ -79,6 +63,34 @@ public class RoutineActivityJoin {
         this.day = 0;
         this.startTime = 0;
         this.endTime = 0;
+        this.enabled = true;
+        this.creationDateTimestamp = 0;
+        this.deactivationDateTimestamp = 0;
+    }
+
+    @Ignore
+    public RoutineActivityJoin(long routineId, long activityId, int day, int startTime, int endTime, boolean enabled, long creationDateTimestamp, long deactivationDateTimestamp) {
+        this.id = 0;
+        this.routineId = routineId;
+        this.activityId = activityId;
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.enabled = enabled;
+        this.creationDateTimestamp = creationDateTimestamp;
+        this.deactivationDateTimestamp = deactivationDateTimestamp;
+    }
+
+    public RoutineActivityJoin(long id, long routineId, long activityId, int day, int startTime, int endTime, boolean enabled, long creationDateTimestamp, long deactivationDateTimestamp) {
+        this.id = id;
+        this.routineId = routineId;
+        this.activityId = activityId;
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.enabled = enabled;
+        this.creationDateTimestamp = creationDateTimestamp;
+        this.deactivationDateTimestamp = deactivationDateTimestamp;
     }
 
     @Override
@@ -91,12 +103,15 @@ public class RoutineActivityJoin {
                 activityId == that.activityId &&
                 day == that.day &&
                 startTime == that.startTime &&
-                endTime == that.endTime;
+                endTime == that.endTime &&
+                enabled == that.enabled &&
+                creationDateTimestamp == that.creationDateTimestamp &&
+                deactivationDateTimestamp == that.deactivationDateTimestamp;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, routineId, activityId, day, startTime, endTime);
+        return Objects.hash(id, routineId, activityId, day, startTime, endTime, enabled, creationDateTimestamp, deactivationDateTimestamp);
     }
 
     @Override
@@ -108,6 +123,9 @@ public class RoutineActivityJoin {
                 ", day=" + day +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
+                ", enabled=" + enabled +
+                ", creationDateTimestamp=" + creationDateTimestamp +
+                ", deactivationDateTimestamp=" + deactivationDateTimestamp +
                 '}';
     }
 }

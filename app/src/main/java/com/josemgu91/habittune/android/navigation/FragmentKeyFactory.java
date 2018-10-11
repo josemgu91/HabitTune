@@ -34,7 +34,6 @@ import com.josemgu91.habittune.android.ui.activity_selection.FragmentActivitySel
 import com.josemgu91.habittune.android.ui.new_routine.FragmentNewRoutine;
 import com.josemgu91.habittune.android.ui.routine_editor.FragmentRoutineEditor;
 import com.josemgu91.habittune.android.ui.routine_entry_add_update.FragmentAddRoutineEntry;
-import com.josemgu91.habittune.android.ui.routine_entry_add_update.FragmentUpdateRoutineEntry;
 import com.josemgu91.habittune.android.ui.routine_update.FragmentUpdateRoutine;
 import com.josemgu91.habittune.android.ui.routines.FragmentRoutines;
 import com.josemgu91.habittune.android.ui.tag_editor.FragmentTagEditor;
@@ -55,7 +54,6 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_UPDATE_ROUTINE = "fragmentUpdateRoutine";
     public static final String FRAGMENT_TAG_ROUTINE_EDITOR = "fragmentRoutineEditor";
     public static final String FRAGMENT_TAG_ADD_ROUTINE_ENTRY = "fragmentAddRoutineEntry";
-    public static final String FRAGMENT_TAG_UPDATE_ROUTINE_ENTRY = "fragmentUpdateRoutineEntry";
     public static final String FRAGMENT_TAG_ACTIVITY_SELECTION = "fragmentActivitySelection";
 
     private static final String FRAGMENT_ARG_UPDATE_ACTIVITY_ACTIVITY_ID = "activityId";
@@ -66,9 +64,6 @@ public class FragmentKeyFactory {
 
     private static final String FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_ID = "routineId";
     private static final String FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_DAY = "routineDay";
-
-    private static final String FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ENTRY_ID = "routineEntryId";
-    private static final String FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ROUTINE_ID = "routineId";
 
     public FragmentKey createScheduleKey() {
         return new FragmentKey(FRAGMENT_TAG_SCHEDULE, null);
@@ -123,14 +118,6 @@ public class FragmentKeyFactory {
         return new FragmentKey(FRAGMENT_TAG_ADD_ROUTINE_ENTRY, arguments);
     }
 
-    public FragmentKey createUpdateRoutineEntryKey(@NonNull final String routineEntryId, @NonNull final String routineId) {
-        final Bundle arguments = new Bundle();
-        arguments.putString(FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ENTRY_ID, routineEntryId);
-        arguments.putString(FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ROUTINE_ID, routineId);
-        return new FragmentKey(FRAGMENT_TAG_UPDATE_ROUTINE_ENTRY, arguments);
-    }
-
-
     public FragmentKey createFragmentActivitySelection() {
         return new FragmentKey(FRAGMENT_TAG_ACTIVITY_SELECTION, null);
     }
@@ -181,11 +168,6 @@ public class FragmentKeyFactory {
                     return FragmentAddRoutineEntry.newInstance(
                             arguments.getString(FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_ID),
                             arguments.getInt(FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_DAY)
-                    );
-                case FRAGMENT_TAG_UPDATE_ROUTINE_ENTRY:
-                    return FragmentUpdateRoutineEntry.newInstance(
-                            arguments.getString(FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ENTRY_ID),
-                            arguments.getString(FRAGMENT_ARG_UPDATE_ROUTINE_ENTRY_ROUTINE_ROUTINE_ID)
                     );
                 case FRAGMENT_TAG_ACTIVITY_SELECTION:
                     return new FragmentActivitySelection();

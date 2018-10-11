@@ -40,18 +40,13 @@ public class Routine {
     private final Date startDate;
     @Nullable
     private final List<RoutineEntry> routineEntries;
+    private final boolean enabled;
+    @NonNull
+    private final Date creationDate;
+    @Nullable
+    private final Date deactivationDate;
 
-    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays, @NonNull Date startDate, @Nullable List<RoutineEntry> routineEntries) {
-        this.id = "";
-        this.name = name;
-        this.description = description;
-        this.color = color;
-        this.numberOfDays = numberOfDays;
-        this.startDate = startDate;
-        this.routineEntries = routineEntries;
-    }
-
-    public Routine(@NonNull String id, @NonNull String name, @NonNull String description, int color, int numberOfDays, @NonNull Date startDate, @Nullable List<RoutineEntry> routineEntries) {
+    public Routine(@NonNull String id, @NonNull String name, @NonNull String description, int color, int numberOfDays, @NonNull Date startDate, @Nullable List<RoutineEntry> routineEntries, boolean enabled, @NonNull Date creationDate, @Nullable Date deactivationDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -59,6 +54,22 @@ public class Routine {
         this.numberOfDays = numberOfDays;
         this.startDate = startDate;
         this.routineEntries = routineEntries;
+        this.enabled = enabled;
+        this.creationDate = creationDate;
+        this.deactivationDate = deactivationDate;
+    }
+
+    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays, @NonNull Date startDate, @Nullable List<RoutineEntry> routineEntries, boolean enabled, @NonNull Date creationDate, @Nullable Date deactivationDate) {
+        this.id = "";
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.numberOfDays = numberOfDays;
+        this.startDate = startDate;
+        this.routineEntries = routineEntries;
+        this.enabled = enabled;
+        this.creationDate = creationDate;
+        this.deactivationDate = deactivationDate;
     }
 
     public Routine(@NonNull String id) {
@@ -69,6 +80,9 @@ public class Routine {
         this.numberOfDays = 0;
         this.startDate = new Date();
         this.routineEntries = null;
+        this.enabled = false;
+        this.creationDate = new Date();
+        this.deactivationDate = null;
     }
 
     @NonNull
@@ -104,6 +118,20 @@ public class Routine {
         return routineEntries;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @NonNull
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    @Nullable
+    public Date getDeactivationDate() {
+        return deactivationDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -111,16 +139,19 @@ public class Routine {
         Routine routine = (Routine) o;
         return color == routine.color &&
                 numberOfDays == routine.numberOfDays &&
+                enabled == routine.enabled &&
                 Objects.equals(id, routine.id) &&
                 Objects.equals(name, routine.name) &&
                 Objects.equals(description, routine.description) &&
                 Objects.equals(startDate, routine.startDate) &&
-                Objects.equals(routineEntries, routine.routineEntries);
+                Objects.equals(routineEntries, routine.routineEntries) &&
+                Objects.equals(creationDate, routine.creationDate) &&
+                Objects.equals(deactivationDate, routine.deactivationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, color, numberOfDays, startDate, routineEntries);
+        return Objects.hash(id, name, description, color, numberOfDays, startDate, routineEntries, enabled, creationDate, deactivationDate);
     }
 
     @Override
@@ -133,6 +164,9 @@ public class Routine {
                 ", numberOfDays=" + numberOfDays +
                 ", startDate=" + startDate +
                 ", routineEntries=" + routineEntries +
+                ", enabled=" + enabled +
+                ", creationDate=" + creationDate +
+                ", deactivationDate=" + deactivationDate +
                 '}';
     }
 }

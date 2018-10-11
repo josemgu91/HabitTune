@@ -20,9 +20,12 @@
 package com.josemgu91.habittune.domain.entities;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.DomainException;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class RoutineEntry {
@@ -35,31 +38,54 @@ public class RoutineEntry {
     private final Time startTime;
     @NonNull
     private final Time endTime;
-    @NonNull
+    @Nullable
     private final Activity activity;
+    private final boolean enabled;
+    @NonNull
+    private final Date creationDate;
+    @Nullable
+    private final Date deactivationDate;
+    @Nullable
+    private final List<AssistanceRegister> assistanceRegisters;
 
-    public RoutineEntry(@NonNull final String id, @NonNull final Day day, @NonNull final Time startTime, @NonNull final Time endTime, @NonNull final Activity activity) {
+    public RoutineEntry(@NonNull String id, @NonNull Day day, @NonNull Time startTime, @NonNull Time endTime, @NonNull Activity activity, boolean enabled, @NonNull Date creationDate, @Nullable Date deactivationDate, @Nullable List<AssistanceRegister> assistanceRegisters) {
         this.id = id;
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
         this.activity = activity;
+        this.enabled = enabled;
+        this.creationDate = creationDate;
+        this.deactivationDate = deactivationDate;
+        this.assistanceRegisters = assistanceRegisters;
     }
 
-    public RoutineEntry(@NonNull Day day, @NonNull Time startTime, @NonNull Time endTime, @NonNull Activity activity) {
+    public RoutineEntry(@NonNull Day day, @NonNull Time startTime, @NonNull Time endTime, @NonNull Activity activity, boolean enabled, @NonNull Date creationDate, @Nullable Date deactivationDate, @Nullable List<AssistanceRegister> assistanceRegisters) {
         this.id = "";
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
         this.activity = activity;
+        this.enabled = enabled;
+        this.creationDate = creationDate;
+        this.deactivationDate = deactivationDate;
+        this.assistanceRegisters = assistanceRegisters;
     }
 
     public RoutineEntry(@NonNull String id) {
-        this.id = id;
-        this.day = null;
-        this.startTime = null;
-        this.endTime = null;
-        this.activity = null;
+        try {
+            this.id = id;
+            this.day = new Day(0);
+            this.startTime = new Time(0);
+            this.endTime = new Time(0);
+            this.activity = null;
+            this.enabled = true;
+            this.creationDate = new Date();
+            this.deactivationDate = null;
+            this.assistanceRegisters = null;
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid RoutineEntry creation. This shouldn't occur!");
+        }
     }
 
     @NonNull
@@ -82,9 +108,28 @@ public class RoutineEntry {
         return endTime;
     }
 
-    @NonNull
+    @Nullable
     public Activity getActivity() {
         return activity;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @NonNull
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    @Nullable
+    public Date getDeactivationDate() {
+        return deactivationDate;
+    }
+
+    @Nullable
+    public List<AssistanceRegister> getAssistanceRegisters() {
+        return assistanceRegisters;
     }
 
     @Override
@@ -92,16 +137,20 @@ public class RoutineEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RoutineEntry that = (RoutineEntry) o;
-        return Objects.equals(id, that.id) &&
+        return enabled == that.enabled &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(day, that.day) &&
                 Objects.equals(startTime, that.startTime) &&
                 Objects.equals(endTime, that.endTime) &&
-                Objects.equals(activity, that.activity);
+                Objects.equals(activity, that.activity) &&
+                Objects.equals(creationDate, that.creationDate) &&
+                Objects.equals(deactivationDate, that.deactivationDate) &&
+                Objects.equals(assistanceRegisters, that.assistanceRegisters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, day, startTime, endTime, activity);
+        return Objects.hash(id, day, startTime, endTime, activity, enabled, creationDate, deactivationDate, assistanceRegisters);
     }
 
     @Override
@@ -112,6 +161,10 @@ public class RoutineEntry {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", activity=" + activity +
+                ", enabled=" + enabled +
+                ", creationDate=" + creationDate +
+                ", deactivationDate=" + deactivationDate +
+                ", assistanceRegisters=" + assistanceRegisters +
                 '}';
     }
 

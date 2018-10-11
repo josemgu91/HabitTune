@@ -28,6 +28,7 @@ import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -48,7 +49,11 @@ public class CreateRoutineEntry extends AbstractUseCase<CreateRoutineEntry.Input
                     new RoutineEntry.Day(input.day),
                     new RoutineEntry.Time(input.startTime),
                     new RoutineEntry.Time(input.endTime),
-                    new Activity(input.activityId)
+                    new Activity(input.activityId),
+                    true,
+                    new Date(),
+                    null,
+                    null
             ), input.routineId);
             if (routineEntry != null) {
                 output.onSuccess(null);

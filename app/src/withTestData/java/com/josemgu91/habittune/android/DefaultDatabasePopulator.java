@@ -41,9 +41,12 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
 
     @Override
     public void populate() {
+        final Date currentDate = new Date();
         final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        final Date mondayStartDate = calendar.getTime();
+        final long mondayStartDateTimestamp = calendar.getTime().getTime();
+        final long currentDateTimestamp = currentDate.getTime();
 
         @ColorInt final int red400 = 0xFFEF5350;
         @ColorInt final int pink400 = 0xFFEC407A;
@@ -224,7 +227,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         "This is the every day activities.",
                         cyan400,
                         1,
-                        mondayStartDate.getTime()
+                        mondayStartDateTimestamp,
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         final long studyRoutineId = localRoomDatabase.getRoutineDao().insertRoutine(
@@ -233,7 +239,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         "Study sessions.",
                         teal400,
                         6,
-                        mondayStartDate.getTime()
+                        mondayStartDateTimestamp,
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         final long workRoutineId = localRoomDatabase.getRoutineDao().insertRoutine(
@@ -242,7 +251,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         "Work routine.",
                         red400,
                         7,
-                        mondayStartDate.getTime()
+                        mondayStartDateTimestamp,
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         final long exerciseRoutineId = localRoomDatabase.getRoutineDao().insertRoutine(
@@ -251,7 +263,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         "Exercise routine.",
                         blue400,
                         7,
-                        mondayStartDate.getTime()
+                        mondayStartDateTimestamp,
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
 
@@ -262,7 +277,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         breakfastActivityId,
                         0,
                         generateTime(6, 25),
-                        generateTime(6, 40)
+                        generateTime(6, 40),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -271,7 +289,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         lunchActivityId,
                         0,
                         generateTime(13, 0),
-                        generateTime(13, 40)
+                        generateTime(13, 40),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -280,7 +301,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         dinnerActivityId,
                         0,
                         generateTime(17, 30),
-                        generateTime(18, 0)
+                        generateTime(18, 0),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -289,7 +313,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         sleepActivityId,
                         0,
                         generateTime(22, 45),
-                        generateTime(6, 15)
+                        generateTime(6, 15),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
 
@@ -299,7 +326,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         pianoActivityId,
                         0,
                         generateTime(16, 30),
-                        generateTime(17, 20)
+                        generateTime(17, 20),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -308,7 +338,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         readingActivityId,
                         1,
                         generateTime(16, 30),
-                        generateTime(17, 20)
+                        generateTime(17, 20),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -317,8 +350,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         pianoActivityId,
                         2,
                         generateTime(16, 30),
-                        generateTime(17, 20)
-
+                        generateTime(17, 20),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -327,7 +362,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         readingActivityId,
                         3,
                         generateTime(16, 30),
-                        generateTime(17, 20)
+                        generateTime(17, 20),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -336,7 +374,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         pianoActivityId,
                         4,
                         generateTime(16, 30),
-                        generateTime(17, 20)
+                        generateTime(17, 20),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -345,7 +386,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         readingActivityId,
                         5,
                         generateTime(16, 30),
-                        generateTime(17, 20)
+                        generateTime(17, 20),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
 
@@ -355,7 +399,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         workActivityId,
                         0,
                         generateTime(9, 0),
-                        generateTime(16, 0)
+                        generateTime(16, 0),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -364,7 +411,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         workActivityId,
                         1,
                         generateTime(9, 0),
-                        generateTime(16, 0)
+                        generateTime(16, 0),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -373,7 +423,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         workActivityId,
                         2,
                         generateTime(9, 0),
-                        generateTime(16, 0)
+                        generateTime(16, 0),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -382,7 +435,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         workActivityId,
                         3,
                         generateTime(9, 0),
-                        generateTime(16, 0)
+                        generateTime(16, 0),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -391,7 +447,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         workActivityId,
                         4,
                         generateTime(9, 0),
-                        generateTime(16, 0)
+                        generateTime(16, 0),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
 
@@ -401,7 +460,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         gymActivityId,
                         0,
                         generateTime(7, 0),
-                        generateTime(8, 30)
+                        generateTime(8, 30),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -410,7 +472,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         gymActivityId,
                         1,
                         generateTime(7, 0),
-                        generateTime(8, 30)
+                        generateTime(8, 30),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -419,7 +484,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         gymActivityId,
                         2,
                         generateTime(7, 0),
-                        generateTime(8, 30)
+                        generateTime(8, 30),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -428,7 +496,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         gymActivityId,
                         3,
                         generateTime(7, 0),
-                        generateTime(8, 30)
+                        generateTime(8, 30),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -437,7 +508,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         gymActivityId,
                         4,
                         generateTime(7, 0),
-                        generateTime(8, 30)
+                        generateTime(8, 30),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
         localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(
@@ -446,7 +520,10 @@ public class DefaultDatabasePopulator implements DatabasePopulator {
                         runningActivityId,
                         6,
                         generateTime(7, 0),
-                        generateTime(9, 0)
+                        generateTime(9, 0),
+                        true,
+                        currentDateTimestamp,
+                        0
                 )
         );
     }

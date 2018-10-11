@@ -30,15 +30,14 @@ import com.josemgu91.habittune.domain.usecases.DeleteRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
 import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.GetActivity;
+import com.josemgu91.habittune.domain.usecases.GetRoutine;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
 import com.josemgu91.habittune.domain.usecases.GetTags;
 import com.josemgu91.habittune.domain.usecases.UpdateActivity;
 import com.josemgu91.habittune.domain.usecases.UpdateRoutine;
-import com.josemgu91.habittune.domain.usecases.UpdateRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.UpdateTag;
-import com.josemgu91.habittune.domain.usecases.GetRoutine;
 
 import java.util.concurrent.Executor;
 
@@ -192,15 +191,6 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     @Override
     public DeleteRoutineEntry createDeleteRoutineEntry() {
         return new DeleteRoutineEntry(
-                uiThreadExecutor,
-                defaultThreadPoolExecutor,
-                repository
-        );
-    }
-
-    @Override
-    public UpdateRoutineEntry createUpdateRoutineEntry() {
-        return new UpdateRoutineEntry(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
                 repository

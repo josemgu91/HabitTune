@@ -37,7 +37,6 @@ import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
-import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.databinding.FragmentRoutineDayBinding;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
 
@@ -71,8 +70,6 @@ public class FragmentRoutineDay extends Fragment {
     private int routineDay;
     private String routineId;
 
-    private FragmentInteractionListener fragmentInteractionListener;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -81,21 +78,16 @@ public class FragmentRoutineDay extends Fragment {
         routineId = arguments.getString(ARG_ROUTINE_ID);
         final ViewModelProvider.Factory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
         viewModelRoutineDay = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineDay.class);
-        fragmentInteractionListener = (FragmentInteractionListener) context;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentRoutineDayBinding fragmentRoutineDayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_day, container, false);
-        routineEntryItemFlexibleAdapter = new RoutineEntriesFlexibleAdapter(viewModelRoutineDay::deleteRoutineEntry, this::updateRoutineEntry);
+        routineEntryItemFlexibleAdapter = new RoutineEntriesFlexibleAdapter(viewModelRoutineDay::deleteRoutineEntry, null);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setAdapter(routineEntryItemFlexibleAdapter);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setLayoutManager(new LinearLayoutManager(getContext()));
         return fragmentRoutineDayBinding.getRoot();
-    }
-
-    private void updateRoutineEntry(final String routineEntryId) {
-        fragmentInteractionListener.navigateToFragmentUpdateRoutineEntry(routineEntryId, routineId);
     }
 
     @Override
@@ -142,19 +134,19 @@ public class FragmentRoutineDay extends Fragment {
 
     public static class RoutineEntriesFlexibleAdapter extends FlexibleAdapter<RoutineEntryItem> {
 
-        @NonNull
+        @Nullable
         private final OnRoutineEntryDeleteListener onRoutineEntryDeleteListener;
 
-        public RoutineEntriesFlexibleAdapter(@NonNull final OnRoutineEntryDeleteListener onRoutineEntryDeleteListener, @NonNull final OnRoutineEntryClickListener onRoutineEntryClickListener) {
+        public RoutineEntriesFlexibleAdapter(@Nullable final OnRoutineEntryDeleteListener onRoutineEntryDeleteListener, @Nullable final OnRoutineEntryClickListener onRoutineEntryClickListener) {
             super(null);
             this.onRoutineEntryDeleteListener = onRoutineEntryDeleteListener;
-            addListener(new OnItemClickListener() {
-                @Override
-                public boolean onItemClick(View view, int position) {
-                    final RoutineEntryItem routineEntryItem = getItem(position);
-                    onRoutineEntryClickListener.onRoutineEntryClick(routineEntryItem.routineEntryId);
-                    return true;
-                }
+            if (onRoutineEntryClickListener == null) {
+                return;
+            }
+            addListener((OnItemClickListener) (view, position) -> {
+                final RoutineEntryItem routineEntryItem = getItem(position);
+                onRoutineEntryClickListener.onRoutineEntryClick(routineEntryItem.routineEntryId);
+                return true;
             });
         }
 
@@ -239,8 +231,9 @@ public class FragmentRoutineDay extends Fragment {
                 final PopupMenu popupMenu = new PopupMenu(view.getContext(), imageViewOverflowButton);
                 popupMenu.inflate(R.menu.element_routine_entry);
                 popupMenu.setOnMenuItemClickListener(item -> {
-                    if (item.getItemId() == R.id.actionDeleteRoutineEntry) {
-                        ((RoutineEntriesFlexibleAdapter) adapter).onRoutineEntryDeleteListener.onRoutineEntryDelete(routineEntryId);
+                    final RoutineEntriesFlexibleAdapter.OnRoutineEntryDeleteListener onRoutineEntryDeleteListener = ((RoutineEntriesFlexibleAdapter) adapter).onRoutineEntryDeleteListener;
+                    if (item.getItemId() == R.id.actionDeleteRoutineEntry && onRoutineEntryDeleteListener != null) {
+                        onRoutineEntryDeleteListener.onRoutineEntryDelete(routineEntryId);
                         return true;
                     }
                     return false;

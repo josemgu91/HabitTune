@@ -45,6 +45,10 @@ public class Routine {
     public final int color;
     public final int numberOfDays;
     public final long startDateTimestamp;
+    public final boolean enabled;
+    public final long creationDateTimestamp;
+    public final long deactivationDateTimestamp;
+
 
     @Ignore
     public Routine(long id) {
@@ -54,25 +58,34 @@ public class Routine {
         this.color = 0;
         this.numberOfDays = 0;
         this.startDateTimestamp = 0;
+        this.enabled = true;
+        this.creationDateTimestamp = 0;
+        this.deactivationDateTimestamp = 0;
     }
 
     @Ignore
-    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays, long startDateTimestamp) {
+    public Routine(@NonNull String name, @NonNull String description, int color, int numberOfDays, long startDateTimestamp, boolean enabled, long creationDateTimestamp, long deactivationDateTimestamp) {
         this.id = 0;
         this.name = name;
         this.description = description;
         this.color = color;
         this.numberOfDays = numberOfDays;
         this.startDateTimestamp = startDateTimestamp;
+        this.enabled = enabled;
+        this.creationDateTimestamp = creationDateTimestamp;
+        this.deactivationDateTimestamp = deactivationDateTimestamp;
     }
 
-    public Routine(long id, @NonNull String name, @NonNull String description, int color, int numberOfDays, long startDateTimestamp) {
+    public Routine(long id, @NonNull String name, @NonNull String description, int color, int numberOfDays, long startDateTimestamp, boolean enabled, long creationDateTimestamp, long deactivationDateTimestamp) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.color = color;
         this.numberOfDays = numberOfDays;
         this.startDateTimestamp = startDateTimestamp;
+        this.enabled = enabled;
+        this.creationDateTimestamp = creationDateTimestamp;
+        this.deactivationDateTimestamp = deactivationDateTimestamp;
     }
 
     @Override
@@ -84,13 +97,16 @@ public class Routine {
                 color == routine.color &&
                 numberOfDays == routine.numberOfDays &&
                 startDateTimestamp == routine.startDateTimestamp &&
+                enabled == routine.enabled &&
+                creationDateTimestamp == routine.creationDateTimestamp &&
+                deactivationDateTimestamp == routine.deactivationDateTimestamp &&
                 Objects.equals(name, routine.name) &&
                 Objects.equals(description, routine.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, color, numberOfDays, startDateTimestamp);
+        return Objects.hash(id, name, description, color, numberOfDays, startDateTimestamp, enabled, creationDateTimestamp, deactivationDateTimestamp);
     }
 
     @Override
@@ -102,6 +118,9 @@ public class Routine {
                 ", color=" + color +
                 ", numberOfDays=" + numberOfDays +
                 ", startDateTimestamp=" + startDateTimestamp +
+                ", enabled=" + enabled +
+                ", creationDateTimestamp=" + creationDateTimestamp +
+                ", deactivationDateTimestamp=" + deactivationDateTimestamp +
                 '}';
     }
 }
