@@ -33,7 +33,7 @@ import com.josemgu91.habittune.android.ui.activity_create_update.FragmentUpdateA
 import com.josemgu91.habittune.android.ui.activity_selection.FragmentActivitySelection;
 import com.josemgu91.habittune.android.ui.new_routine.FragmentNewRoutine;
 import com.josemgu91.habittune.android.ui.routine_editor.FragmentRoutineEditor;
-import com.josemgu91.habittune.android.ui.routine_entry_add_update.FragmentAddRoutineEntry;
+import com.josemgu91.habittune.android.ui.routine_entry_add.FragmentAddRoutineEntry;
 import com.josemgu91.habittune.android.ui.routine_update.FragmentUpdateRoutine;
 import com.josemgu91.habittune.android.ui.routines.FragmentRoutines;
 import com.josemgu91.habittune.android.ui.tag_editor.FragmentTagEditor;

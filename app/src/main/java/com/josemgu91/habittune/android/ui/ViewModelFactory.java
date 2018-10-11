@@ -29,7 +29,7 @@ import com.josemgu91.habittune.android.ui.activity_selection.ViewModelActivitySe
 import com.josemgu91.habittune.android.ui.new_routine.ViewModelNewRoutine;
 import com.josemgu91.habittune.android.ui.routine_editor.ViewModelRoutineDay;
 import com.josemgu91.habittune.android.ui.routine_editor.ViewModelRoutineEditor;
-import com.josemgu91.habittune.android.ui.routine_entry_add_update.ViewModelRoutineAddActivity;
+import com.josemgu91.habittune.android.ui.routine_entry_add.ViewModelRoutineAddActivity;
 import com.josemgu91.habittune.android.ui.routine_update.ViewModelUpdateRoutine;
 import com.josemgu91.habittune.android.ui.routines.ViewModelRoutines;
 import com.josemgu91.habittune.android.ui.schedule.ViewModelSchedule;
