@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import com.josemgu91.habittune.domain.entities.Routine;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
 
+import java.util.Date;
 import java.util.List;
 
 public interface RoutineDataGateway {
@@ -45,6 +46,9 @@ public interface RoutineDataGateway {
 
     @NonNull
     LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull final String routineId, final int dayNumber) throws DataGatewayException;
+
+    @NonNull
+    LiveData<List<RoutineEntry>> subscribeToRoutineEntriesByDate(@NonNull final Date date) throws DataGatewayException;
 
     @NonNull
     RoutineEntry getRoutineEntryById(@NonNull final String id) throws DataGatewayException;

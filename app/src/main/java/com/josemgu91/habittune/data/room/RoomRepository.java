@@ -393,6 +393,12 @@ public class RoomRepository implements Repository {
         }
     }
 
+    @NonNull
+    @Override
+    public LiveData<List<RoutineEntry>> subscribeToRoutineEntriesByDate(@NonNull Date date) throws DataGatewayException {
+        return null;
+    }
+
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
         final List<O> outList = new ArrayList<>();
         for (final I element : inList) {
