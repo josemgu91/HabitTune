@@ -63,5 +63,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="13:00" />
 
+        <TextView
+            android:id="@+id/textViewAssistance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="end"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewActivityName"
+            tools:text="&#10003;&#10003;" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>
