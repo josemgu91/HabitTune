@@ -28,9 +28,28 @@ public class ScheduleCalculator {
     /**
      * @return Number of the day starting from 0.
      */
-    public int getDayNumber(final Date currentDate, final Date routineStartDate, final int routineTotalDays) {
-        final long daysSinceStartDate = Math.round((currentDate.getTime() - routineStartDate.getTime()) / (double) MILLISECONDS_IN_A_DAY);
-        return (int) (daysSinceStartDate % routineTotalDays);
+    public int getRoutineDayNumber(final Date date, final Date routineStartDate, final int routineNumberOfDays) {
+        return calculateRoutineDayNumber(date, routineStartDate, routineNumberOfDays);
+    }
+
+    public boolean isInRoutineEntryDay(final Date date, final Date routineStartDate, final int routineNumberOfDays, final int routineEntryDay) {
+        final int daysSinceStartDate = calculateDaysBetween(routineStartDate, date);
+        final int routineDayNumber = daysSinceStartDate % routineNumberOfDays;
+        return routineDayNumber == routineEntryDay;
+    }
+
+    public int getRoutineEntryCycleNumber(final Date date, final Date routineStartDate, final int routineNumberOfDays) {
+        final int daysSinceStartDate = calculateDaysBetween(routineStartDate, date);
+        return daysSinceStartDate / routineNumberOfDays;
+    }
+
+    private int calculateRoutineDayNumber(final Date date, final Date routineStartDate, final int routineNumberOfDays) {
+        final int daysSinceStartDate = calculateDaysBetween(routineStartDate, date);
+        return daysSinceStartDate % routineNumberOfDays;
+    }
+
+    private int calculateDaysBetween(final Date start, final Date end) {
+        return (int) Math.round((end.getTime() - start.getTime()) / (double) MILLISECONDS_IN_A_DAY);
     }
 
 }

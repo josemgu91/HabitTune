@@ -137,7 +137,7 @@ public class FragmentSchedule extends BaseFragment {
         final List<GetRoutineEntries.Output> routineEntries = new ArrayList<>();
         for (final GetRoutines.Output routine : routines) {
             for (final GetRoutineEntries.Output routineEntry : routine.getRoutineEntries()) {
-                final int currentDayNumber = scheduleCalculator.getDayNumber(currentDate, routine.getStartDate(), routine.getNumberOfDays());
+                final int currentDayNumber = scheduleCalculator.getRoutineDayNumber(currentDate, routine.getStartDate(), routine.getNumberOfDays());
                 if (currentDayNumber != routineEntry.getDay()) {
                     continue;
                 }
