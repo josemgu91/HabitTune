@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.domain.datagateways;
+package com.josemgu91.habittune.domain.usecases;
 
-public interface Repository extends ActivityDataGateway, RoutineDataGateway, TagDataGateway, RoutineEntryDataGateway {
+public class RegisterAssistance {
 }

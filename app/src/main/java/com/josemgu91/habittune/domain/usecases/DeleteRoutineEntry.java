@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
-import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
+import com.josemgu91.habittune.domain.datagateways.RoutineEntryDataGateway;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
@@ -32,18 +32,18 @@ import java.util.concurrent.Executor;
 
 public class DeleteRoutineEntry extends AbstractUseCase<DeleteRoutineEntry.Input, Void> {
 
-    private final RoutineDataGateway routineDataGateway;
+    private final RoutineEntryDataGateway routineEntryDataGateway;
 
-    public DeleteRoutineEntry(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineDataGateway routineDataGateway) {
+    public DeleteRoutineEntry(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineEntryDataGateway routineEntryDataGateway) {
         super(outputExecutor, useCaseExecutor);
-        this.routineDataGateway = routineDataGateway;
+        this.routineEntryDataGateway = routineEntryDataGateway;
     }
 
     @Override
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Void> output) {
         output.inProgress();
         try {
-            final boolean activityDeleted = routineDataGateway.deleteRoutineEntry(input.id);
+            final boolean activityDeleted = routineEntryDataGateway.deleteRoutineEntry(input.id);
             if (activityDeleted) {
                 output.onSuccess(null);
             } else {

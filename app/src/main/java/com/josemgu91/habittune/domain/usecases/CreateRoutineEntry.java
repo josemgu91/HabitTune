@@ -22,7 +22,7 @@ package com.josemgu91.habittune.domain.usecases;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
+import com.josemgu91.habittune.domain.datagateways.RoutineEntryDataGateway;
 import com.josemgu91.habittune.domain.entities.Activity;
 import com.josemgu91.habittune.domain.entities.Day;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
@@ -36,18 +36,18 @@ import java.util.concurrent.Executor;
 
 public class CreateRoutineEntry extends AbstractUseCase<CreateRoutineEntry.Input, Void> {
 
-    private final RoutineDataGateway routineDataGateway;
+    private final RoutineEntryDataGateway routineEntryDataGateway;
 
-    public CreateRoutineEntry(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineDataGateway routineDataGateway) {
+    public CreateRoutineEntry(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineEntryDataGateway routineEntryDataGateway) {
         super(outputExecutor, useCaseExecutor);
-        this.routineDataGateway = routineDataGateway;
+        this.routineEntryDataGateway = routineEntryDataGateway;
     }
 
     @Override
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Void> output) {
         output.inProgress();
         try {
-            final RoutineEntry routineEntry = routineDataGateway.createRoutineEntry(new RoutineEntry(
+            final RoutineEntry routineEntry = routineEntryDataGateway.createRoutineEntry(new RoutineEntry(
                     new Day(input.day),
                     new Time(input.startTime),
                     new Time(input.endTime),

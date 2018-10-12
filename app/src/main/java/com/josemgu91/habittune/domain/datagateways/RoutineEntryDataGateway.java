@@ -22,23 +22,27 @@ package com.josemgu91.habittune.domain.datagateways;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.josemgu91.habittune.domain.entities.Routine;
+import com.josemgu91.habittune.domain.entities.RoutineEntry;
 
+import java.util.Date;
 import java.util.List;
 
-public interface RoutineDataGateway {
+public interface RoutineEntryDataGateway {
 
     @NonNull
-    LiveData<List<Routine>> subscribeToAllRoutines(final boolean includeRoutineEntries) throws DataGatewayException;
+    LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException;
 
     @NonNull
-    Routine getRoutineWithoutEntriesById(@NonNull final String id) throws DataGatewayException;
-
-    boolean deleteRoutineById(@NonNull final String id) throws DataGatewayException;
+    LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull final String routineId, final int dayNumber) throws DataGatewayException;
 
     @NonNull
-    Routine createRoutineWithoutEntries(@NonNull final Routine routine) throws DataGatewayException;
+    LiveData<List<RoutineEntry>> subscribeToRoutineEntriesByDate(@NonNull final Date date) throws DataGatewayException;
 
-    boolean updateRoutine(@NonNull final String id, @NonNull final String name, @NonNull final String description, final int color) throws DataGatewayException;
+    @NonNull
+    RoutineEntry getRoutineEntryById(@NonNull final String id) throws DataGatewayException;
+
+    boolean deleteRoutineEntry(@NonNull final String id) throws DataGatewayException;
+
+    @NonNull
+    RoutineEntry createRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException;
 }
-

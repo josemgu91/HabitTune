@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
-import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
+import com.josemgu91.habittune.domain.datagateways.RoutineEntryDataGateway;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
@@ -38,12 +38,12 @@ import java.util.concurrent.Executor;
 
 public class GetRoutineEntries extends AbstractUseCase<GetRoutineEntries.Input, LiveData<List<GetRoutineEntries.Output>>> {
 
-    private final RoutineDataGateway routineDataGateway;
+    private final RoutineEntryDataGateway routineEntryDataGateway;
     private final Function<List<RoutineEntry>, List<Output>> listMapper;
 
-    public GetRoutineEntries(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineDataGateway routineDataGateway) {
+    public GetRoutineEntries(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineEntryDataGateway routineEntryDataGateway) {
         super(outputExecutor, useCaseExecutor);
-        this.routineDataGateway = routineDataGateway;
+        this.routineEntryDataGateway = routineEntryDataGateway;
         this.listMapper = new ListMapper<>(new RoutineEntryMapper());
     }
 
@@ -53,9 +53,9 @@ public class GetRoutineEntries extends AbstractUseCase<GetRoutineEntries.Input, 
         try {
             final LiveData<List<RoutineEntry>> result;
             if (input.dayNumber == Input.ALL_DAYS) {
-                result = routineDataGateway.subscribeToAllRoutineEntriesByRoutineId(input.routineId);
+                result = routineEntryDataGateway.subscribeToAllRoutineEntriesByRoutineId(input.routineId);
             } else {
-                result = routineDataGateway.subscribeToAllRoutineEntriesByRoutineIdAndDay(input.routineId, input.dayNumber);
+                result = routineEntryDataGateway.subscribeToAllRoutineEntriesByRoutineIdAndDay(input.routineId, input.dayNumber);
             }
             final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
             output.onSuccess(outputLiveData);

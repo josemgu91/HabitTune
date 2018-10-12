@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
-import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
+import com.josemgu91.habittune.domain.datagateways.RoutineEntryDataGateway;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
@@ -38,12 +38,12 @@ import java.util.concurrent.Executor;
 
 public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesByDate.Input, LiveData<List<GetRoutineEntriesByDate.Output>>> {
 
-    private final RoutineDataGateway routineDataGateway;
+    private final RoutineEntryDataGateway routineEntryDataGateway;
     private final Function<List<RoutineEntry>, List<Output>> listMapper;
 
-    public GetRoutineEntriesByDate(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineDataGateway routineDataGateway) {
+    public GetRoutineEntriesByDate(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineEntryDataGateway routineEntryDataGateway) {
         super(outputExecutor, useCaseExecutor);
-        this.routineDataGateway = routineDataGateway;
+        this.routineEntryDataGateway = routineEntryDataGateway;
         this.listMapper = new ListMapper<>(new RoutineEntryMapper());
     }
 
@@ -51,7 +51,7 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<LiveData<List<Output>>> output) {
         output.inProgress();
         try {
-            final LiveData<List<RoutineEntry>> result = routineDataGateway.subscribeToRoutineEntriesByDate(input.date);
+            final LiveData<List<RoutineEntry>> result = routineEntryDataGateway.subscribeToRoutineEntriesByDate(input.date);
             final LiveData<List<Output>> outputLiveData = Transformations.map(result, listMapper::apply);
             output.onSuccess(outputLiveData);
         } catch (DataGatewayException e) {

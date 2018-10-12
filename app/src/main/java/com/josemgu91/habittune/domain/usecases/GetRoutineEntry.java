@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
-import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
+import com.josemgu91.habittune.domain.datagateways.RoutineEntryDataGateway;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
@@ -34,12 +34,12 @@ import java.util.concurrent.Executor;
 
 public class GetRoutineEntry extends AbstractUseCase<GetRoutineEntry.Input, GetRoutineEntry.Output> {
 
-    private final RoutineDataGateway routineDataGateway;
+    private final RoutineEntryDataGateway routineEntryDataGateway;
     private final Function<RoutineEntry, Output> mapper;
 
-    public GetRoutineEntry(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineDataGateway routineDataGateway) {
+    public GetRoutineEntry(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineEntryDataGateway routineEntryDataGateway) {
         super(outputExecutor, useCaseExecutor);
-        this.routineDataGateway = routineDataGateway;
+        this.routineEntryDataGateway = routineEntryDataGateway;
         this.mapper = new RoutineEntryMapper();
     }
 
@@ -47,7 +47,7 @@ public class GetRoutineEntry extends AbstractUseCase<GetRoutineEntry.Input, GetR
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Output> output) {
         output.inProgress();
         try {
-            final RoutineEntry result = routineDataGateway.getRoutineEntryById(input.routineEntryId);
+            final RoutineEntry result = routineEntryDataGateway.getRoutineEntryById(input.routineEntryId);
             output.onSuccess(mapper.apply(result));
         } catch (DataGatewayException e) {
             e.printStackTrace();
