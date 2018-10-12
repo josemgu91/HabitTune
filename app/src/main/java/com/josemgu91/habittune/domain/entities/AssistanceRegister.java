@@ -30,22 +30,22 @@ public class AssistanceRegister {
 
     @NonNull
     private final String id;
-    private final int daySinceRoutineStartDate;
+    private final int cycleNumber;
     @NonNull
     private final Time startTime;
     @Nullable
     private final Time endTime;
 
-    public AssistanceRegister(@NonNull String id, int daySinceRoutineStartDate, @NonNull Time startTime, @Nullable Time endTime) {
+    public AssistanceRegister(@NonNull String id, int cycleNumber, @NonNull Time startTime, @Nullable Time endTime) {
         this.id = id;
-        this.daySinceRoutineStartDate = daySinceRoutineStartDate;
+        this.cycleNumber = cycleNumber;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public AssistanceRegister(int daySinceRoutineStartDate, @NonNull Time startTime, @Nullable Time endTime) {
+    public AssistanceRegister(int cycleNumber, @NonNull Time startTime, @Nullable Time endTime) {
         this.id = "";
-        this.daySinceRoutineStartDate = daySinceRoutineStartDate;
+        this.cycleNumber = cycleNumber;
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -53,7 +53,7 @@ public class AssistanceRegister {
     public AssistanceRegister(@NonNull String id) {
         try {
             this.id = id;
-            this.daySinceRoutineStartDate = 0;
+            this.cycleNumber = 0;
             this.startTime = new Time(0);
             this.endTime = null;
         } catch (DomainException e) {
@@ -66,8 +66,9 @@ public class AssistanceRegister {
         return id;
     }
 
-    public int getDaySinceRoutineStartDate() {
-        return daySinceRoutineStartDate;
+
+    public int getCycleNumber() {
+        return cycleNumber;
     }
 
     @NonNull
@@ -85,7 +86,7 @@ public class AssistanceRegister {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AssistanceRegister that = (AssistanceRegister) o;
-        return daySinceRoutineStartDate == that.daySinceRoutineStartDate &&
+        return cycleNumber == that.cycleNumber &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(startTime, that.startTime) &&
                 Objects.equals(endTime, that.endTime);
@@ -93,14 +94,14 @@ public class AssistanceRegister {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, daySinceRoutineStartDate, startTime, endTime);
+        return Objects.hash(id, cycleNumber, startTime, endTime);
     }
 
     @Override
     public String toString() {
         return "AssistanceRegister{" +
                 "id='" + id + '\'' +
-                ", daySinceRoutineStartDate=" + daySinceRoutineStartDate +
+                ", cycleNumber=" + cycleNumber +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 '}';

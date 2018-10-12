@@ -31,7 +31,7 @@ import java.util.Objects;
         tableName = "assistanceRegisters",
         indices = {
                 @Index(
-                        value = {"routineActivityJoinId", "daySinceRoutineStartDate"},
+                        value = {"routineActivityJoinId", "cycleNumber"},
                         unique = true
                 )
         },
@@ -48,7 +48,7 @@ public class AssistanceRegister {
 
     @PrimaryKey(autoGenerate = true)
     public final long id;
-    public final int daySinceRoutineStartDate;
+    public final int cycleNumber;
     public final int startTime;
     public final int endTime;
     public final long routineActivityJoinId;
@@ -56,24 +56,24 @@ public class AssistanceRegister {
     @Ignore
     public AssistanceRegister(long id) {
         this.id = id;
-        this.daySinceRoutineStartDate = 0;
+        this.cycleNumber = 0;
         this.startTime = 0;
         this.endTime = 0;
         this.routineActivityJoinId = 0;
     }
 
     @Ignore
-    public AssistanceRegister(int daySinceRoutineStartDate, int startTime, int endTime, long routineActivityJoinId) {
+    public AssistanceRegister(int cycleNumber, int startTime, int endTime, long routineActivityJoinId) {
         this.id = 0;
-        this.daySinceRoutineStartDate = daySinceRoutineStartDate;
+        this.cycleNumber = cycleNumber;
         this.startTime = startTime;
         this.endTime = endTime;
         this.routineActivityJoinId = routineActivityJoinId;
     }
 
-    public AssistanceRegister(long id, int daySinceRoutineStartDate, int startTime, int endTime, long routineActivityJoinId) {
+    public AssistanceRegister(long id, int cycleNumber, int startTime, int endTime, long routineActivityJoinId) {
         this.id = id;
-        this.daySinceRoutineStartDate = daySinceRoutineStartDate;
+        this.cycleNumber = cycleNumber;
         this.startTime = startTime;
         this.endTime = endTime;
         this.routineActivityJoinId = routineActivityJoinId;
@@ -85,7 +85,7 @@ public class AssistanceRegister {
         if (o == null || getClass() != o.getClass()) return false;
         AssistanceRegister that = (AssistanceRegister) o;
         return id == that.id &&
-                daySinceRoutineStartDate == that.daySinceRoutineStartDate &&
+                cycleNumber == that.cycleNumber &&
                 startTime == that.startTime &&
                 endTime == that.endTime &&
                 routineActivityJoinId == that.routineActivityJoinId;
@@ -93,14 +93,14 @@ public class AssistanceRegister {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, daySinceRoutineStartDate, startTime, endTime, routineActivityJoinId);
+        return Objects.hash(id, cycleNumber, startTime, endTime, routineActivityJoinId);
     }
 
     @Override
     public String toString() {
         return "AssistanceRegister{" +
                 "id=" + id +
-                ", daySinceRoutineStartDate=" + daySinceRoutineStartDate +
+                ", cycleNumber=" + cycleNumber +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", routineActivityJoinId=" + routineActivityJoinId +
