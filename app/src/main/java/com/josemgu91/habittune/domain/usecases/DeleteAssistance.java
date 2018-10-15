@@ -24,19 +24,17 @@ import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.AssistanceRegisterDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
-import com.josemgu91.habittune.domain.entities.AssistanceRegister;
-import com.josemgu91.habittune.domain.entities.Time;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-public class RegisterAssistance extends AbstractUseCase<RegisterAssistance.Input, Void> {
+public class DeleteAssistance extends AbstractUseCase<DeleteAssistance.Input, Void> {
 
     private final AssistanceRegisterDataGateway assistanceRegisterDataGateway;
 
-    public RegisterAssistance(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, AssistanceRegisterDataGateway assistanceRegisterDataGateway) {
+    public DeleteAssistance(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, AssistanceRegisterDataGateway assistanceRegisterDataGateway) {
         super(outputExecutor, useCaseExecutor);
         this.assistanceRegisterDataGateway = assistanceRegisterDataGateway;
     }
@@ -45,36 +43,29 @@ public class RegisterAssistance extends AbstractUseCase<RegisterAssistance.Input
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Void> output) {
         output.inProgress();
         try {
-            final AssistanceRegister assistanceRegister = assistanceRegisterDataGateway.createOrUpdateAssistanceRegister(
-                    new AssistanceRegister(
-                            input.cycleNumber,
-                            input.startHour,
-                            input.endHour
-                    ),
+            final boolean wasDeleted = assistanceRegisterDataGateway.deleteAssistanceRegister(
+                    input.cycleNumber,
                     input.routineEntryId
             );
-            output.onSuccess(null);
+            if (wasDeleted) {
+                output.onSuccess(null);
+            } else {
+                output.onError();
+            }
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.onError();
         }
     }
 
-    public static final class Input {
+    public final static class Input {
 
-        @NonNull
         private final String routineEntryId;
         private final int cycleNumber;
-        @NonNull
-        private final Time startHour;
-        @Nullable
-        private final Time endHour;
 
-        public Input(@NonNull String routineEntryId, int cycleNumber, @NonNull Time startHour, @Nullable Time endHour) {
+        public Input(String routineEntryId, int cycleNumber) {
             this.routineEntryId = routineEntryId;
             this.cycleNumber = cycleNumber;
-            this.startHour = startHour;
-            this.endHour = endHour;
         }
 
         @Override
@@ -83,15 +74,13 @@ public class RegisterAssistance extends AbstractUseCase<RegisterAssistance.Input
             if (o == null || getClass() != o.getClass()) return false;
             Input input = (Input) o;
             return cycleNumber == input.cycleNumber &&
-                    Objects.equals(routineEntryId, input.routineEntryId) &&
-                    Objects.equals(startHour, input.startHour) &&
-                    Objects.equals(endHour, input.endHour);
+                    Objects.equals(routineEntryId, input.routineEntryId);
         }
 
         @Override
         public int hashCode() {
 
-            return Objects.hash(routineEntryId, cycleNumber, startHour, endHour);
+            return Objects.hash(routineEntryId, cycleNumber);
         }
 
         @Override
@@ -99,8 +88,6 @@ public class RegisterAssistance extends AbstractUseCase<RegisterAssistance.Input
             return "Input{" +
                     "routineEntryId='" + routineEntryId + '\'' +
                     ", cycleNumber=" + cycleNumber +
-                    ", startHour=" + startHour +
-                    ", endHour=" + endHour +
                     '}';
         }
     }
