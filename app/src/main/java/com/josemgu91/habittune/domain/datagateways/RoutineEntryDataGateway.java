@@ -36,9 +36,6 @@ public interface RoutineEntryDataGateway {
     LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull final String routineId, final int dayNumber) throws DataGatewayException;
 
     @NonNull
-    LiveData<List<RoutineEntry>> subscribeToRoutineEntriesByDate(@NonNull final Date date) throws DataGatewayException;
-
-    @NonNull
     RoutineEntry getRoutineEntryById(@NonNull final String id) throws DataGatewayException;
 
     boolean deleteRoutineEntry(@NonNull final String id) throws DataGatewayException;

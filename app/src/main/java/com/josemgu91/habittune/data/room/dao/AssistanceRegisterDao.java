@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.data.room.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -30,11 +31,14 @@ import com.josemgu91.habittune.data.room.model.AssistanceRegister;
 @Dao
 public interface AssistanceRegisterDao {
 
+    @Query("SELECT * FROM assistanceRegisters WHERE cycleNumber = :cycleNumber AND routineActivityJoinId = :routineActivityJoinId")
+    LiveData<AssistanceRegister> subscribeToAssistanceRegisterByCycleNumberAndRoutineEntryId(int cycleNumber, long routineActivityJoinId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertAssistanceRegister(@NonNull final AssistanceRegister assistanceRegister);
 
     @Query("DELETE FROM assistanceRegisters WHERE cycleNumber = :cycleNumber AND routineActivityJoinId = :routineActivityJoinId")
-    int deleteAssistanceRegisterByCycleNumberAndRoutineEntryId(final int cycleNumber, final long routineActivityJoinId);
+    int deleteAssistanceRegisterByCycleNumberAndRoutineActivityJoinId(final int cycleNumber, final long routineActivityJoinId);
 
 
 }

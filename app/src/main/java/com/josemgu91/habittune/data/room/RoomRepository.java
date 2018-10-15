@@ -396,12 +396,6 @@ public class RoomRepository implements Repository {
 
     @NonNull
     @Override
-    public LiveData<List<RoutineEntry>> subscribeToRoutineEntriesByDate(@NonNull Date date) throws DataGatewayException {
-        return null;
-    }
-
-    @NonNull
-    @Override
     public AssistanceRegister createOrUpdateAssistanceRegister(@NonNull AssistanceRegister assistanceRegister, @NonNull String routineEntryId) throws DataGatewayException {
         try {
             final Time assistanceRegisterEndTime = assistanceRegister.getEndTime();
@@ -427,10 +421,37 @@ public class RoomRepository implements Repository {
     @Override
     public boolean deleteAssistanceRegister(int cycleNumber, @NonNull String routineEntryId) throws DataGatewayException {
         try {
-            return localRoomDatabase.getAssistanceRegisterDao().deleteAssistanceRegisterByCycleNumberAndRoutineEntryId(
+            return localRoomDatabase.getAssistanceRegisterDao().deleteAssistanceRegisterByCycleNumberAndRoutineActivityJoinId(
                     cycleNumber,
                     Long.valueOf(routineEntryId)
             ) != 0;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @NonNull
+    @Override
+    public LiveData<AssistanceRegister> subscribeToAssistanceRegisterByCycleNumberAndRoutineEntryId(int cycleNumber, @NonNull String routineEntryId) throws DataGatewayException {
+        try {
+            return Transformations.map(localRoomDatabase.getAssistanceRegisterDao().subscribeToAssistanceRegisterByCycleNumberAndRoutineEntryId(
+                    cycleNumber, Long.valueOf(routineEntryId)
+            ), input -> {
+                if (input == null) {
+                    return null;
+                }
+                try {
+                    return new AssistanceRegister(
+                            String.valueOf(input.id),
+                            input.cycleNumber,
+                            new Time(input.startTime),
+                            new Time(input.endTime)
+                    );
+                } catch (DomainException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e.getMessage());
+                }
+            });
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }

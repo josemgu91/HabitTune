@@ -27,9 +27,9 @@ import java.util.concurrent.Executor;
 public abstract class AbstractUseCase<Input, Output> implements UseCase<Input, Output> {
 
     @NonNull
-    private final Executor useCaseExecutor;
+    protected final Executor useCaseExecutor;
     @NonNull
-    private final Executor outputExecutor;
+    protected final Executor outputExecutor;
 
     public AbstractUseCase(@NonNull final Executor outputExecutor, @NonNull final Executor useCaseExecutor) {
         this.useCaseExecutor = useCaseExecutor;

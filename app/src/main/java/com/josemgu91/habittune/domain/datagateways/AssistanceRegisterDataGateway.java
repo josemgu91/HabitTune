@@ -19,11 +19,15 @@
 
 package com.josemgu91.habittune.domain.datagateways;
 
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.domain.entities.AssistanceRegister;
 
 public interface AssistanceRegisterDataGateway {
+
+    @NonNull
+    LiveData<AssistanceRegister> subscribeToAssistanceRegisterByCycleNumberAndRoutineEntryId(int cycleNumber, @NonNull String routineEntryId) throws DataGatewayException;
 
     @NonNull
     AssistanceRegister createOrUpdateAssistanceRegister(@NonNull AssistanceRegister assistanceRegister, @NonNull String routineEntryId) throws DataGatewayException;
