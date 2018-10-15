@@ -32,6 +32,7 @@ import com.josemgu91.habittune.domain.DomainException;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.entities.Activity;
+import com.josemgu91.habittune.domain.entities.AssistanceRegister;
 import com.josemgu91.habittune.domain.entities.Day;
 import com.josemgu91.habittune.domain.entities.Routine;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
@@ -397,6 +398,42 @@ public class RoomRepository implements Repository {
     @Override
     public LiveData<List<RoutineEntry>> subscribeToRoutineEntriesByDate(@NonNull Date date) throws DataGatewayException {
         return null;
+    }
+
+    @NonNull
+    @Override
+    public AssistanceRegister createOrUpdateAssistanceRegister(@NonNull AssistanceRegister assistanceRegister, @NonNull String routineEntryId) throws DataGatewayException {
+        try {
+            final Time assistanceRegisterEndTime = assistanceRegister.getEndTime();
+            final long assistanceRegisterId = localRoomDatabase.getAssistanceRegisterDao().insertAssistanceRegister(
+                    new com.josemgu91.habittune.data.room.model.AssistanceRegister(
+                            assistanceRegister.getCycleNumber(),
+                            assistanceRegister.getStartTime().getTime(),
+                            assistanceRegisterEndTime == null ? -1 : assistanceRegisterEndTime.getTime(),
+                            Long.valueOf(routineEntryId)
+                    )
+            );
+            return new AssistanceRegister(
+                    String.valueOf(assistanceRegisterId),
+                    assistanceRegister.getCycleNumber(),
+                    assistanceRegister.getStartTime(),
+                    assistanceRegister.getEndTime()
+            );
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean deleteAssistanceRegister(int cycleNumber, @NonNull String routineEntryId) throws DataGatewayException {
+        try {
+            return localRoomDatabase.getAssistanceRegisterDao().deleteAssistanceRegisterByCycleNumberAndRoutineEntryId(
+                    cycleNumber,
+                    Long.valueOf(routineEntryId)
+            ) != 0;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
     }
 
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {

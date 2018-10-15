@@ -24,6 +24,7 @@ import android.arch.persistence.room.RoomDatabase;
 
 import com.josemgu91.habittune.data.room.dao.ActivityDao;
 import com.josemgu91.habittune.data.room.dao.ActivityTagJoinDao;
+import com.josemgu91.habittune.data.room.dao.AssistanceRegisterDao;
 import com.josemgu91.habittune.data.room.dao.RoutineActivityJoinDao;
 import com.josemgu91.habittune.data.room.dao.RoutineDao;
 import com.josemgu91.habittune.data.room.dao.TagDao;
@@ -32,9 +33,10 @@ import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.Routine;
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
 import com.josemgu91.habittune.data.room.model.Tag;
+import com.josemgu91.habittune.domain.usecases.RegisterAssistance;
 
 /*TODO: Set exportSchema directory when the final version releases.*/
-@Database(entities = {Activity.class, ActivityTagJoin.class, Tag.class, Routine.class, RoutineActivityJoin.class}, version = 1, exportSchema = false)
+@Database(entities = {Activity.class, ActivityTagJoin.class, Tag.class, Routine.class, RoutineActivityJoin.class, RegisterAssistance.class}, version = 1, exportSchema = false)
 public abstract class LocalRoomDatabase extends RoomDatabase {
 
     public abstract ActivityDao getActivityDao();
@@ -46,4 +48,6 @@ public abstract class LocalRoomDatabase extends RoomDatabase {
     public abstract RoutineDao getRoutineDao();
 
     public abstract RoutineActivityJoinDao getRoutineActivityJoinDao();
+
+    public abstract AssistanceRegisterDao getAssistanceRegisterDao();
 }
