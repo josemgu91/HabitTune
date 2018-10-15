@@ -30,13 +30,13 @@ import com.josemgu91.habittune.data.room.dao.RoutineDao;
 import com.josemgu91.habittune.data.room.dao.TagDao;
 import com.josemgu91.habittune.data.room.model.Activity;
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
+import com.josemgu91.habittune.data.room.model.AssistanceRegister;
 import com.josemgu91.habittune.data.room.model.Routine;
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
 import com.josemgu91.habittune.data.room.model.Tag;
-import com.josemgu91.habittune.domain.usecases.RegisterAssistance;
 
 /*TODO: Set exportSchema directory when the final version releases.*/
-@Database(entities = {Activity.class, ActivityTagJoin.class, Tag.class, Routine.class, RoutineActivityJoin.class, RegisterAssistance.class}, version = 1, exportSchema = false)
+@Database(entities = {Activity.class, ActivityTagJoin.class, Tag.class, Routine.class, RoutineActivityJoin.class, AssistanceRegister.class}, version = 1, exportSchema = false)
 public abstract class LocalRoomDatabase extends RoomDatabase {
 
     public abstract ActivityDao getActivityDao();
