@@ -34,8 +34,7 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentScheduleBinding;
-import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
-import com.josemgu91.habittune.domain.usecases.GetRoutines;
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntriesByDate;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -52,20 +51,15 @@ import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class FragmentSchedule extends BaseFragment {
 
-    private final static int ROUTINE_ENTRY_START_DAY = Calendar.MONDAY;
-
     private ViewModelSchedule viewModelSchedule;
     private FragmentScheduleBinding fragmentScheduleBinding;
 
     private FlexibleAdapter<ActivityItem> activityItemFlexibleAdapter;
 
-    private ScheduleCalculator scheduleCalculator;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelSchedule = ViewModelProviders.of(this, viewModelFactory).get(ViewModelSchedule.class);
-        scheduleCalculator = new ScheduleCalculator();
     }
 
     @Override
@@ -96,13 +90,9 @@ public class FragmentSchedule extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState == null) {
-            /* FIXME: A better approach must be used. What if the process is killed by the system (savedInstanceState != null)?
-             * The ViewModel will start in a clean state but the savedInstanceState will not be null because the system saves
-             * the instance state when killing the process.*/
-            viewModelSchedule.fetchRoutines();
-        }
-        viewModelSchedule.getGetRoutinesResponse().observe(getViewLifecycleOwner(), response -> {
+        final Date currentDate = new Date();
+        viewModelSchedule.fetchRoutines(currentDate);
+        viewModelSchedule.getGetRoutineEntriesByDateResponse().observe(getViewLifecycleOwner(), response -> {
             switch (response.status) {
                 case LOADING:
                     break;
@@ -132,21 +122,10 @@ public class FragmentSchedule extends BaseFragment {
         return dateFormat.format(calendar.getTime());
     }
 
-    private void onRoutinesUpdated(final List<GetRoutines.Output> routines) {
-        final Date currentDate = new Date();
-        final List<GetRoutineEntries.Output> routineEntries = new ArrayList<>();
-        for (final GetRoutines.Output routine : routines) {
-            for (final GetRoutineEntries.Output routineEntry : routine.getRoutineEntries()) {
-                final int currentDayNumber = scheduleCalculator.getRoutineDayNumber(currentDate, routine.getStartDate(), routine.getNumberOfDays());
-                if (currentDayNumber != routineEntry.getDay()) {
-                    continue;
-                }
-                routineEntries.add(routineEntry);
-            }
-        }
+    private void onRoutinesUpdated(final List<GetRoutineEntriesByDate.Output> routineEntries) {
         Collections.sort(routineEntries, (o1, o2) -> o1.getStartTime() - o2.getStartTime());
         final ArrayList<ActivityItem> activityItems = new ArrayList<>();
-        for (final GetRoutineEntries.Output routineEntry : routineEntries) {
+        for (final GetRoutineEntriesByDate.Output routineEntry : routineEntries) {
             activityItems.add(new ActivityItem(
                     routineEntry.getId(),
                     formatHour(routineEntry.getStartTime()),

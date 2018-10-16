@@ -25,41 +25,42 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
-import com.josemgu91.habittune.domain.usecases.GetRoutines;
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntriesByDate;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
+import java.util.Date;
 import java.util.List;
 
 public class ViewModelSchedule extends ViewModel {
 
-    private final GetRoutines getRoutines;
-    private final MutableLiveData<Response<LiveData<List<GetRoutines.Output>>, Void>> getRoutinesResponse;
+    private final GetRoutineEntriesByDate getRoutineEntriesByDate;
+    private final MutableLiveData<Response<LiveData<List<GetRoutineEntriesByDate.Output>>, Void>> getRoutineEntriesByDateResponse;
 
-    public ViewModelSchedule(GetRoutines getRoutines) {
-        this.getRoutines = getRoutines;
-        getRoutinesResponse = new MutableLiveData<>();
+    public ViewModelSchedule(GetRoutineEntriesByDate getRoutineEntriesByDate) {
+        this.getRoutineEntriesByDate = getRoutineEntriesByDate;
+        getRoutineEntriesByDateResponse = new MutableLiveData<>();
     }
 
-    public void fetchRoutines() {
-        getRoutines.execute(new GetRoutines.Input(GetRoutines.Input.WITH_ROUTINE_ENTRIES), new UseCaseOutput<LiveData<List<GetRoutines.Output>>>() {
+    public void fetchRoutines(final Date date) {
+        getRoutineEntriesByDate.execute(new GetRoutineEntriesByDate.Input(date), new UseCaseOutput<LiveData<List<GetRoutineEntriesByDate.Output>>>() {
             @Override
-            public void onSuccess(@Nullable LiveData<List<GetRoutines.Output>> listLiveData) {
-                getRoutinesResponse.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
+            public void onSuccess(@Nullable LiveData<List<GetRoutineEntriesByDate.Output>> listLiveData) {
+                getRoutineEntriesByDateResponse.setValue(new Response<>(Response.Status.SUCCESS, listLiveData, null));
             }
 
             @Override
             public void inProgress() {
-                getRoutinesResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+                getRoutineEntriesByDateResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
             }
 
             @Override
             public void onError() {
-                getRoutinesResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+                getRoutineEntriesByDateResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
             }
         });
     }
 
-    public LiveData<Response<LiveData<List<GetRoutines.Output>>, Void>> getGetRoutinesResponse() {
-        return getRoutinesResponse;
+    public LiveData<Response<LiveData<List<GetRoutineEntriesByDate.Output>>, Void>> getGetRoutineEntriesByDateResponse() {
+        return getRoutineEntriesByDateResponse;
     }
 }

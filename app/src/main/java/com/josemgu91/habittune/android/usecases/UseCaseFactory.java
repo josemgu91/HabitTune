@@ -31,6 +31,7 @@ import com.josemgu91.habittune.domain.usecases.GetActivities;
 import com.josemgu91.habittune.domain.usecases.GetActivity;
 import com.josemgu91.habittune.domain.usecases.GetRoutine;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntries;
+import com.josemgu91.habittune.domain.usecases.GetRoutineEntriesByDate;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
 import com.josemgu91.habittune.domain.usecases.GetTags;
@@ -75,5 +76,7 @@ public interface UseCaseFactory {
     GetRoutineEntries createGetRoutineEntries();
 
     GetRoutineEntry createGetRoutineEntry();
+
+    GetRoutineEntriesByDate createGetRoutineEntriesByDate();
 
 }
