@@ -21,21 +21,19 @@ package com.josemgu91.habittune.domain.usecases;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.josemgu91.habittune.domain.datagateways.AssistanceRegisterDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.RoutineDataGateway;
-import com.josemgu91.habittune.domain.datagateways.RoutineEntryDataGateway;
+import com.josemgu91.habittune.domain.entities.AssistanceRegister;
 import com.josemgu91.habittune.domain.entities.Routine;
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.ScheduleCalculator;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
-import com.josemgu91.habittune.domain.util.Function;
-import com.josemgu91.habittune.domain.util.ListMapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,16 +45,14 @@ import java.util.concurrent.Executor;
 public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesByDate.Input, LiveData<List<GetRoutineEntriesByDate.Output>>> {
 
     private final RoutineDataGateway routineDataGateway;
-    private final RoutineEntryDataGateway routineEntryDataGateway;
-    private final Function<List<RoutineEntry>, List<Output>> listMapper;
+    private final AssistanceRegisterDataGateway assistanceRegisterDataGateway;
 
     private final ScheduleCalculator scheduleCalculator;
 
-    public GetRoutineEntriesByDate(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, RoutineEntryDataGateway routineEntryDataGateway, RoutineDataGateway routineDataGateway) {
+    public GetRoutineEntriesByDate(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, AssistanceRegisterDataGateway assistanceRegisterDataGateway, RoutineDataGateway routineDataGateway) {
         super(outputExecutor, useCaseExecutor);
-        this.routineEntryDataGateway = routineEntryDataGateway;
+        this.assistanceRegisterDataGateway = assistanceRegisterDataGateway;
         this.routineDataGateway = routineDataGateway;
-        this.listMapper = new ListMapper<>(new RoutineEntryMapper());
         this.scheduleCalculator = new ScheduleCalculator();
     }
 
@@ -66,39 +62,68 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
         try {
             final Date inputDate = input.date;
             final LiveData<List<Routine>> allRoutines = routineDataGateway.subscribeToAllRoutines(true);
-            final MediatorLiveData<List<Routine>> routinesWithEntriesPerDate = new MediatorLiveData<>();
-            routinesWithEntriesPerDate.addSource(allRoutines, new Observer<List<Routine>>() {
-                @Override
-                public void onChanged(@Nullable List<Routine> routines) {
-                    final List<RoutineEntry> routineEntries = new ArrayList<>();
+            final MediatorLiveData<List<Output>> routinesWithEntriesPerDate = new MediatorLiveData<>();
+            routinesWithEntriesPerDate.addSource(allRoutines, routines -> useCaseExecutor.execute(() -> {
+                try {
+                    final List<Output> useCaseOutputList = new ArrayList<>();
                     for (final Routine routine : routines) {
                         for (final RoutineEntry routineEntry : routine.getRoutineEntries()) {
                             final int currentDayNumber = scheduleCalculator.getRoutineDayNumber(inputDate, routine.getStartDate(), routine.getNumberOfDays());
                             if (currentDayNumber != routineEntry.getDay().getDay()) {
                                 continue;
                             }
-                            routineEntries.add(routineEntry);
+                            final int cycleNumber = scheduleCalculator.getRoutineEntryCycleNumber(inputDate, routine.getStartDate(), routine.getNumberOfDays());
+                            final LiveData<AssistanceRegister> assistanceRegisterLiveData = assistanceRegisterDataGateway.subscribeToAssistanceRegisterByCycleNumberAndRoutineEntryId(
+                                    cycleNumber,
+                                    routineEntry.getId()
+                            );
+                            useCaseOutputList.add(buildOutput(routineEntry, cycleNumber, assistanceRegisterLiveData));
                         }
                     }
-                    Collections.sort(routineEntries, (o1, o2) -> o1.getStartTime().getTime() - o2.getStartTime().getTime());
+                    Collections.sort(useCaseOutputList, (o1, o2) -> o1.getStartTime() - o2.getStartTime());
+                    routinesWithEntriesPerDate.postValue(useCaseOutputList);
+                } catch (DataGatewayException e) {
+                    throw new RuntimeException(e.getMessage());
                 }
-            });
-
-            output.onSuccess(outputLiveData);
+            }));
+            output.onSuccess(routinesWithEntriesPerDate);
         } catch (DataGatewayException e) {
             e.printStackTrace();
             output.onError();
         }
     }
 
-    private void
+    private Output buildOutput(final RoutineEntry routineEntry, final int cycleNumber, final LiveData<AssistanceRegister> assistanceRegisterDomainEntityLiveData) {
+        final LiveData<Output.AssistanceRegister> assistanceRegisterLiveData = Transformations.map(
+                assistanceRegisterDomainEntityLiveData,
+                this::mapToAssistanceRegister
+        );
+        return new Output(
+                routineEntry.getId(),
+                cycleNumber,
+                routineEntry.getStartTime().getTime(),
+                routineEntry.getEndTime().getTime(),
+                new GetRoutineEntries.Output.Activity(
+                        routineEntry.getActivity().getId(),
+                        routineEntry.getActivity().getName(),
+                        routineEntry.getActivity().getDescription(),
+                        routineEntry.getActivity().getColor()
+                ),
+                assistanceRegisterLiveData
+        );
+    }
 
-    private final class RoutineEntryMapper implements Function<RoutineEntry, Output> {
-
-        @Override
-        public Output apply(RoutineEntry input) {
-            return new Output();
+    private Output.AssistanceRegister mapToAssistanceRegister(final AssistanceRegister assistanceRegister) {
+        if (assistanceRegister == null) {
+            return new Output.AssistanceRegister(
+                    Output.AssistanceRegister.UNDEFINED,
+                    Output.AssistanceRegister.UNDEFINED
+            );
         }
+        return new Output.AssistanceRegister(
+                assistanceRegister.getStartTime().getTime(),
+                assistanceRegister.getEndTime().getTime()
+        );
     }
 
     public static final class Input {
@@ -121,15 +146,15 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
         @NonNull
         private final GetRoutineEntries.Output.Activity activity;
         @NonNull
-        private final AssistanceRegister assistanceRegister;
+        private final LiveData<AssistanceRegister> assistanceRegisterLiveData;
 
-        public Output(@NonNull String id, int cycleNumber, int startTime, int endTime, @NonNull GetRoutineEntries.Output.Activity activity, @NonNull AssistanceRegister assistanceRegister) {
+        public Output(@NonNull String id, int cycleNumber, int startTime, int endTime, @NonNull GetRoutineEntries.Output.Activity activity, @NonNull LiveData<AssistanceRegister> assistanceRegisterLiveData) {
             this.id = id;
             this.cycleNumber = cycleNumber;
             this.startTime = startTime;
             this.endTime = endTime;
             this.activity = activity;
-            this.assistanceRegister = assistanceRegister;
+            this.assistanceRegisterLiveData = assistanceRegisterLiveData;
         }
 
         @NonNull
@@ -155,8 +180,8 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
         }
 
         @NonNull
-        public AssistanceRegister getAssistanceRegister() {
-            return assistanceRegister;
+        public LiveData<AssistanceRegister> getAssistanceRegisterLiveData() {
+            return assistanceRegisterLiveData;
         }
 
         @Override
@@ -169,12 +194,12 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
                     endTime == output.endTime &&
                     Objects.equals(id, output.id) &&
                     Objects.equals(activity, output.activity) &&
-                    Objects.equals(assistanceRegister, output.assistanceRegister);
+                    Objects.equals(assistanceRegisterLiveData, output.assistanceRegisterLiveData);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, cycleNumber, startTime, endTime, activity, assistanceRegister);
+            return Objects.hash(id, cycleNumber, startTime, endTime, activity, assistanceRegisterLiveData);
         }
 
         @Override
@@ -185,7 +210,7 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
                     ", startTime=" + startTime +
                     ", endTime=" + endTime +
                     ", activity=" + activity +
-                    ", assistanceRegister=" + assistanceRegister +
+                    ", assistanceRegisterLiveData=" + assistanceRegisterLiveData +
                     '}';
         }
 
