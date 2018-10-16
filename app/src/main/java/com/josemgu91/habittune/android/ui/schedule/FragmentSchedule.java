@@ -19,6 +19,8 @@
 
 package com.josemgu91.habittune.android.ui.schedule;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -34,12 +36,13 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.databinding.FragmentScheduleBinding;
+import com.josemgu91.habittune.domain.DomainException;
+import com.josemgu91.habittune.domain.entities.Time;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntriesByDate;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -71,7 +74,10 @@ public class FragmentSchedule extends BaseFragment {
     @Override
     public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentScheduleBinding = FragmentScheduleBinding.inflate(inflater, container, false);
-        activityItemFlexibleAdapter = new FlexibleAdapter<>(null);
+        activityItemFlexibleAdapter = new FlexibleAdapter<>(null, (FlexibleAdapter.OnItemClickListener) (view, position) -> {
+            markAssistance(activityItemFlexibleAdapter.getItem(position));
+            return true;
+        });
         fragmentScheduleBinding.recyclerView.setAdapter(activityItemFlexibleAdapter);
         fragmentScheduleBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return fragmentScheduleBinding.getRoot();
@@ -112,46 +118,58 @@ public class FragmentSchedule extends BaseFragment {
         return dateFormat.format(calendar.getTime());
     }
 
-    private String formatHour(final int hourInSeconds) {
-        final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-        final Calendar calendar = Calendar.getInstance();
-        final int hours = hourInSeconds / 3600;
-        final int minutes = (hourInSeconds % 3600) / 60;
-        calendar.set(Calendar.HOUR_OF_DAY, hours);
-        calendar.set(Calendar.MINUTE, minutes);
-        return dateFormat.format(calendar.getTime());
-    }
-
     private void onRoutinesUpdated(final List<GetRoutineEntriesByDate.Output> routineEntries) {
-        Collections.sort(routineEntries, (o1, o2) -> o1.getStartTime() - o2.getStartTime());
         final ArrayList<ActivityItem> activityItems = new ArrayList<>();
-        for (final GetRoutineEntriesByDate.Output routineEntry : routineEntries) {
+        for (GetRoutineEntriesByDate.Output routineEntry : routineEntries) {
             activityItems.add(new ActivityItem(
                     routineEntry.getId(),
-                    formatHour(routineEntry.getStartTime()),
-                    formatHour(routineEntry.getEndTime()),
-                    routineEntry.getActivity().getName()
+                    routineEntry.getActivity().getName(),
+                    routineEntry.getStartTime(),
+                    routineEntry.getEndTime(),
+                    routineEntry.getCycleNumber(),
+                    routineEntry.getAssistanceRegisterLiveData(),
+                    getViewLifecycleOwner()
             ));
+            activityItemFlexibleAdapter.updateDataSet(activityItems);
         }
-        activityItemFlexibleAdapter.updateDataSet(activityItems);
+    }
+
+    private void markAssistance(final ActivityItem activityItem) {
+        try {
+            viewModelSchedule.registerAssistance(
+                    activityItem.routineEntryId,
+                    activityItem.cycleNumber,
+                    new Time(3600),
+                    new Time(3600)
+            );
+        } catch (DomainException e) {
+            e.printStackTrace();
+        }
     }
 
     private static class ActivityItem extends AbstractFlexibleItem<ActivityItem.ViewHolder> {
 
+        public final static int UNDEFINED_ASSISTANCE_TIME = -1;
+        private final static String ASSISTANCE_CHAR = "\u2713";
+
         @NonNull
         private final String routineEntryId;
         @NonNull
-        private final String activityStartHour;
-        @NonNull
-        private final String activityEndHour;
-        @NonNull
         private final String activityName;
+        private final int activityStartHour;
+        private final int activityEndHour;
+        private final int cycleNumber;
+        private final LiveData<GetRoutineEntriesByDate.Output.AssistanceRegister> assistanceRegisterLiveData;
+        private final LifecycleOwner lifecycleOwner;
 
-        public ActivityItem(@NonNull String routineEntryId, @NonNull String activityStartHour, @NonNull String activityEndHour, @NonNull String activityName) {
+        public ActivityItem(@NonNull String routineEntryId, @NonNull String activityName, int activityStartHour, int activityEndHour, int cycleNumber, LiveData<GetRoutineEntriesByDate.Output.AssistanceRegister> assistanceRegisterLiveData, LifecycleOwner lifecycleOwner) {
             this.routineEntryId = routineEntryId;
+            this.activityName = activityName;
             this.activityStartHour = activityStartHour;
             this.activityEndHour = activityEndHour;
-            this.activityName = activityName;
+            this.cycleNumber = cycleNumber;
+            this.assistanceRegisterLiveData = assistanceRegisterLiveData;
+            this.lifecycleOwner = lifecycleOwner;
         }
 
         @Override
@@ -159,15 +177,18 @@ public class FragmentSchedule extends BaseFragment {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ActivityItem that = (ActivityItem) o;
-            return Objects.equals(routineEntryId, that.routineEntryId) &&
-                    Objects.equals(activityStartHour, that.activityStartHour) &&
-                    Objects.equals(activityEndHour, that.activityEndHour) &&
-                    Objects.equals(activityName, that.activityName);
+            return activityStartHour == that.activityStartHour &&
+                    activityEndHour == that.activityEndHour &&
+                    cycleNumber == that.cycleNumber &&
+                    Objects.equals(routineEntryId, that.routineEntryId) &&
+                    Objects.equals(activityName, that.activityName) &&
+                    Objects.equals(assistanceRegisterLiveData, that.assistanceRegisterLiveData) &&
+                    Objects.equals(lifecycleOwner, that.lifecycleOwner);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(routineEntryId, activityStartHour, activityEndHour, activityName);
+            return Objects.hash(routineEntryId, activityName, activityStartHour, activityEndHour, cycleNumber, assistanceRegisterLiveData, lifecycleOwner);
         }
 
         @Override
@@ -183,8 +204,29 @@ public class FragmentSchedule extends BaseFragment {
         @Override
         public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, ViewHolder holder, int position, List<Object> payloads) {
             holder.textViewName.setText(activityName);
-            holder.textViewStartHour.setText(activityStartHour);
-            holder.textViewEndHour.setText(activityEndHour);
+            holder.textViewStartHour.setText(formatHour(activityStartHour));
+            holder.textViewEndHour.setText(formatHour(activityEndHour));
+            assistanceRegisterLiveData.observe(lifecycleOwner, assistanceRegister -> {
+                if (assistanceRegister.getStartTime() == UNDEFINED_ASSISTANCE_TIME) {
+                    holder.textViewAssistance.setText("");
+                    return;
+                }
+                if (assistanceRegister.getEndTime() == UNDEFINED_ASSISTANCE_TIME) {
+                    holder.textViewAssistance.setText(ASSISTANCE_CHAR);
+                    return;
+                }
+                holder.textViewAssistance.setText(String.format("%s%s", ASSISTANCE_CHAR, ASSISTANCE_CHAR));
+            });
+        }
+
+        private String formatHour(final int hourInSeconds) {
+            final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+            final Calendar calendar = Calendar.getInstance();
+            final int hours = hourInSeconds / 3600;
+            final int minutes = (hourInSeconds % 3600) / 60;
+            calendar.set(Calendar.HOUR_OF_DAY, hours);
+            calendar.set(Calendar.MINUTE, minutes);
+            return dateFormat.format(calendar.getTime());
         }
 
         public static class ViewHolder extends FlexibleViewHolder {
@@ -192,12 +234,14 @@ public class FragmentSchedule extends BaseFragment {
             private final TextView textViewStartHour;
             private final TextView textViewEndHour;
             private final TextView textViewName;
+            private final TextView textViewAssistance;
 
             public ViewHolder(View view, FlexibleAdapter adapter) {
                 super(view, adapter);
                 textViewStartHour = view.findViewById(R.id.textViewActivityStartHour);
                 textViewEndHour = view.findViewById(R.id.textViewActivityEndHour);
                 textViewName = view.findViewById(R.id.textViewActivityName);
+                textViewAssistance = view.findViewById(R.id.textViewAssistance);
             }
         }
 

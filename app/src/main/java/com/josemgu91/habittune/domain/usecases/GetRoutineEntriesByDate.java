@@ -80,7 +80,7 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
                             useCaseOutputList.add(buildOutput(routineEntry, cycleNumber, assistanceRegisterLiveData));
                         }
                     }
-                    Collections.sort(useCaseOutputList, (o1, o2) -> o1.getStartTime() - o2.getStartTime());
+                    Collections.sort(useCaseOutputList, (o1, o2) -> o1.startTime - o2.startTime);
                     routinesWithEntriesPerDate.postValue(useCaseOutputList);
                 } catch (DataGatewayException e) {
                     throw new RuntimeException(e.getMessage());
