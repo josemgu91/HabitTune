@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
+import com.josemgu91.habittune.android.ui.routine_entry_add.Hour;
 import com.josemgu91.habittune.databinding.FragmentScheduleBinding;
 import com.josemgu91.habittune.domain.DomainException;
 import com.josemgu91.habittune.domain.entities.Time;
@@ -136,12 +137,34 @@ public class FragmentSchedule extends BaseFragment {
 
     private void markAssistance(final ActivityItem activityItem) {
         try {
-            viewModelSchedule.registerAssistance(
-                    activityItem.routineEntryId,
-                    activityItem.cycleNumber,
-                    new Time(3600),
-                    null
+            final Date currentDate = new Date();
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentDate);
+            final Hour currentHour = new Hour(
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE)
             );
+            final GetRoutineEntriesByDate.Output.AssistanceRegister assistanceRegister
+                    = activityItem.assistanceRegisterLiveData.getValue();
+            if (assistanceRegister.getStartTime() == GetRoutineEntriesByDate.Output.AssistanceRegister.UNDEFINED) {
+                viewModelSchedule.registerAssistance(
+                        activityItem.routineEntryId,
+                        activityItem.cycleNumber,
+                        new Time(currentHour.inSeconds()),
+                        null
+                );
+                return;
+            }
+            if (assistanceRegister.getEndTime() == GetRoutineEntriesByDate.Output.AssistanceRegister.UNDEFINED) {
+                viewModelSchedule.registerAssistance(
+                        activityItem.routineEntryId,
+                        activityItem.cycleNumber,
+                        new Time(assistanceRegister.getStartTime()),
+                        new Time(currentHour.inSeconds())
+                );
+                return;
+            }
+            viewModelSchedule.deleteAssistance(activityItem.routineEntryId, activityItem.cycleNumber);
         } catch (DomainException e) {
             e.printStackTrace();
         }
