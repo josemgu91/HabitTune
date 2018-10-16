@@ -22,10 +22,14 @@ package com.josemgu91.habittune.android.ui.schedule;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.entities.Time;
+import com.josemgu91.habittune.domain.usecases.DeleteAssistance;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntriesByDate;
+import com.josemgu91.habittune.domain.usecases.RegisterAssistance;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 import java.util.Date;
@@ -34,10 +38,14 @@ import java.util.List;
 public class ViewModelSchedule extends ViewModel {
 
     private final GetRoutineEntriesByDate getRoutineEntriesByDate;
+    private final RegisterAssistance registerAssistance;
+    private final DeleteAssistance deleteAssistance;
     private final MutableLiveData<Response<LiveData<List<GetRoutineEntriesByDate.Output>>, Void>> getRoutineEntriesByDateResponse;
 
-    public ViewModelSchedule(GetRoutineEntriesByDate getRoutineEntriesByDate) {
+    public ViewModelSchedule(final GetRoutineEntriesByDate getRoutineEntriesByDate, final RegisterAssistance registerAssistance, final DeleteAssistance deleteAssistance) {
         this.getRoutineEntriesByDate = getRoutineEntriesByDate;
+        this.registerAssistance = registerAssistance;
+        this.deleteAssistance = deleteAssistance;
         getRoutineEntriesByDateResponse = new MutableLiveData<>();
     }
 
@@ -56,6 +64,38 @@ public class ViewModelSchedule extends ViewModel {
             @Override
             public void onError() {
                 getRoutineEntriesByDateResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
+    public void registerAssistance(@NonNull final String routineEntryId, final int cycleNumber, @NonNull final Time startHour, @Nullable final Time endHour) {
+        registerAssistance.execute(new RegisterAssistance.Input(routineEntryId, cycleNumber, startHour, endHour), new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+            }
+
+            @Override
+            public void inProgress() {
+            }
+
+            @Override
+            public void onError() {
+            }
+        });
+    }
+
+    public void deleteAssistance(@NonNull final String routineEntryId, final int cycleNumber) {
+        deleteAssistance.execute(new DeleteAssistance.Input(routineEntryId, cycleNumber), new UseCaseOutput<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void aVoid) {
+            }
+
+            @Override
+            public void inProgress() {
+            }
+
+            @Override
+            public void onError() {
             }
         });
     }

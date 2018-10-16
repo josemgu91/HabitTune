@@ -24,6 +24,7 @@ import com.josemgu91.habittune.domain.usecases.CreateRoutine;
 import com.josemgu91.habittune.domain.usecases.CreateRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.CreateTag;
 import com.josemgu91.habittune.domain.usecases.DeleteActivity;
+import com.josemgu91.habittune.domain.usecases.DeleteAssistance;
 import com.josemgu91.habittune.domain.usecases.DeleteRoutine;
 import com.josemgu91.habittune.domain.usecases.DeleteRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.DeleteTag;
@@ -35,6 +36,7 @@ import com.josemgu91.habittune.domain.usecases.GetRoutineEntriesByDate;
 import com.josemgu91.habittune.domain.usecases.GetRoutineEntry;
 import com.josemgu91.habittune.domain.usecases.GetRoutines;
 import com.josemgu91.habittune.domain.usecases.GetTags;
+import com.josemgu91.habittune.domain.usecases.RegisterAssistance;
 import com.josemgu91.habittune.domain.usecases.UpdateActivity;
 import com.josemgu91.habittune.domain.usecases.UpdateRoutine;
 import com.josemgu91.habittune.domain.usecases.UpdateTag;
@@ -78,5 +80,9 @@ public interface UseCaseFactory {
     GetRoutineEntry createGetRoutineEntry();
 
     GetRoutineEntriesByDate createGetRoutineEntriesByDate();
+
+    RegisterAssistance createRegisterAssistance();
+
+    DeleteAssistance createDeleteAssistance();
 
 }
