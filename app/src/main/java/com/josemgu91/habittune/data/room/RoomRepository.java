@@ -411,7 +411,7 @@ public class RoomRepository implements Repository {
                     String.valueOf(assistanceRegisterId),
                     assistanceRegister.getCycleNumber(),
                     assistanceRegister.getStartTime(),
-                    assistanceRegister.getEndTime()
+                    assistanceRegisterEndTime
             );
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
@@ -445,7 +445,7 @@ public class RoomRepository implements Repository {
                             String.valueOf(input.id),
                             input.cycleNumber,
                             new Time(input.startTime),
-                            new Time(input.endTime)
+                            input.endTime == -1 ? null : new Time(input.endTime)
                     );
                 } catch (DomainException e) {
                     e.printStackTrace();

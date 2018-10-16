@@ -140,7 +140,7 @@ public class FragmentSchedule extends BaseFragment {
                     activityItem.routineEntryId,
                     activityItem.cycleNumber,
                     new Time(3600),
-                    new Time(3600)
+                    null
             );
         } catch (DomainException e) {
             e.printStackTrace();

@@ -122,7 +122,7 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
         }
         return new Output.AssistanceRegister(
                 assistanceRegister.getStartTime().getTime(),
-                assistanceRegister.getEndTime().getTime()
+                assistanceRegister.getEndTime() == null ? Output.AssistanceRegister.UNDEFINED : assistanceRegister.getEndTime().getTime()
         );
     }
 
