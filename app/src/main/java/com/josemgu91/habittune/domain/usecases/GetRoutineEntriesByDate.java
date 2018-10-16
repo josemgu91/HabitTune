@@ -68,8 +68,8 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
                     final List<Output> useCaseOutputList = new ArrayList<>();
                     for (final Routine routine : routines) {
                         for (final RoutineEntry routineEntry : routine.getRoutineEntries()) {
-                            final int currentDayNumber = scheduleCalculator.getRoutineDayNumber(inputDate, routine.getStartDate(), routine.getNumberOfDays());
-                            if (currentDayNumber != routineEntry.getDay().getDay()) {
+                            final boolean isInRoutineEntryDay = scheduleCalculator.isInRoutineEntryDay(inputDate, routine.getStartDate(), routine.getNumberOfDays(), routineEntry.getDay().getDay());
+                            if (!isInRoutineEntryDay) {
                                 continue;
                             }
                             final int cycleNumber = scheduleCalculator.getRoutineEntryCycleNumber(inputDate, routine.getStartDate(), routine.getNumberOfDays());

@@ -25,16 +25,8 @@ public class ScheduleCalculator {
 
     private final static int MILLISECONDS_IN_A_DAY = 3600 * 24 * 1000;
 
-    /**
-     * @return Number of the day starting from 0.
-     */
-    public int getRoutineDayNumber(final Date date, final Date routineStartDate, final int routineNumberOfDays) {
-        return calculateRoutineDayNumber(date, routineStartDate, routineNumberOfDays);
-    }
-
     public boolean isInRoutineEntryDay(final Date date, final Date routineStartDate, final int routineNumberOfDays, final int routineEntryDay) {
-        final int daysSinceStartDate = calculateDaysBetween(routineStartDate, date);
-        final int routineDayNumber = daysSinceStartDate % routineNumberOfDays;
+        final int routineDayNumber = calculateRoutineDayNumber(date, routineStartDate, routineNumberOfDays);
         return routineDayNumber == routineEntryDay;
     }
 
