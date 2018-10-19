@@ -17,24 +17,10 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
-    <Preference
-        android:key="@string/preferenceKeyCreateBackup"
-        android:persistent="false"
-        android:summary="@string/settings_create_backup_summary"
-        android:title="@string/settings_create_backup" />
+    <string name="preferenceKeyCreateBackup" translatable="false">createBackup</string>
+    <string name="preferenceKeyImportBackup" translatable="false">importBackup</string>
+    <string name="preferenceKeyAbout" translatable="false">about</string>
 
-    <Preference
-        android:key="@string/preferenceKeyImportBackup"
-        android:persistent="false"
-        android:summary="@string/settings_import_backup_summary"
-        android:title="@string/settings_import_backup" />
-
-    <Preference
-        android:key="@string/preferenceKeyAbout"
-        android:persistent="false"
-        android:summary="@string/settings_about_summary"
-        android:title="@string/settings_about" />
-
-</PreferenceScreen>
+</resources>

@@ -28,5 +28,29 @@ public class FragmentSettingsPreference extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings);
+        findPreference(getString(R.string.preferenceKeyCreateBackup)).setOnPreferenceClickListener(preference -> {
+            createBackup();
+            return true;
+        });
+        findPreference(getString(R.string.preferenceKeyImportBackup)).setOnPreferenceClickListener(preference -> {
+            importBackup();
+            return true;
+        });
+        findPreference(getString(R.string.preferenceKeyAbout)).setOnPreferenceClickListener(preference -> {
+            showAbout();
+            return true;
+        });
+    }
+
+    private void createBackup() {
+
+    }
+
+    private void importBackup() {
+
+    }
+
+    private void showAbout() {
+
     }
 }
