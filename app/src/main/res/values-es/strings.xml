@@ -93,6 +93,9 @@
     <string name="settings_import_backup_summary">Importa el archivo de copia de seguridad.</string>
     <string name="settings_about">Acerca de&#8230;</string>
     <string name="settings_about_summary">Muestra los créditos de la aplicación.</string>
+    <string name="settings_error_file_explorer">No se puede abrir el explorador de archivos.</string>
+    <string name="settings_error_create_backup">No se puede crear el archivo de copia de seguridad.</string>
+    <string name="settings_error_import_backup">No se puede importar el archivo de copia de seguridad. Formato inválido.</string>
 
     <string name="action_delete">Eliminar</string>
     <string name="action_cancel">Cancelar</string>

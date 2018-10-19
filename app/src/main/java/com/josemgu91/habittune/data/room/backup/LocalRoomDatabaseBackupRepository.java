@@ -39,6 +39,8 @@ public class LocalRoomDatabaseBackupRepository implements BackupDataGateway {
     private final JsonBuilder jsonBuilder;
     private final Context context;
 
+    private final static String CHARSET = "UTF-8";
+
     public LocalRoomDatabaseBackupRepository(final LocalRoomDatabase localRoomDatabase, final Context context) {
         this.jsonBuilder = new JsonBuilder(localRoomDatabase);
         this.context = context;
@@ -46,6 +48,11 @@ public class LocalRoomDatabaseBackupRepository implements BackupDataGateway {
 
     @Override
     public void importFrom(@NonNull String fileUriString) throws DataGatewayException {
+        final Uri fileUri = Uri.parse(fileUriString);
+    }
+
+    @Override
+    public void exportTo(@NonNull String fileUriString) throws DataGatewayException {
         try {
             final Uri fileUri = Uri.parse(fileUriString);
             final JSONObject jsonObject = jsonBuilder.buildJsonObject();
@@ -53,16 +60,13 @@ public class LocalRoomDatabaseBackupRepository implements BackupDataGateway {
             if (outputStream == null) {
                 throw new DataGatewayException("Can't open output stream !");
             }
-            final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+            final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, CHARSET);
             outputStreamWriter.write(jsonObject.toString());
+            outputStreamWriter.close();
+            outputStream.close();
         } catch (JSONException | IOException e) {
             e.printStackTrace();
             throw new DataGatewayException(e.getMessage());
         }
-    }
-
-    @Override
-    public void exportTo(@NonNull String fileUriString) throws DataGatewayException {
-        final Uri fileUri = Uri.parse(fileUriString);
     }
 }

@@ -19,5 +19,5 @@
 
 package com.josemgu91.habittune.domain.datagateways;
 
-public interface Repository extends ActivityDataGateway, RoutineDataGateway, TagDataGateway, RoutineEntryDataGateway, AssistanceRegisterDataGateway {
+public interface Repository extends ActivityDataGateway, RoutineDataGateway, TagDataGateway, RoutineEntryDataGateway, AssistanceRegisterDataGateway, BackupDataGateway {
 }

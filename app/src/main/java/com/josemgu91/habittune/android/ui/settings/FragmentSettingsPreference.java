@@ -19,12 +19,27 @@
 
 package com.josemgu91.habittune.android.ui.settings;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.Application;
+import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
+import com.josemgu91.habittune.domain.datagateways.Repository;
 
 public class FragmentSettingsPreference extends PreferenceFragmentCompat {
+
+    private final static int REQUEST_CODE_CREATE_BACKUP = 100;
+    private final static int REQUEST_CODE_IMPORT_BACKUP = 200;
+
+    private final static String JSON_MEDIA_TYPE = "application/json";
+
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings);
@@ -42,15 +57,55 @@ public class FragmentSettingsPreference extends PreferenceFragmentCompat {
         });
     }
 
-    private void createBackup() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_CREATE_BACKUP && resultCode == Activity.RESULT_OK) {
+            final Uri fileUri = data.getData();
+            //TODO: Use a use case instead of calling the repository directly.
+            AsyncTask.execute(() -> {
+                final Repository repository = ((Application) getActivity().getApplication()).getRepository();
+                try {
+                    repository.exportTo(fileUri.toString());
+                } catch (DataGatewayException e) {
+                    e.printStackTrace();
+                    showError(R.string.settings_error_create_backup);
+                }
+            });
+        } else if (requestCode == REQUEST_CODE_IMPORT_BACKUP && resultCode == Activity.RESULT_OK) {
 
+        }
+    }
+
+    private void createBackup() {
+        final Intent createFileIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        createFileIntent.setType(JSON_MEDIA_TYPE);
+        if (!doesActivityExist(createFileIntent)) {
+            showError(R.string.settings_error_file_explorer);
+            return;
+        }
+        startActivityForResult(createFileIntent, REQUEST_CODE_CREATE_BACKUP);
     }
 
     private void importBackup() {
-
+        final Intent openFileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        openFileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        openFileIntent.setType(JSON_MEDIA_TYPE);
+        if (!doesActivityExist(openFileIntent)) {
+            showError(R.string.settings_error_file_explorer);
+            return;
+        }
+        startActivityForResult(openFileIntent, REQUEST_CODE_IMPORT_BACKUP);
     }
 
     private void showAbout() {
 
+    }
+
+    private boolean doesActivityExist(final Intent intent) {
+        return intent.resolveActivity(getContext().getPackageManager()) != null;
+    }
+
+    private void showError(@StringRes final int errorMessage) {
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 }

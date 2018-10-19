@@ -23,9 +23,11 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Transformations;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.josemgu91.habittune.data.room.backup.LocalRoomDatabaseBackupRepository;
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
 import com.josemgu91.habittune.domain.DomainException;
@@ -47,12 +49,14 @@ import java.util.concurrent.Executor;
 public class RoomRepository implements Repository {
 
     private final LocalRoomDatabase localRoomDatabase;
+    private final LocalRoomDatabaseBackupRepository localRoomDatabaseBackupRepository;
 
     private final Executor repositoryExecutor;
 
-    public RoomRepository(LocalRoomDatabase localRoomDatabase, Executor repositoryExecutor) {
+    public RoomRepository(@NonNull final Context context, @NonNull final LocalRoomDatabase localRoomDatabase, @NonNull final Executor repositoryExecutor) {
         this.localRoomDatabase = localRoomDatabase;
         this.repositoryExecutor = repositoryExecutor;
+        this.localRoomDatabaseBackupRepository = new LocalRoomDatabaseBackupRepository(localRoomDatabase, context);
     }
 
     @NonNull
@@ -455,6 +459,16 @@ public class RoomRepository implements Repository {
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
+    }
+
+    @Override
+    public void importFrom(@NonNull String fileUri) throws DataGatewayException {
+        localRoomDatabaseBackupRepository.importFrom(fileUri);
+    }
+
+    @Override
+    public void exportTo(@NonNull String fileUri) throws DataGatewayException {
+        localRoomDatabaseBackupRepository.exportTo(fileUri);
     }
 
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {

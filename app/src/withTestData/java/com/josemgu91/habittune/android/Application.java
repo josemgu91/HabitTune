@@ -55,7 +55,7 @@ public class Application extends android.app.Application {
         uiThreadExecutor = new UiThreadExecutor();
         defaultThreadPoolExecutor = new DefaultThreadPoolExecutor();
         localRoomDatabase = createRoomDatabaseWithTestData(BuildConfig.USE_IN_RAM_DATABASE);
-        repository = new RoomRepository(localRoomDatabase, defaultThreadPoolExecutor);
+        repository = new RoomRepository(this, localRoomDatabase, defaultThreadPoolExecutor);
         useCaseFactory = new DefaultUseCaseFactory(uiThreadExecutor, defaultThreadPoolExecutor, repository);
         viewModelFactory = new ViewModelFactory(useCaseFactory);
     }
