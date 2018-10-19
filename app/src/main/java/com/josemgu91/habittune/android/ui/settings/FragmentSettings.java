@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android;
+package com.josemgu91.habittune.android.ui.settings;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,9 +27,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 
 public class FragmentSettings extends BaseFragment {
+
+    private final static String FRAGMENT_TAG_PREFERENCE_SCREEN = "preferenceScreen";
 
     @Override
     protected ToolbarOptions createToolbarOptions() {
@@ -40,6 +43,17 @@ public class FragmentSettings extends BaseFragment {
     @Override
     public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_settings, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            final FragmentSettingsPreference fragmentSettingsPreference = new FragmentSettingsPreference();
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentPreferenceContainer, fragmentSettingsPreference, FRAGMENT_TAG_PREFERENCE_SCREEN)
+                    .commit();
+        }
     }
 
     @Override

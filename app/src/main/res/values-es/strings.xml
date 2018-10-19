@@ -29,9 +29,7 @@
 
     <string name="menu_delete_items">Borrar Elementos</string>
 
-    <string name="schedule_title">Horario</string>
     <string name="statistics_title">Estadísticas</string>
-    <string name="settings_title">Configuración</string>
     <string name="help_title">Ayuda</string>
 
     <string name="activities_title">Actividades</string>
@@ -85,6 +83,16 @@
     <string name="update_routine_entry_action_update">Modificar</string>
 
     <string name="activity_selection_title">Selecciona una Actividad</string>
+
+    <string name="schedule_title">Horario</string>
+
+    <string name="settings_title">Configuración</string>
+    <string name="settings_create_backup">Crear Copia de Seguridad</string>
+    <string name="settings_create_backup_summary">Crea el archivo de copia de seguridad.</string>
+    <string name="settings_import_backup">Importar Copia de Seguridad</string>
+    <string name="settings_import_backup_summary">Importa el archivo de copia de seguridad.</string>
+    <string name="settings_about">Acerca de&#8230;</string>
+    <string name="settings_about_summary">Muestra los créditos de la aplicación.</string>
 
     <string name="action_delete">Eliminar</string>
     <string name="action_cancel">Cancelar</string>

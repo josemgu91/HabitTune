@@ -25,7 +25,7 @@ import android.support.v4.app.Fragment;
 
 import com.josemgu91.habittune.android.FragmentHelp;
 import com.josemgu91.habittune.android.ui.schedule.FragmentSchedule;
-import com.josemgu91.habittune.android.FragmentSettings;
+import com.josemgu91.habittune.android.ui.settings.FragmentSettings;
 import com.josemgu91.habittune.android.FragmentStatistics;
 import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
 import com.josemgu91.habittune.android.ui.activity_create_update.FragmentNewActivity;

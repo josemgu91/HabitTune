@@ -31,9 +31,7 @@
 
     <string name="menu_delete_items">Delete Items</string>
 
-    <string name="schedule_title">Schedule</string>
     <string name="statistics_title">Statistics</string>
-    <string name="settings_title">Settings</string>
     <string name="help_title">Help</string>
 
     <string name="activities_title">Activities</string>
@@ -87,6 +85,16 @@
     <string name="update_routine_entry_action_update">Update</string>
 
     <string name="activity_selection_title">Select an Activity</string>
+
+    <string name="schedule_title">Schedule</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_create_backup">Create Backup</string>
+    <string name="settings_create_backup_summary">Creates a backup file.</string>
+    <string name="settings_import_backup">Import Backup</string>
+    <string name="settings_import_backup_summary">Imports an existing backup file.</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_summary">Shows the about screen.</string>
 
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
