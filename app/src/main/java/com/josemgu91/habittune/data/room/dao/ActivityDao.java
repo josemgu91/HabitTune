@@ -40,6 +40,9 @@ public interface ActivityDao {
     @Query("SELECT * FROM activities ORDER BY name ASC")
     LiveData<List<Activity>> subscribeToAllActivities();
 
+    @Query("SELECT * FROM activities ORDER BY name ASC")
+    List<Activity> getAllActivities();
+
     @Query("SELECT * FROM activities WHERE id = :activityId")
     LiveData<Activity> subscribeToActivityById(final long activityId);
 

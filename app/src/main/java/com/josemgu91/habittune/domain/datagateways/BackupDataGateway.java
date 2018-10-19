@@ -21,9 +21,9 @@ package com.josemgu91.habittune.domain.datagateways;
 
 import android.support.annotation.NonNull;
 
-public interface ImportExportDataGateway {
+public interface BackupDataGateway {
 
-    void importFrom(@NonNull String fileUri);
+    void importFrom(@NonNull String fileUri) throws DataGatewayException;
 
-    void exportTo(@NonNull String fileUri);
+    void exportTo(@NonNull String fileUri) throws DataGatewayException;
 }

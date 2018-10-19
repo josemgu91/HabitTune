@@ -40,6 +40,9 @@ public interface TagDao {
     @Query("SELECT * FROM tags ORDER BY name ASC")
     LiveData<List<Tag>> subscribeToAllTags();
 
+    @Query("SELECT * FROM tags ORDER BY name ASC")
+    List<Tag> getAllTags();
+
     @Query("SELECT * FROM tags WHERE id IN(:tagIds) ORDER BY name ASC")
     LiveData<List<Tag>> subscribeToTagsByIds(long[] tagIds);
 

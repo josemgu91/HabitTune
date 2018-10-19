@@ -42,6 +42,9 @@ public interface RoutineDao {
     @Query("SELECT * FROM routines ORDER BY name ASC")
     LiveData<List<Routine>> subscribeToAllRoutines();
 
+    @Query("SELECT * FROM routines ORDER BY name ASC")
+    List<Routine> getAllRoutines();
+
     @Delete
     int deleteRoutine(final Routine routine);
 

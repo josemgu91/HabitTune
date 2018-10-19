@@ -28,6 +28,8 @@ import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.data.room.model.AssistanceRegister;
 
+import java.util.List;
+
 @Dao
 public interface AssistanceRegisterDao {
 
@@ -40,5 +42,9 @@ public interface AssistanceRegisterDao {
     @Query("DELETE FROM assistanceRegisters WHERE cycleNumber = :cycleNumber AND routineActivityJoinId = :routineActivityJoinId")
     int deleteAssistanceRegisterByCycleNumberAndRoutineActivityJoinId(final int cycleNumber, final long routineActivityJoinId);
 
+    @Query("SELECT * FROM assistanceRegisters WHERE routineActivityJoinId = :routineActivityJoinId")
+    List<AssistanceRegister> getAssistanceRegistersByRoutineActivityJoinId(final long routineActivityJoinId);
 
+    @Query("SELECT * FROM assistanceRegisters")
+    List<AssistanceRegister> getAllAssistanceRegisters();
 }
