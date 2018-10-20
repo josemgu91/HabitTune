@@ -32,48 +32,43 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ACTIVITIES;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ACTIVITY_COLOR;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ACTIVITY_DESCRIPTION;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ACTIVITY_ID;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ACTIVITY_NAME;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ACTIVITY_TAGS_IDS;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ASSISTANCE_REGISTERS;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ASSISTANCE_REGISTER_CYCLE_NUMBER;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ASSISTANCE_REGISTER_END_TIME;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ASSISTANCE_REGISTER_ID;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ASSISTANCE_REGISTER_START_TIME;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINES;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_COLOR;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_CREATION_DATE;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_DEACTIVATION_DATE;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_DESCRIPTION;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENABLED;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRIES;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_ACTIVITY_ID;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_ASSISTANCE_REGISTERS_IDS;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_CREATION_DATE;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_DAY;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_DEACTIVATION_DATE;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_ENABLED;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_END_TIME;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_ID;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ENTRY_START_TIME;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ID;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_NAME;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_NUMBER_OF_DAYS;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_ROUTINE_ENTRIES_IDS;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.ROUTINE_START_DATE;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.TAGS;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.TAG_ID;
+import static com.josemgu91.habittune.data.room.backup.JsonExportFormatContract.TAG_NAME;
+
 public class JsonBuilder {
-
-    private final static String ROUTINES = "routines";
-    private final static String ACTIVITIES = "activities";
-    private final static String TAGS = "tags";
-    private final static String ROUTINE_ENTRIES = "routineEntries";
-    private final static String ASSISTANCE_REGISTERS = "assistanceRegisters";
-
-    private final static String ROUTINE_ID = "id";
-    private final static String ROUTINE_NAME = "name";
-    private final static String ROUTINE_DESCRIPTION = "description";
-    private final static String ROUTINE_COLOR = "color";
-    private final static String ROUTINE_NUMBER_OF_DAYS = "numberOfDays";
-    private final static String ROUTINE_START_DATE = "startDate";
-    private final static String ROUTINE_ROUTINE_ENTRIES_IDS = "routineEntriesIds";
-    private final static String ROUTINE_ENABLED = "enabled";
-    private final static String ROUTINE_CREATION_DATE = "creationDate";
-    private final static String ROUTINE_DEACTIVATION_DATE = "deactivationDate";
-
-    private final static String ACTIVITY_ID = "id";
-    private final static String ACTIVITY_NAME = "name";
-    private final static String ACTIVITY_DESCRIPTION = "description";
-    private final static String ACTIVITY_COLOR = "color";
-    private final static String ACTIVITY_TAGS_IDS = "tagsIds";
-
-    private final static String TAG_ID = "id";
-    private final static String TAG_NAME = "name";
-
-    private final static String ROUTINE_ENTRY_ID = "id";
-    private final static String ROUTINE_ENTRY_DAY = "day";
-    private final static String ROUTINE_ENTRY_START_TIME = "startTime";
-    private final static String ROUTINE_ENTRY_END_TIME = "endTime";
-    private final static String ROUTINE_ENTRY_ACTIVITY_ID = "activityId";
-    private final static String ROUTINE_ENTRY_ENABLED = "enabled";
-    private final static String ROUTINE_ENTRY_CREATION_DATE = "creationDate";
-    private final static String ROUTINE_ENTRY_DEACTIVATION_DATE = "deactivationDate";
-    private final static String ROUTINE_ENTRY_ASSISTANCE_REGISTERS_IDS = "assistanceRegistersIds";
-
-    private final static String ASSISTANCE_REGISTER_ID = "id";
-    private final static String ASSISTANCE_REGISTER_CYCLE_NUMBER = "cycleNumber";
-    private final static String ASSISTANCE_REGISTER_START_TIME = "startTime";
-    private final static String ASSISTANCE_REGISTER_END_TIME = "endTime";
 
     private final LocalRoomDatabase localRoomDatabase;
 
