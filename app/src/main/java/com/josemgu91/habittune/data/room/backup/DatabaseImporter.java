@@ -122,8 +122,8 @@ public class DatabaseImporter {
             final long jsonActivityId = activityJsonObject.getLong(ACTIVITY_ID);
             final long roomActivityId = activitiesIds.get(jsonActivityId);
             final JSONArray activityTagsJsonArray = activityJsonObject.getJSONArray(ACTIVITY_TAGS_IDS);
-            for (int j = 0; i < activityTagsJsonArray.length(); j++) {
-                final long jsonTagId = activityTagsJsonArray.getLong(i);
+            for (int j = 0; j < activityTagsJsonArray.length(); j++) {
+                final long jsonTagId = activityTagsJsonArray.getLong(j);
                 final long roomTagId = tagsIds.get(jsonTagId);
                 localRoomDatabase.getActivityTagJoinDao().insertActivityTagJoin(parseActivityTagJoin(roomActivityId, roomTagId));
             }

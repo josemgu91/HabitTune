@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.StringRes;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class FragmentSettingsPreference extends PreferenceFragmentCompat {
     private final static int REQUEST_CODE_IMPORT_BACKUP = 200;
 
     private final static String JSON_MEDIA_TYPE = "application/json";
+    private final static String ALL_MEDIA_TYPE = "*/*";
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -62,17 +64,29 @@ public class FragmentSettingsPreference extends PreferenceFragmentCompat {
         if (requestCode == REQUEST_CODE_CREATE_BACKUP && resultCode == Activity.RESULT_OK) {
             final Uri fileUri = data.getData();
             //TODO: Use a use case instead of calling the repository directly.
+            final Handler uiThreadHandler = new Handler();
             AsyncTask.execute(() -> {
                 final Repository repository = ((Application) getActivity().getApplication()).getRepository();
                 try {
                     repository.exportTo(fileUri.toString());
                 } catch (DataGatewayException e) {
                     e.printStackTrace();
-                    showError(R.string.settings_error_create_backup);
+                    uiThreadHandler.post(() -> showError(R.string.settings_error_create_backup));
                 }
             });
         } else if (requestCode == REQUEST_CODE_IMPORT_BACKUP && resultCode == Activity.RESULT_OK) {
-
+            final Uri fileUri = data.getData();
+            //TODO: Use a use case instead of calling the repository directly.
+            final Handler uiThreadHandler = new Handler();
+            AsyncTask.execute(() -> {
+                final Repository repository = ((Application) getActivity().getApplication()).getRepository();
+                try {
+                    repository.importFrom(fileUri.toString());
+                } catch (DataGatewayException e) {
+                    e.printStackTrace();
+                    uiThreadHandler.post(() -> showError(R.string.settings_error_import_backup));
+                }
+            });
         }
     }
 
@@ -89,7 +103,7 @@ public class FragmentSettingsPreference extends PreferenceFragmentCompat {
     private void importBackup() {
         final Intent openFileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         openFileIntent.addCategory(Intent.CATEGORY_OPENABLE);
-        openFileIntent.setType(JSON_MEDIA_TYPE);
+        openFileIntent.setType(ALL_MEDIA_TYPE);
         if (!doesActivityExist(openFileIntent)) {
             showError(R.string.settings_error_file_explorer);
             return;
