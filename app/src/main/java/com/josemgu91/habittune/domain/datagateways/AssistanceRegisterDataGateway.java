@@ -24,6 +24,8 @@ import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.domain.entities.AssistanceRegister;
 
+import java.util.List;
+
 public interface AssistanceRegisterDataGateway {
 
     @NonNull
@@ -33,5 +35,7 @@ public interface AssistanceRegisterDataGateway {
     AssistanceRegister createOrUpdateAssistanceRegister(@NonNull AssistanceRegister assistanceRegister, @NonNull String routineEntryId) throws DataGatewayException;
 
     boolean deleteAssistanceRegister(int cycleNumber, @NonNull String routineEntryId) throws DataGatewayException;
+
+    List<AssistanceRegister> getAssistanceRegistersByRoutineEntryBetweenCycleNumbers(@NonNull String routineEntryId, int fromCycleNumber, int toCycleNumber) throws DataGatewayException;
 
 }

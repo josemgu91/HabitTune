@@ -444,18 +444,23 @@ public class RoomRepository implements Repository {
                 if (input == null) {
                     return null;
                 }
-                try {
-                    return new AssistanceRegister(
-                            String.valueOf(input.id),
-                            input.cycleNumber,
-                            new Time(input.startTime),
-                            input.endTime == -1 ? null : new Time(input.endTime)
-                    );
-                } catch (DomainException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e.getMessage());
-                }
+                return mapToEntityAssistanceRegister(input);
             });
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<AssistanceRegister> getAssistanceRegistersByRoutineEntryBetweenCycleNumbers(@NonNull String routineEntryId, int fromCycleNumber, int toCycleNumber) throws DataGatewayException {
+        try {
+            final List<com.josemgu91.habittune.data.room.model.AssistanceRegister> roomAssistanceRegisters =
+                    localRoomDatabase.getAssistanceRegisterDao().getAssistanceRegistersByRoutineEntryBetweenCycleNumbers(
+                            Long.valueOf(routineEntryId),
+                            fromCycleNumber,
+                            toCycleNumber
+                    );
+            return mapList(roomAssistanceRegisters, RoomRepository::mapToEntityAssistanceRegister);
         } catch (Exception e) {
             throw new DataGatewayException(e.getMessage());
         }
@@ -477,6 +482,20 @@ public class RoomRepository implements Repository {
             outList.add(function.apply(element));
         }
         return outList;
+    }
+
+    private static AssistanceRegister mapToEntityAssistanceRegister(final com.josemgu91.habittune.data.room.model.AssistanceRegister roomAssistanceRegister) {
+        try {
+            return new AssistanceRegister(
+                    String.valueOf(roomAssistanceRegister.id),
+                    roomAssistanceRegister.cycleNumber,
+                    new Time(roomAssistanceRegister.startTime),
+                    roomAssistanceRegister.endTime == -1 ? null : new Time(roomAssistanceRegister.endTime)
+            );
+        } catch (DomainException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     private static RoutineEntry mapRoutineActivityJoinToRoutineEntry(final RoutineActivityJoin routineActivityJoin, final Activity activity) throws DomainException {
