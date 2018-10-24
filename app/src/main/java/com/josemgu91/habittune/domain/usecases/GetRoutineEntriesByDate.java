@@ -72,7 +72,7 @@ public class GetRoutineEntriesByDate extends AbstractUseCase<GetRoutineEntriesBy
                             if (!isInRoutineEntryDay) {
                                 continue;
                             }
-                            final int cycleNumber = scheduleCalculator.getRoutineEntryCycleNumber(inputDate, routine.getStartDate(), routine.getNumberOfDays());
+                            final int cycleNumber = scheduleCalculator.computeRoutineEntryCycleNumber(inputDate, routine.getStartDate(), routine.getNumberOfDays());
                             final LiveData<AssistanceRegister> assistanceRegisterLiveData = assistanceRegisterDataGateway.subscribeToAssistanceRegisterByCycleNumberAndRoutineEntryId(
                                     cycleNumber,
                                     routineEntry.getId()

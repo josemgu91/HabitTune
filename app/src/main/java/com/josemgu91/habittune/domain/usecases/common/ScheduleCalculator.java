@@ -28,43 +28,43 @@ public class ScheduleCalculator {
     private final static int MILLISECONDS_IN_A_DAY = 3600 * 24 * 1000;
 
     public boolean isInRoutineEntryDay(final Date date, final Date routineStartDate, final int routineNumberOfDays, final int routineEntryDay) {
-        final int routineDayNumber = calculateRoutineDayNumber(date, routineStartDate, routineNumberOfDays);
+        final int routineDayNumber = calculateRoutineDayNumber(date.getTime(), routineStartDate.getTime(), routineNumberOfDays);
         return routineDayNumber == routineEntryDay;
     }
 
-    public int getRoutineEntryCycleNumber(final Date date, final Date routineStartDate, final int routineNumberOfDays) {
-        final int daysSinceStartDate = calculateDaysBetween(routineStartDate, date);
+    public int computeRoutineEntryCycleNumber(final Date date, final Date routineStartDate, final int routineNumberOfDays) {
+        final int daysSinceStartDate = calculateDaysBetween(routineStartDate.getTime(), date.getTime());
         return daysSinceStartDate / routineNumberOfDays;
     }
 
-    public int numberOfRoutineEntryEventsBetweenDates(final Date fromDate, final Date toDate, final Date routineStartDate, final Date routineEntryCreationDate, final int routineNumberOfDays, final int routineEntryDay) {
-        final long fromDateTimestamp = fromDate.getTime();
-        final long toDateTimestamp = toDate.getTime();
-        final long routineStartDateTimestamp = routineStartDate.getTime();
-        final long routineEntryCreationDateTimestamp = routineEntryCreationDate.getTime();
+    //FIXME: This algorithms doesn't pass the tests!
+    public int computeNumberOfRoutineEntryEventsBetweenDates(final Date fromDate, final Date toDate, final Date routineStartDate, final Date routineEntryCreationDate, final int routineNumberOfDays, final int routineEntryDay) {
+        long fromDateTimestamp = fromDate.getTime();
+        long toDateTimestamp = toDate.getTime();
+        long routineStartDateTimestamp = routineStartDate.getTime();
+        long routineEntryCreationDateTimestamp = routineEntryCreationDate.getTime();
 
         if (fromDateTimestamp > toDateTimestamp) {
             throw new IllegalArgumentException("fromDateTimestamp > toDateTimestamp");
         }
-        if(fromDateTimestamp < routineEntryCreationDateTimestamp){
-            throw new IllegalArgumentException("fromDateTimestamp < routineEntryCreationDateTimestamp");
-        }
-        if(routineEntryCreationDateTimestamp < routineStartDateTimestamp){
+        if (routineEntryCreationDateTimestamp < routineStartDateTimestamp) {
             throw new IllegalArgumentException("routineEntryCreationDateTimestamp < routineStartDateTimestamp");
         }
 
-        final int routineEntryStartDayNumber = calculateRoutineDayNumber(routineEntryCreationDate, routineStartDate, routineNumberOfDays);
-        final int daysBetweenRoutineEntryCreationDateAndToDate = calculateDaysBetween(routineEntryCreationDateTimestamp, toDateTimestamp);
-        final int repetitionsBetweenRoutineEntryCreationDateAndToDate = ((daysBetweenRoutineEntryCreationDateAndToDate - routineEntryStartDayNumber + routineEntryDay) / routineNumberOfDays)+1;
+        if (toDateTimestamp < routineEntryCreationDateTimestamp) {
+            return 0;
+        }
+        if (fromDateTimestamp < routineEntryCreationDateTimestamp) {
+            fromDateTimestamp = routineEntryCreationDateTimestamp;
+        }
+        final int daysBetweenFromDateAndToDate = calculateDaysBetween(fromDateTimestamp, toDateTimestamp);
+        final int fromDateDayNumber = calculateRoutineDayNumber(fromDateTimestamp, routineStartDateTimestamp, routineNumberOfDays);
+        return ((daysBetweenFromDateAndToDate + (fromDateDayNumber - routineEntryDay)) / routineNumberOfDays) + 1;
     }
 
-    private int calculateRoutineDayNumber(final Date date, final Date routineStartDate, final int routineNumberOfDays) {
-        final int daysSinceStartDate = calculateDaysBetween(routineStartDate, date);
+    private int calculateRoutineDayNumber(final long dateTimestamp, final long routineStartDateTimestamp, final int routineNumberOfDays) {
+        final int daysSinceStartDate = calculateDaysBetween(routineStartDateTimestamp, dateTimestamp);
         return daysSinceStartDate % routineNumberOfDays;
-    }
-
-    private int calculateDaysBetween(final Date start, final Date end) {
-        return calculateDaysBetween(start.getTime(), end.getTime());
     }
 
     private int calculateDaysBetween(final long startTimestamp, final long endTimestamp) {
