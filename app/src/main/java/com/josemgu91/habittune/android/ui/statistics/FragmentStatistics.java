@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android.ui.statistics;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,9 +28,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
+import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.databinding.FragmentStatisticsBinding;
 
 public class FragmentStatistics extends BaseFragment {
 
@@ -45,10 +47,14 @@ public class FragmentStatistics extends BaseFragment {
 
     private String activityId;
 
+    private ViewModelStatistics viewModelStatistics;
+    private FragmentStatisticsBinding fragmentStatisticsBinding;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        final Bundle arguments = new Bundle();
+        viewModelStatistics = ViewModelProviders.of(this, viewModelFactory).get(ViewModelStatistics.class);
+        final Bundle arguments = getArguments();
         activityId = arguments.getString(ARG_ACTIVITY_ID);
     }
 
@@ -60,13 +66,25 @@ public class FragmentStatistics extends BaseFragment {
     @NonNull
     @Override
     public View createView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_statistics, container, false);
+        fragmentStatisticsBinding = FragmentStatisticsBinding.inflate(inflater, container, false);
+        return fragmentStatisticsBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModelStatistics.fetchActivity(activityId);
+        viewModelStatistics.getGetActivityResponse().observe(getViewLifecycleOwner(), response -> {
+            if (response.status != Response.Status.SUCCESS) {
+                return;
+            }
+            fragmentInteractionListener.updateToolbar(response.successData.getName(), FragmentInteractionListener.IC_NAVIGATION_UP);
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fragmentInteractionListener.updateToolbar(getString(R.string.statistics_title), FragmentInteractionListener.IC_NAVIGATION_UP);
         fragmentInteractionListener.updateNavigationDrawer(false);
     }
 }
