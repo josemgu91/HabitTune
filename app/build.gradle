@@ -26,7 +26,7 @@ android {
         applicationId "com.josemgu91.habittune"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 18
+        versionCode 19
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     dataBinding {
@@ -36,11 +36,11 @@ android {
     productFlavors {
         clean {
             dimension "data"
-            versionName "pre-1.0-vc18"
+            versionName "pre-1.0-vc19"
         }
         withTestData {
             dimension "data"
-            versionName "pre-1.0-vc18-internal"
+            versionName "pre-1.0-vc19-internal"
         }
     }
     buildTypes {
