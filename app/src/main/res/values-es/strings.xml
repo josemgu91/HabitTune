@@ -29,7 +29,6 @@
 
     <string name="menu_delete_items">Borrar Elementos</string>
 
-    <string name="statistics_title">Estadísticas</string>
     <string name="help_title">Ayuda</string>
 
     <string name="activities_title">Actividades</string>
@@ -96,6 +95,15 @@
     <string name="settings_error_file_explorer">No se puede abrir el explorador de archivos.</string>
     <string name="settings_error_create_backup">No se puede crear el archivo de copia de seguridad.</string>
     <string name="settings_error_import_backup">No se puede importar el archivo de copia de seguridad. Formato inválido.</string>
+
+    <string name="statistics_title">Estadísticas</string>
+    <string name="statistics_pie_up_to_date">Actualizado al: %s</string>
+    <string name="statistics_pie_events_total">Eventos totales: %d.</string>
+    <string name="statistics_pie_events_completed_label">Eventos completados</string>
+    <string name="statistics_pie_events_missed_label">Eventos perdidos</string>
+    <string name="statistics_pie_variation_average_label">Variación promedio:</string>
+    <string name="statistics_pie_variation_start">Inicio: &#177;%d minutos.</string>
+    <string name="statistics_pie_variation_end">Fin: &#177;%d minutos.</string>
 
     <string name="action_delete">Eliminar</string>
     <string name="action_cancel">Cancelar</string>

@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.android.usecases;
 
 import com.josemgu91.habittune.domain.datagateways.Repository;
+import com.josemgu91.habittune.domain.usecases.CalculateAssistanceStatistics;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.CreateRoutine;
 import com.josemgu91.habittune.domain.usecases.CreateRoutineEntry;
@@ -240,6 +241,15 @@ public class DefaultUseCaseFactory implements UseCaseFactory {
     @Override
     public DeleteAssistance createDeleteAssistance() {
         return new DeleteAssistance(
+                uiThreadExecutor,
+                defaultThreadPoolExecutor,
+                repository
+        );
+    }
+
+    @Override
+    public CalculateAssistanceStatistics createCalculateAssistanceStatistics() {
+        return new CalculateAssistanceStatistics(
                 uiThreadExecutor,
                 defaultThreadPoolExecutor,
                 repository

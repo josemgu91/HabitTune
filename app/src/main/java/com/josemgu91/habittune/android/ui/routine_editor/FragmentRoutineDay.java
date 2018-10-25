@@ -124,6 +124,7 @@ public class FragmentRoutineDay extends Fragment {
         routineEntryItemFlexibleAdapter.updateDataSet(routineEntryItems);
     }
 
+    //TODO: Reuse.
     private String formatHour(final DateFormat dateFormat, final Calendar calendar, final int hourInSeconds) {
         final int hours = hourInSeconds / 3600;
         final int minutes = (hourInSeconds % 3600) / 60;

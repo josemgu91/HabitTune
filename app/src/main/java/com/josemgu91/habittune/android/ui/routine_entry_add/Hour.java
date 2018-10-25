@@ -79,6 +79,7 @@ public class Hour implements Parcelable {
         return (hourOfDay * 3600) + (minute * 60);
     }
 
+    //TODO: Reuse.
     public String format() {
         final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
         final Calendar calendar = Calendar.getInstance();

@@ -19,6 +19,7 @@
 
 package com.josemgu91.habittune.android.usecases;
 
+import com.josemgu91.habittune.domain.usecases.CalculateAssistanceStatistics;
 import com.josemgu91.habittune.domain.usecases.CreateActivity;
 import com.josemgu91.habittune.domain.usecases.CreateRoutine;
 import com.josemgu91.habittune.domain.usecases.CreateRoutineEntry;
@@ -84,5 +85,7 @@ public interface UseCaseFactory {
     RegisterAssistance createRegisterAssistance();
 
     DeleteAssistance createDeleteAssistance();
+
+    CalculateAssistanceStatistics createCalculateAssistanceStatistics();
 
 }

@@ -112,6 +112,7 @@ public class FragmentSchedule extends BaseFragment {
         });
     }
 
+    //TODO: Reuse.
     private String getCurrentDay() {
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
         final Calendar calendar = Calendar.getInstance();
@@ -242,6 +243,7 @@ public class FragmentSchedule extends BaseFragment {
             });
         }
 
+        //TODO: Reuse.
         private String formatHour(final int hourInSeconds) {
             final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
             final Calendar calendar = Calendar.getInstance();

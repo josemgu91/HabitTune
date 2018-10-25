@@ -31,7 +31,6 @@
 
     <string name="menu_delete_items">Delete Items</string>
 
-    <string name="statistics_title">Statistics</string>
     <string name="help_title">Help</string>
 
     <string name="activities_title">Activities</string>
@@ -98,6 +97,15 @@
     <string name="settings_error_file_explorer">Can\'t open file explorer.</string>
     <string name="settings_error_create_backup">Can\'t create backup file.</string>
     <string name="settings_error_import_backup">Can\'t import backup file. Invalid format.</string>
+
+    <string name="statistics_title">Statistics</string>
+    <string name="statistics_pie_up_to_date">Updated to: %s</string>
+    <string name="statistics_pie_events_total">Total events: %d.</string>
+    <string name="statistics_pie_events_completed_label">Completed events</string>
+    <string name="statistics_pie_events_missed_label">Missed events</string>
+    <string name="statistics_pie_variation_average_label">Average variation:</string>
+    <string name="statistics_pie_variation_start">Start: &#177;%d minutes.</string>
+    <string name="statistics_pie_variation_end">End: &#177;%d minutes.</string>
 
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>

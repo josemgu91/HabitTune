@@ -30,11 +30,11 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-public class CalculateAssistanceStats extends AbstractUseCase<CalculateAssistanceStats.Input, CalculateAssistanceStats.Output> {
+public class CalculateAssistanceStatistics extends AbstractUseCase<CalculateAssistanceStatistics.Input, CalculateAssistanceStatistics.Output> {
 
     private final AssistanceRegisterDataGateway assistanceRegisterDataGateway;
 
-    public CalculateAssistanceStats(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull AssistanceRegisterDataGateway assistanceRegisterDataGateway) {
+    public CalculateAssistanceStatistics(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull AssistanceRegisterDataGateway assistanceRegisterDataGateway) {
         super(outputExecutor, useCaseExecutor);
         this.assistanceRegisterDataGateway = assistanceRegisterDataGateway;
     }

@@ -83,7 +83,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new ViewModelSchedule(useCaseFactory.createGetRoutineEntriesByDate(), useCaseFactory.createRegisterAssistance(), useCaseFactory.createDeleteAssistance());
         }
         if (modelClass.isAssignableFrom(ViewModelStatistics.class)) {
-            return (T) new ViewModelStatistics(useCaseFactory.createGetActivity());
+            return (T) new ViewModelStatistics(useCaseFactory.createGetActivity(), useCaseFactory.createCalculateAssistanceStatistics());
         }
         try {
             return modelClass.newInstance();

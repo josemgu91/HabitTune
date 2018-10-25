@@ -26,18 +26,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.android.ui.Response;
+import com.josemgu91.habittune.domain.usecases.CalculateAssistanceStatistics;
 import com.josemgu91.habittune.domain.usecases.GetActivity;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
 public class ViewModelStatistics extends ViewModel {
 
     private final GetActivity getActivity;
+    private final CalculateAssistanceStatistics calculateAssistanceStatistics;
 
     private final MutableLiveData<Response<GetActivity.Output, Void>> getActivityResponse;
+    private final MutableLiveData<Response<CalculateAssistanceStatistics.Output, Void>> calculateAssistanceStatsResponse;
 
-    public ViewModelStatistics(GetActivity getActivity) {
+    public ViewModelStatistics(GetActivity getActivity, CalculateAssistanceStatistics calculateAssistanceStatistics) {
         this.getActivity = getActivity;
+        this.calculateAssistanceStatistics = calculateAssistanceStatistics;
         getActivityResponse = new MutableLiveData<>();
+        calculateAssistanceStatsResponse = new MutableLiveData<>();
     }
 
     public void fetchActivity(@NonNull final String activityId) {
@@ -59,7 +64,30 @@ public class ViewModelStatistics extends ViewModel {
         });
     }
 
+    public void calculateAssistanceStats(@NonNull final String activityId) {
+        calculateAssistanceStatistics.execute(new CalculateAssistanceStatistics.Input(activityId), new UseCaseOutput<CalculateAssistanceStatistics.Output>() {
+            @Override
+            public void onSuccess(@Nullable CalculateAssistanceStatistics.Output output) {
+                calculateAssistanceStatsResponse.setValue(new Response<>(Response.Status.SUCCESS, output, null));
+            }
+
+            @Override
+            public void inProgress() {
+                calculateAssistanceStatsResponse.setValue(new Response<>(Response.Status.LOADING, null, null));
+            }
+
+            @Override
+            public void onError() {
+                calculateAssistanceStatsResponse.setValue(new Response<>(Response.Status.ERROR, null, null));
+            }
+        });
+    }
+
     public LiveData<Response<GetActivity.Output, Void>> getGetActivityResponse() {
         return getActivityResponse;
+    }
+
+    public LiveData<Response<CalculateAssistanceStatistics.Output, Void>> getCalculateAssistanceStatsResponse() {
+        return calculateAssistanceStatsResponse;
     }
 }
