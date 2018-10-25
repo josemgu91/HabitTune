@@ -49,6 +49,7 @@ public class CalculateAssistanceStats extends AbstractUseCase<CalculateAssistanc
                     input.activityId
             );
             final int eventsMissed = totalEvents - totalRegisteredEvents;
+            //TODO: Calculate average start and end time errors.
             final int averageStartTimeErrorInSeconds = 0;
             final int averageEndTimeErrorInSeconds = 0;
             output.onSuccess(new Output(
