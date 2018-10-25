@@ -28,6 +28,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.data.room.backup.LocalRoomDatabaseBackupRepository;
+import com.josemgu91.habittune.data.room.custom_responses.RoutineEntry;
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
 import com.josemgu91.habittune.domain.DomainException;
@@ -37,9 +38,9 @@ import com.josemgu91.habittune.domain.entities.Activity;
 import com.josemgu91.habittune.domain.entities.AssistanceRegister;
 import com.josemgu91.habittune.domain.entities.Day;
 import com.josemgu91.habittune.domain.entities.Routine;
-import com.josemgu91.habittune.domain.entities.RoutineEntry;
 import com.josemgu91.habittune.domain.entities.Tag;
 import com.josemgu91.habittune.domain.entities.Time;
+import com.josemgu91.habittune.domain.usecases.common.ScheduleCalculator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,10 +54,13 @@ public class RoomRepository implements Repository {
 
     private final Executor repositoryExecutor;
 
+    private final ScheduleCalculator scheduleCalculator;
+
     public RoomRepository(@NonNull final Context context, @NonNull final LocalRoomDatabase localRoomDatabase, @NonNull final Executor repositoryExecutor) {
         this.localRoomDatabase = localRoomDatabase;
         this.repositoryExecutor = repositoryExecutor;
         this.localRoomDatabaseBackupRepository = new LocalRoomDatabaseBackupRepository(localRoomDatabase, context);
+        this.scheduleCalculator = new ScheduleCalculator();
     }
 
     @NonNull
@@ -217,7 +221,7 @@ public class RoomRepository implements Repository {
                 final MediatorLiveData<List<Routine>> result = new MediatorLiveData<>();
                 result.addSource(localRoomDatabase.getRoutineDao().subscribeToAllRoutines(), roomRoutines -> repositoryExecutor.execute(() -> {
                     final List<Routine> routines = mapList(roomRoutines, roomRoutine -> {
-                        final List<RoutineEntry> routineEntries = mapList(
+                        final List<com.josemgu91.habittune.domain.entities.RoutineEntry> routineEntries = mapList(
                                 localRoomDatabase.getRoutineActivityJoinDao().getAllRoutineActivityJoinsByRoutineId(roomRoutine.id),
                                 routineActivityJoin -> {
                                     try {
@@ -309,7 +313,7 @@ public class RoomRepository implements Repository {
 
     @Override
     @NonNull
-    public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException {
+    public LiveData<List<com.josemgu91.habittune.domain.entities.RoutineEntry>> subscribeToAllRoutineEntriesByRoutineId(@NonNull final String routineId) throws DataGatewayException {
         try {
             final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData = localRoomDatabase.getRoutineActivityJoinDao().subscribeToAllRoutineActivityJoinsByRoutineId(Long.valueOf(routineId));
             return transformRoutineActivityJoinListLiveDataToRoutineEntryListLiveData(routineActivityJoinsLiveData);
@@ -320,7 +324,7 @@ public class RoomRepository implements Repository {
 
     @Override
     @NonNull
-    public LiveData<List<RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull String routineId, int dayNumber) throws DataGatewayException {
+    public LiveData<List<com.josemgu91.habittune.domain.entities.RoutineEntry>> subscribeToAllRoutineEntriesByRoutineIdAndDay(@NonNull String routineId, int dayNumber) throws DataGatewayException {
         try {
             final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData = localRoomDatabase.getRoutineActivityJoinDao().subscribeToAllRoutineActivityJoinsByRoutineIdAndDay(Long.valueOf(routineId), dayNumber);
             return transformRoutineActivityJoinListLiveDataToRoutineEntryListLiveData(routineActivityJoinsLiveData);
@@ -329,10 +333,10 @@ public class RoomRepository implements Repository {
         }
     }
 
-    private LiveData<List<RoutineEntry>> transformRoutineActivityJoinListLiveDataToRoutineEntryListLiveData(final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData) {
-        final MediatorLiveData<List<RoutineEntry>> result = new MediatorLiveData<>();
+    private LiveData<List<com.josemgu91.habittune.domain.entities.RoutineEntry>> transformRoutineActivityJoinListLiveDataToRoutineEntryListLiveData(final LiveData<List<RoutineActivityJoin>> routineActivityJoinsLiveData) {
+        final MediatorLiveData<List<com.josemgu91.habittune.domain.entities.RoutineEntry>> result = new MediatorLiveData<>();
         result.addSource(routineActivityJoinsLiveData, routineActivityJoins -> repositoryExecutor.execute(() -> {
-            final List<RoutineEntry> routineEntries = new ArrayList<>();
+            final List<com.josemgu91.habittune.domain.entities.RoutineEntry> routineEntries = new ArrayList<>();
             for (final RoutineActivityJoin routineActivityJoin : routineActivityJoins) {
                 try {
                     final Activity activity = getActivityById(String.valueOf(routineActivityJoin.activityId));
@@ -348,7 +352,7 @@ public class RoomRepository implements Repository {
 
     @NonNull
     @Override
-    public RoutineEntry getRoutineEntryById(@NonNull final String id) throws DataGatewayException {
+    public com.josemgu91.habittune.domain.entities.RoutineEntry getRoutineEntryById(@NonNull final String id) throws DataGatewayException {
         try {
             final RoutineActivityJoin routineActivityJoin = localRoomDatabase.getRoutineActivityJoinDao().getRoutineActivityJoin(Long.valueOf(id));
             final Activity activity = getActivityById(String.valueOf(routineActivityJoin.activityId));
@@ -361,7 +365,7 @@ public class RoomRepository implements Repository {
 
     @Override
     @NonNull
-    public RoutineEntry createRoutineEntry(@NonNull final RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException {
+    public com.josemgu91.habittune.domain.entities.RoutineEntry createRoutineEntry(@NonNull final com.josemgu91.habittune.domain.entities.RoutineEntry routineEntry, @NonNull final String routineId) throws DataGatewayException {
         try {
             final long id = localRoomDatabase.getRoutineActivityJoinDao().insertRoutineActivityJoin(new RoutineActivityJoin(
                     Long.valueOf(routineId),
@@ -373,7 +377,7 @@ public class RoomRepository implements Repository {
                     routineEntry.getCreationDate().getTime(),
                     routineEntry.isEnabled() ? 0 : routineEntry.getDeactivationDate().getTime()
             ));
-            return new RoutineEntry(String.valueOf(id),
+            return new com.josemgu91.habittune.domain.entities.RoutineEntry(String.valueOf(id),
                     routineEntry.getDay(),
                     routineEntry.getStartTime(),
                     routineEntry.getEndTime(),
@@ -467,6 +471,41 @@ public class RoomRepository implements Repository {
     }
 
     @Override
+    public int countCompletedAssistanceRegistersByActivityId(@NonNull String activityId) throws DataGatewayException {
+        try {
+            return localRoomDatabase.getStatisticsDao().countCompletedAssistanceRegistersByActivityId(
+                    Long.valueOf(activityId)
+            );
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
+    public int calculateTotalSinceCreationByActivityId(@NonNull final String activityId, @NonNull final Date toDate) throws DataGatewayException {
+        try {
+            int totalCount = 0;
+            final List<RoutineEntry> routineEntries = localRoomDatabase.getStatisticsDao().getRoutineActivityJoinsWithRoutineInfoByActivityId(
+                    Long.valueOf(activityId)
+            );
+            for (final RoutineEntry routineEntry : routineEntries) {
+                final int numberOfRoutineEntryEventsBetweenDates = scheduleCalculator.computeNumberOfRoutineEntryEventsBetweenDates(
+                        new Date(routineEntry.routineActivityJoinCreationDateTimestamp),
+                        toDate,
+                        new Date(routineEntry.routineStartDateTimestamp),
+                        new Date(routineEntry.routineActivityJoinCreationDateTimestamp),
+                        routineEntry.routineNumberOfDays,
+                        routineEntry.routineActivityJoinEntryDay
+                );
+                totalCount += numberOfRoutineEntryEventsBetweenDates;
+            }
+            return totalCount;
+        } catch (Exception e) {
+            throw new DataGatewayException(e.getMessage());
+        }
+    }
+
+    @Override
     public void importFrom(@NonNull String fileUri) throws DataGatewayException {
         localRoomDatabaseBackupRepository.importFrom(fileUri);
     }
@@ -498,8 +537,8 @@ public class RoomRepository implements Repository {
         }
     }
 
-    private static RoutineEntry mapRoutineActivityJoinToRoutineEntry(final RoutineActivityJoin routineActivityJoin, final Activity activity) throws DomainException {
-        return new RoutineEntry(
+    private static com.josemgu91.habittune.domain.entities.RoutineEntry mapRoutineActivityJoinToRoutineEntry(final RoutineActivityJoin routineActivityJoin, final Activity activity) throws DomainException {
+        return new com.josemgu91.habittune.domain.entities.RoutineEntry(
                 String.valueOf(routineActivityJoin.id),
                 new Day(routineActivityJoin.day),
                 new Time(routineActivityJoin.startTime),
@@ -529,7 +568,7 @@ public class RoomRepository implements Repository {
         );
     }
 
-    private static Routine mapToEntityRoutine(@NonNull final com.josemgu91.habittune.data.room.model.Routine roomRoutine, @Nullable final List<RoutineEntry> routineEntries) {
+    private static Routine mapToEntityRoutine(@NonNull final com.josemgu91.habittune.data.room.model.Routine roomRoutine, @Nullable final List<com.josemgu91.habittune.domain.entities.RoutineEntry> routineEntries) {
         return new Routine(
                 String.valueOf(roomRoutine.id),
                 roomRoutine.name,

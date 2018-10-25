@@ -50,4 +50,5 @@ public interface AssistanceRegisterDao {
 
     @Query("SELECT * FROM assistanceRegisters WHERE routineActivityJoinId = :routineActivityJoinId AND cycleNumber BETWEEN :fromCycleNumber AND :toCycleNumber")
     List<AssistanceRegister> getAssistanceRegistersByRoutineEntryBetweenCycleNumbers(long routineActivityJoinId, int fromCycleNumber, int toCycleNumber);
+
 }

@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 
 import com.josemgu91.habittune.domain.entities.AssistanceRegister;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AssistanceRegisterDataGateway {
@@ -38,4 +39,8 @@ public interface AssistanceRegisterDataGateway {
 
     List<AssistanceRegister> getAssistanceRegistersByRoutineEntryBetweenCycleNumbers(@NonNull String routineEntryId, int fromCycleNumber, int toCycleNumber) throws DataGatewayException;
 
+    //Completed means those who have a registered start and end times.
+    int countCompletedAssistanceRegistersByActivityId(@NonNull final String activityId) throws DataGatewayException;
+
+    int calculateTotalSinceCreationByActivityId(@NonNull final String activityId, @NonNull final Date toDate) throws DataGatewayException;
 }

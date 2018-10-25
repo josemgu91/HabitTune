@@ -27,6 +27,7 @@ import com.josemgu91.habittune.data.room.dao.ActivityTagJoinDao;
 import com.josemgu91.habittune.data.room.dao.AssistanceRegisterDao;
 import com.josemgu91.habittune.data.room.dao.RoutineActivityJoinDao;
 import com.josemgu91.habittune.data.room.dao.RoutineDao;
+import com.josemgu91.habittune.data.room.dao.StatisticsDao;
 import com.josemgu91.habittune.data.room.dao.TagDao;
 import com.josemgu91.habittune.data.room.model.Activity;
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
@@ -50,4 +51,6 @@ public abstract class LocalRoomDatabase extends RoomDatabase {
     public abstract RoutineActivityJoinDao getRoutineActivityJoinDao();
 
     public abstract AssistanceRegisterDao getAssistanceRegisterDao();
+
+    public abstract StatisticsDao getStatisticsDao();
 }

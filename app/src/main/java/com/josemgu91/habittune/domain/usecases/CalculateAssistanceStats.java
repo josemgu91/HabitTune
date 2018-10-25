@@ -22,6 +22,7 @@ package com.josemgu91.habittune.domain.usecases;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.josemgu91.habittune.domain.datagateways.AssistanceRegisterDataGateway;
 import com.josemgu91.habittune.domain.usecases.common.AbstractUseCase;
 import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
@@ -31,16 +32,34 @@ import java.util.concurrent.Executor;
 
 public class CalculateAssistanceStats extends AbstractUseCase<CalculateAssistanceStats.Input, CalculateAssistanceStats.Output> {
 
-    public CalculateAssistanceStats(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor) {
+    private final AssistanceRegisterDataGateway assistanceRegisterDataGateway;
+
+    public CalculateAssistanceStats(@NonNull Executor outputExecutor, @NonNull Executor useCaseExecutor, @NonNull AssistanceRegisterDataGateway assistanceRegisterDataGateway) {
         super(outputExecutor, useCaseExecutor);
+        this.assistanceRegisterDataGateway = assistanceRegisterDataGateway;
     }
 
     @Override
     protected void executeUseCase(@Nullable Input input, @NonNull UseCaseOutput<Output> output) {
         output.inProgress();
-        try{
-
-        }catch (Exception e){
+        try {
+            final Date todayDate = new Date();
+            final int totalEvents = assistanceRegisterDataGateway.calculateTotalSinceCreationByActivityId(input.activityId, todayDate);
+            final int totalRegisteredEvents = assistanceRegisterDataGateway.countCompletedAssistanceRegistersByActivityId(
+                    input.activityId
+            );
+            final int eventsMissed = totalEvents - totalRegisteredEvents;
+            final int averageStartTimeErrorInSeconds = 0;
+            final int averageEndTimeErrorInSeconds = 0;
+            output.onSuccess(new Output(
+                    input.activityId,
+                    todayDate,
+                    totalEvents,
+                    eventsMissed,
+                    averageStartTimeErrorInSeconds,
+                    averageEndTimeErrorInSeconds
+            ));
+        } catch (Exception e) {
             e.printStackTrace();
             output.onError();
         }
