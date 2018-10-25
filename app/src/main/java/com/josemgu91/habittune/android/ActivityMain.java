@@ -113,7 +113,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createActivitiesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToStatistics:
-                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createStatisticsKey()), StateChange.REPLACE);
+                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createStatisticsActivitySelectionKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToSettings:
                 backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createSettingsKey());
@@ -243,8 +243,13 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void navigateToActivitySelection() {
+    public void navigateToFragmentActivitySelection() {
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createFragmentActivitySelection());
+    }
+
+    @Override
+    public void navigateToFragmentStatistics(@NonNull String activityId) {
+        backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createStatisticsKey(activityId));
     }
 
     @Override

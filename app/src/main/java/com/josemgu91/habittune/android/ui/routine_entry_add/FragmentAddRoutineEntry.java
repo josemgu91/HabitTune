@@ -121,7 +121,7 @@ public class FragmentAddRoutineEntry extends BaseFragment implements TimePickerD
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentRoutineAddActivityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_add_activity, container, false);
         fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setOnClickListener(
-                v -> fragmentInteractionListener.navigateToActivitySelection()
+                v -> fragmentInteractionListener.navigateToFragmentActivitySelection()
         );
         fragmentRoutineAddActivityBinding.textViewStartHour.setOnClickListener(
                 v -> showTimePicker(v.getId(), startHour)

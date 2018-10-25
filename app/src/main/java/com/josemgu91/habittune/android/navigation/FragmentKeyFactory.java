@@ -24,9 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.josemgu91.habittune.android.FragmentHelp;
-import com.josemgu91.habittune.android.ui.schedule.FragmentSchedule;
-import com.josemgu91.habittune.android.ui.settings.FragmentSettings;
-import com.josemgu91.habittune.android.FragmentStatistics;
 import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
 import com.josemgu91.habittune.android.ui.activity_create_update.FragmentNewActivity;
 import com.josemgu91.habittune.android.ui.activity_create_update.FragmentUpdateActivity;
@@ -36,6 +33,9 @@ import com.josemgu91.habittune.android.ui.routine_editor.FragmentRoutineEditor;
 import com.josemgu91.habittune.android.ui.routine_entry_add.FragmentAddRoutineEntry;
 import com.josemgu91.habittune.android.ui.routine_update.FragmentUpdateRoutine;
 import com.josemgu91.habittune.android.ui.routines.FragmentRoutines;
+import com.josemgu91.habittune.android.ui.schedule.FragmentSchedule;
+import com.josemgu91.habittune.android.ui.settings.FragmentSettings;
+import com.josemgu91.habittune.android.ui.statistics.FragmentStatistics;
 import com.josemgu91.habittune.android.ui.tag_editor.FragmentTagEditor;
 
 public class FragmentKeyFactory {
@@ -55,6 +55,7 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_ROUTINE_EDITOR = "fragmentRoutineEditor";
     public static final String FRAGMENT_TAG_ADD_ROUTINE_ENTRY = "fragmentAddRoutineEntry";
     public static final String FRAGMENT_TAG_ACTIVITY_SELECTION = "fragmentActivitySelection";
+    public static final String FRAGMENT_TAG_STATISTICS_ACTIVITY_SELECTION = "fragmentStatisticsActivitySelection";
 
     private static final String FRAGMENT_ARG_UPDATE_ACTIVITY_ACTIVITY_ID = "activityId";
 
@@ -64,6 +65,8 @@ public class FragmentKeyFactory {
 
     private static final String FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_ID = "routineId";
     private static final String FRAGMENT_ARG_ADD_ROUTINE_ENTRY_ROUTINE_DAY = "routineDay";
+
+    private static final String FRAGMENT_ARG_STATISTICS_ACTIVITY_ID = "activityId";
 
     public FragmentKey createScheduleKey() {
         return new FragmentKey(FRAGMENT_TAG_SCHEDULE, null);
@@ -77,8 +80,14 @@ public class FragmentKeyFactory {
         return new FragmentKey(FRAGMENT_TAG_ACTIVITIES, null);
     }
 
-    public FragmentKey createStatisticsKey() {
-        return new FragmentKey(FRAGMENT_TAG_STATISTICS, null);
+    public FragmentKey createStatisticsKey(@NonNull final String activityId) {
+        final Bundle arguments = new Bundle();
+        arguments.putString(FRAGMENT_ARG_STATISTICS_ACTIVITY_ID, activityId);
+        return new FragmentKey(FRAGMENT_TAG_STATISTICS, arguments);
+    }
+
+    public FragmentKey createStatisticsActivitySelectionKey() {
+        return new FragmentKey(FRAGMENT_TAG_STATISTICS_ACTIVITY_SELECTION, null);
     }
 
     public FragmentKey createNewActivityKey() {
@@ -141,7 +150,9 @@ public class FragmentKeyFactory {
                 case FRAGMENT_TAG_ACTIVITIES:
                     return new FragmentActivities();
                 case FRAGMENT_TAG_STATISTICS:
-                    return new FragmentStatistics();
+                    return FragmentStatistics.newInstance(
+                            arguments.getString(FRAGMENT_ARG_STATISTICS_ACTIVITY_ID)
+                    );
                 case FRAGMENT_TAG_SETTINGS:
                     return new FragmentSettings();
                 case FRAGMENT_TAG_HELP:
@@ -171,6 +182,8 @@ public class FragmentKeyFactory {
                     );
                 case FRAGMENT_TAG_ACTIVITY_SELECTION:
                     return new FragmentActivitySelection();
+                case FRAGMENT_TAG_STATISTICS_ACTIVITY_SELECTION:
+                    return new com.josemgu91.habittune.android.ui.statistics.FragmentActivitySelection();
                 default:
                     throw new RuntimeException("Unknown fragment tag!");
             }

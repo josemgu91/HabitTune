@@ -17,11 +17,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.josemgu91.habittune.android.ui.activity_selection;
+package com.josemgu91.habittune.android.ui.statistics;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +33,7 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.activities.ActivityItem;
+import com.josemgu91.habittune.android.ui.activity_selection.ViewModelActivitySelection;
 import com.josemgu91.habittune.databinding.FragmentActivitySelectionBinding;
 import com.josemgu91.habittune.domain.usecases.GetActivity;
 
@@ -47,25 +47,21 @@ public class FragmentActivitySelection extends BaseFragment {
     private FragmentActivitySelectionBinding fragmentActivitySelectionBinding;
 
     private FlexibleAdapter<ActivityItem> flexibleAdapterActivities;
-
     private ViewModelActivitySelection viewModelActivitySelection;
-    private SharedViewModelActivitySelection sharedViewModelActivitySelection;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         viewModelActivitySelection = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivitySelection.class);
-        sharedViewModelActivitySelection = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
     }
 
     @NonNull
     @Override
     protected View createView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentActivitySelectionBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_activity_selection, container, false);
+        fragmentActivitySelectionBinding = FragmentActivitySelectionBinding.inflate(inflater, container, false);
         flexibleAdapterActivities = new FlexibleAdapter<>(null, (FlexibleAdapter.OnItemClickListener) (view, position) -> {
             final ActivityItem activityItem = flexibleAdapterActivities.getItem(position);
-            sharedViewModelActivitySelection.setSelectedActivityId(activityItem.getId());
-            fragmentInteractionListener.finishFragment();
+            onActivitySelected(activityItem);
             return true;
         }, true);
         fragmentActivitySelectionBinding.recyclerView.setAdapter(flexibleAdapterActivities);
@@ -97,8 +93,8 @@ public class FragmentActivitySelection extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        fragmentInteractionListener.updateToolbar(getString(R.string.activity_selection_title), FragmentInteractionListener.IC_NAVIGATION_CLOSE);
-        fragmentInteractionListener.updateNavigationDrawer(false);
+        fragmentInteractionListener.updateToolbar(getString(R.string.statistics_title), FragmentInteractionListener.IC_NAVIGATION_HAMBURGUER);
+        fragmentInteractionListener.updateNavigationDrawer(true);
     }
 
     @Override
@@ -112,5 +108,9 @@ public class FragmentActivitySelection extends BaseFragment {
             activities.add(new ActivityItem(output.getId(), output.getName()));
         }
         flexibleAdapterActivities.updateDataSet(activities);
+    }
+
+    private void onActivitySelected(final ActivityItem activityItem) {
+        fragmentInteractionListener.navigateToFragmentStatistics(activityItem.getId());
     }
 }

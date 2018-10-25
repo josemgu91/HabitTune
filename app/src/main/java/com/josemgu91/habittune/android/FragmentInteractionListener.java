@@ -59,7 +59,9 @@ public interface FragmentInteractionListener {
 
     void navigateToFragmentAddRoutineEntry(@NonNull final String routineId, final int routineDay);
 
-    void navigateToActivitySelection();
+    void navigateToFragmentActivitySelection();
+
+    void navigateToFragmentStatistics(@NonNull final String activityId);
 
     void finishFragment();
 
