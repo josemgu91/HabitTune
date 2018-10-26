@@ -18,7 +18,7 @@
   -->
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.josemgu91.habittune.android.ui.widget.ActivityConfiguration"
+    android:configure="com.josemgu91.habittune.android.ui.widget.ActivityStatisticsWidgetConfiguration"
     android:initialLayout="@layout/widget_statistics"
     android:minWidth="40dp"
     android:minHeight="40dp"

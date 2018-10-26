@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".android.ui.widget.ActivityConfiguration">
+        <activity android:name=".android.ui.widget.ActivityStatisticsWidgetConfiguration">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
