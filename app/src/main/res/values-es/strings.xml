@@ -104,6 +104,7 @@
     <string name="statistics_pie_variation_average_label">Variación promedio:</string>
     <string name="statistics_pie_variation_start">Inicio: &#177;%d minutos.</string>
     <string name="statistics_pie_variation_end">Fin: &#177;%d minutos.</string>
+    <string name="statistics_action_export_to_csv">Exportar a formato CSV</string>
 
     <string name="action_delete">Eliminar</string>
     <string name="action_cancel">Cancelar</string>

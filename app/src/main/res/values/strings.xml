@@ -106,6 +106,7 @@
     <string name="statistics_pie_variation_average_label">Average variation:</string>
     <string name="statistics_pie_variation_start">Start: &#177;%d minutes.</string>
     <string name="statistics_pie_variation_end">End: &#177;%d minutes.</string>
+    <string name="statistics_action_export_to_csv">Export to CSV</string>
 
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
