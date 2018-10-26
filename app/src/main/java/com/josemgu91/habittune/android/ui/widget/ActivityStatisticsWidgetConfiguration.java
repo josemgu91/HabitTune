@@ -19,8 +19,10 @@
 
 package com.josemgu91.habittune.android.ui.widget;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -44,13 +46,12 @@ public class ActivityStatisticsWidgetConfiguration extends AppCompatActivity {
 
     ActivityWidgetStatisticsConfigurationBinding activityWidgetStatisticsConfigurationBinding;
 
-    private ViewModelActivitySelection viewModelActivitySelection;
-
     private FlexibleAdapter<ActivityItem> flexibleAdapterActivities;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
         activityWidgetStatisticsConfigurationBinding = DataBindingUtil.setContentView(this, R.layout.activity_widget_statistics_configuration);
         setSupportActionBar(activityWidgetStatisticsConfigurationBinding.toolbar);
         setTitle(R.string.activity_selection_title);
@@ -62,7 +63,7 @@ public class ActivityStatisticsWidgetConfiguration extends AppCompatActivity {
         activityWidgetStatisticsConfigurationBinding.recyclerView.setAdapter(flexibleAdapterActivities);
         final Application application = (Application) getApplication();
         final ViewModelProvider.Factory viewModelFactory = application.getViewModelFactory();
-        viewModelActivitySelection = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivitySelection.class);
+        final ViewModelActivitySelection viewModelActivitySelection = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivitySelection.class);
         viewModelActivitySelection.fetchActivities();
         viewModelActivitySelection.getGetActivitiesResponse().observe(this, response -> {
             if (response.status != Response.Status.SUCCESS) {
@@ -73,7 +74,22 @@ public class ActivityStatisticsWidgetConfiguration extends AppCompatActivity {
     }
 
     private void onActivitySelected(final ActivityItem activityItem) {
-
+        final Intent intentThatStartedThisActivity = getIntent();
+        final Bundle intentExtras = intentThatStartedThisActivity.getExtras();
+        if (intentExtras == null) {
+            finish();
+            return;
+        }
+        final int appWidgetId = intentExtras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finish();
+            return;
+        }
+        final Intent resultIntent = new Intent();
+        resultIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        resultIntent.putExtra(WidgetProviderStatistics.ARG_ACTIVITY_ID, activityItem.getId());
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
     private void updateActivities(List<GetActivity.Output> outputs) {

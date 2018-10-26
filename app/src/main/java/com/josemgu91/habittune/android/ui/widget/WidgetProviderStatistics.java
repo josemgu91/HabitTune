@@ -42,6 +42,8 @@ public class WidgetProviderStatistics extends AppWidgetProvider {
     private final static int GRAPH_WIDTH_PX = 1024;
     private final static int GRAPH_HEIGHT_PX = 1024;
 
+    public final static String ARG_ACTIVITY_ID = "activityId";
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         //TODO: Is there a way to get the RemoteView size?
