@@ -23,6 +23,7 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.ActivityMain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +127,7 @@ public class ServiceWidgetStatistics extends IntentService {
         for (final int appWidgetId : widgetIds) {
             final Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
             final String activityId = options.getString(WidgetProviderStatistics.OPTION_ACTIVITY_ID);
-            renderWidget(appWidgetId, statisticalGraphicsBitmap, "Activity Id: " + activityId);
+            updateRemoteView(appWidgetId, statisticalGraphicsBitmap, activityId);
         }
     }
 
@@ -155,10 +157,17 @@ public class ServiceWidgetStatistics extends IntentService {
         return bitmap;
     }
 
-    private void renderWidget(final int widgetId, final Bitmap bitmap, final String activityName) {
+    private void updateRemoteView(final int widgetId, final Bitmap bitmap, final String activityId) {
         final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_statistics);
         remoteViews.setBitmap(R.id.imageViewStatisticalGraphics, "setImageBitmap", bitmap);
-        remoteViews.setTextViewText(R.id.textViewActivityName, activityName);
+        remoteViews.setTextViewText(R.id.textViewActivityName, "Activity " + activityId);
+        remoteViews.setOnClickPendingIntent(R.id.linearLayout, PendingIntent.getActivity(
+                this,
+                1,
+                new Intent(this, ActivityMain.class)
+                        .putExtra(ActivityMain.OPT_ARG_ACTIVITY_ID, activityId),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        ));
         appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 

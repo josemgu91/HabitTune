@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.android;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -56,6 +57,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     private InputMethodManager inputMethodManager;
 
+    public final static String OPT_ARG_ACTIVITY_ID = "activityId";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         fragmentKeyFactory = new FragmentKeyFactory();
@@ -77,6 +80,29 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         backstackDelegate.setStateChanger(this);
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final Intent intentThatStartedThisActivity = getIntent();
+        handleActivityRedirectionIntent(intentThatStartedThisActivity);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleActivityRedirectionIntent(intent);
+    }
+
+    private void handleActivityRedirectionIntent(final Intent intent) {
+        if (!intent.hasExtra(OPT_ARG_ACTIVITY_ID)) {
+            return;
+        }
+        final String activityId = intent.getStringExtra(OPT_ARG_ACTIVITY_ID);
+        navigateToFragmentStatistics(activityId);
+        intent.removeExtra(OPT_ARG_ACTIVITY_ID);
     }
 
     @Override
