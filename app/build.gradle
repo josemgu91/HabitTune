@@ -89,6 +89,8 @@ dependencies {
     implementation "eu.davidea:flexible-adapter:$flexibleAdapterVersion"
     def mpAndroidChartVersion = 'v3.0.3'
     implementation "com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion"
+    def fastCsvVersion = '1.0.3'
+    implementation "de.siegmar:fastcsv:$fastCsvVersion"
 
     def jUnitVersion = '4.12'
     def testRunnerVersion = '1.0.2'
