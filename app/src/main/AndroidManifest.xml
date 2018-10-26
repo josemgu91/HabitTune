@@ -20,6 +20,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.josemgu91.habittune">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:name=".android.Application"
         android:allowBackup="true"
@@ -36,7 +38,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".android.ui.widget.ActivityStatisticsWidgetConfiguration">
+        <activity
+            android:name=".android.ui.widget.ActivityStatisticsWidgetConfiguration"
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -51,6 +55,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_statistics" />
         </receiver>
+
+        <service android:name=".android.ui.widget.ServiceWidgetStatistics" />
     </application>
 
 </manifest>

@@ -87,7 +87,10 @@ public class ActivityStatisticsWidgetConfiguration extends AppCompatActivity {
         }
         final Intent resultIntent = new Intent();
         resultIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        resultIntent.putExtra(WidgetProviderStatistics.ARG_ACTIVITY_ID, activityItem.getId());
+        final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        final Bundle options = new Bundle();
+        options.putString(WidgetProviderStatistics.OPTION_ACTIVITY_ID, activityItem.getId());
+        appWidgetManager.updateAppWidgetOptions(appWidgetId, options);
         setResult(RESULT_OK, resultIntent);
         finish();
     }

@@ -109,6 +109,10 @@
     <string name="statistics_error_exporting_csv">No se puede exportar al archivo CSV.</string>
 
     <string name="widget_statistics_content_description">Gráficos estadísticos.</string>
+    <string name="widget_statistics_notification_update_title">Widget de Estadísticas</string>
+    <string name="widget_statistics_notification_update_content">Actualizando&#8230;</string>
+
+    <string name="notification_channel_widget_update">Actualización de Widgets</string>
 
     <string name="action_delete">Eliminar</string>
     <string name="action_cancel">Cancelar</string>
