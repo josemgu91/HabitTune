@@ -89,6 +89,7 @@ public class FragmentStatistics extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionExportToCsv) {
+            onExportToCsv();
             return true;
         }
         return false;
@@ -168,5 +169,9 @@ public class FragmentStatistics extends BaseFragment {
         fragmentStatisticsBinding.pieChart.setDescription(description);
         fragmentStatisticsBinding.pieChart.setCenterText(totalEventsText);
         fragmentStatisticsBinding.pieChart.invalidate();
+    }
+
+    private void onExportToCsv() {
+
     }
 }

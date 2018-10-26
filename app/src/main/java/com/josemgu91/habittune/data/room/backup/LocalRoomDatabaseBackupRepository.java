@@ -23,6 +23,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.josemgu91.habittune.data.file.ContentResolverFile;
 import com.josemgu91.habittune.data.room.LocalRoomDatabase;
 import com.josemgu91.habittune.domain.datagateways.BackupDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
@@ -30,19 +31,14 @@ import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.Scanner;
 
 public class LocalRoomDatabaseBackupRepository implements BackupDataGateway {
 
     private final JsonBuilder jsonBuilder;
     private final DatabaseImporter databaseImporter;
     private final LocalRoomDatabase localRoomDatabase;
-    private final Context context;
+    private final ContentResolverFile contentResolverFile;
 
     private final static String CHARSET = "UTF-8";
 
@@ -50,28 +46,20 @@ public class LocalRoomDatabaseBackupRepository implements BackupDataGateway {
         this.jsonBuilder = new JsonBuilder(localRoomDatabase);
         this.databaseImporter = new DatabaseImporter(localRoomDatabase);
         this.localRoomDatabase = localRoomDatabase;
-        this.context = context;
+        this.contentResolverFile = new ContentResolverFile(context, CHARSET);
     }
 
     @Override
     public void importFrom(@NonNull String fileUriString) throws DataGatewayException {
         try {
             final Uri fileUri = Uri.parse(fileUriString);
-            final InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
-            if (inputStream == null) {
-                throw new DataGatewayException("Can't open input stream!");
-            }
-            final Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
-            if (!scanner.hasNext()) {
-                throw new DataGatewayException("Empty file!");
-            }
             localRoomDatabase.clearAllTables();
-            final String jsonString = scanner.next();
+            final String jsonString = contentResolverFile.readFileAsString(fileUri);
             final boolean success = databaseImporter.rebuildDatabase(new JSONObject(jsonString));
             if (!success) {
                 throw new DataGatewayException("Can't build database!");
             }
-        } catch (FileNotFoundException | JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
             throw new DataGatewayException(e.getMessage());
         }
@@ -82,14 +70,7 @@ public class LocalRoomDatabaseBackupRepository implements BackupDataGateway {
         try {
             final Uri fileUri = Uri.parse(fileUriString);
             final JSONObject jsonObject = jsonBuilder.buildJsonObject();
-            final OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri);
-            if (outputStream == null) {
-                throw new DataGatewayException("Can't open output stream!");
-            }
-            final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, CHARSET);
-            outputStreamWriter.write(jsonObject.toString());
-            outputStreamWriter.close();
-            outputStream.close();
+            contentResolverFile.writeStringToFile(fileUri, jsonObject.toString());
         } catch (JSONException | IOException e) {
             e.printStackTrace();
             throw new DataGatewayException(e.getMessage());

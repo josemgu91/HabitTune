@@ -19,5 +19,10 @@
 
 package com.josemgu91.habittune.domain.datagateways;
 
-public interface Repository extends ActivityDataGateway, RoutineDataGateway, TagDataGateway, RoutineEntryDataGateway, AssistanceRegisterDataGateway, BackupDataGateway, ExportDataGateway {
+import android.support.annotation.NonNull;
+
+public interface ExportDataGateway {
+
+    void exportToCsv(@NonNull final String activityId, @NonNull final String fileUri) throws DataGatewayException;
+
 }

@@ -28,6 +28,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.josemgu91.habittune.data.room.backup.LocalRoomDatabaseBackupRepository;
+import com.josemgu91.habittune.data.room.csv.CsvExporter;
 import com.josemgu91.habittune.data.room.custom_responses.RoutineEntry;
 import com.josemgu91.habittune.data.room.model.ActivityTagJoin;
 import com.josemgu91.habittune.data.room.model.RoutineActivityJoin;
@@ -51,6 +52,7 @@ public class RoomRepository implements Repository {
 
     private final LocalRoomDatabase localRoomDatabase;
     private final LocalRoomDatabaseBackupRepository localRoomDatabaseBackupRepository;
+    private final CsvExporter csvExporter;
 
     private final Executor repositoryExecutor;
 
@@ -60,6 +62,7 @@ public class RoomRepository implements Repository {
         this.localRoomDatabase = localRoomDatabase;
         this.repositoryExecutor = repositoryExecutor;
         this.localRoomDatabaseBackupRepository = new LocalRoomDatabaseBackupRepository(localRoomDatabase, context);
+        this.csvExporter = new CsvExporter(localRoomDatabase, context);
         this.scheduleCalculator = new ScheduleCalculator();
     }
 
@@ -513,6 +516,11 @@ public class RoomRepository implements Repository {
     @Override
     public void exportTo(@NonNull String fileUri) throws DataGatewayException {
         localRoomDatabaseBackupRepository.exportTo(fileUri);
+    }
+
+    @Override
+    public void exportToCsv(@NonNull String activityId, @NonNull String fileUri) throws DataGatewayException {
+        csvExporter.exportToCsv(activityId, fileUri);
     }
 
     private static <I, O> List<O> mapList(List<I> inList, Function<I, O> function) {
