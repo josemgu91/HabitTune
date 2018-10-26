@@ -110,6 +110,8 @@
     <string name="statistics_error_file_explorer">Can\'t open file explorer.</string>
     <string name="statistics_error_exporting_csv">Can\'t export to CSV file.</string>
 
+    <string name="widget_statistics_content_description">Statistical graphics.</string>
+
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
 
