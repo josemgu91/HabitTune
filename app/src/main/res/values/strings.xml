@@ -107,6 +107,8 @@
     <string name="statistics_pie_variation_start">Start: &#177;%d minutes.</string>
     <string name="statistics_pie_variation_end">End: &#177;%d minutes.</string>
     <string name="statistics_action_export_to_csv">Export to CSV</string>
+    <string name="statistics_error_file_explorer">Can\'t open file explorer.</string>
+    <string name="statistics_error_exporting_csv">Can\'t export to CSV file.</string>
 
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>

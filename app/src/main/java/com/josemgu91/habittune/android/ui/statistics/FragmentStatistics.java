@@ -19,17 +19,24 @@
 
 package com.josemgu91.habittune.android.ui.statistics;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
@@ -37,11 +44,14 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.josemgu91.habittune.R;
+import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.android.ui.BaseFragment;
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.android.ui.common.DateFormatter;
 import com.josemgu91.habittune.databinding.FragmentStatisticsBinding;
+import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
+import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.usecases.CalculateAssistanceStatistics;
 
 import java.util.ArrayList;
@@ -49,7 +59,11 @@ import java.util.List;
 
 public class FragmentStatistics extends BaseFragment {
 
+    private final static int REQUEST_CODE_EXPORT_AS_CSV = 100;
+
     private final static String ARG_ACTIVITY_ID = "activityId";
+
+    private final static String CSV_MEDIA_TYPE = "text/csv";
 
     public static FragmentStatistics newInstance(@NonNull final String activityId) {
         Bundle args = new Bundle();
@@ -132,6 +146,24 @@ public class FragmentStatistics extends BaseFragment {
         fragmentInteractionListener.updateNavigationDrawer(false);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_EXPORT_AS_CSV && resultCode == Activity.RESULT_OK) {
+            final Uri fileUri = data.getData();
+            //TODO: Use a use case instead of calling the repository directly.
+            final Handler uiThreadHandler = new Handler();
+            AsyncTask.execute(() -> {
+                final Repository repository = ((Application) getActivity().getApplication()).getRepository();
+                try {
+                    repository.exportToCsv(activityId, fileUri.toString());
+                } catch (DataGatewayException e) {
+                    e.printStackTrace();
+                    uiThreadHandler.post(() -> showError(R.string.statistics_error_exporting_csv));
+                }
+            });
+        }
+    }
+
     private void renderAssistanceStatistics(CalculateAssistanceStatistics.Output assistanceStatistics) {
         final int totalEvents = assistanceStatistics.getTotalEvents();
         final int missedEvents = assistanceStatistics.getEventsMissed();
@@ -172,6 +204,20 @@ public class FragmentStatistics extends BaseFragment {
     }
 
     private void onExportToCsv() {
+        final Intent createFileIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        createFileIntent.setType(CSV_MEDIA_TYPE);
+        if (!doesActivityExist(createFileIntent)) {
+            showError(R.string.statistics_error_file_explorer);
+            return;
+        }
+        startActivityForResult(createFileIntent, REQUEST_CODE_EXPORT_AS_CSV);
+    }
 
+    private boolean doesActivityExist(final Intent intent) {
+        return intent.resolveActivity(getContext().getPackageManager()) != null;
+    }
+
+    private void showError(@StringRes final int errorMessage) {
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 }
