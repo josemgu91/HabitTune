@@ -36,6 +36,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.navigation.FragmentKey;
 import com.josemgu91.habittune.android.navigation.FragmentKeyFactory;
@@ -60,10 +61,13 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     private InputMethodManager inputMethodManager;
 
+    private FirebaseAnalytics firebaseAnalytics;
+
     public final static String OPT_ARG_ACTIVITY_ID = "activityId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         fragmentKeyFactory = new FragmentKeyFactory();
         backstackDelegate = new BackstackDelegate(null);
         backstackDelegate.onCreate(savedInstanceState,
@@ -133,21 +137,27 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigationMenuGoToSchedule:
+                logAnalyticsNavigationEvent("schedule");
                 backstackDelegate.getBackstack().jumpToRoot();
                 break;
             case R.id.navigationMenuGoToRoutines:
+                logAnalyticsNavigationEvent("routines");
                 backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createRoutinesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToActivities:
+                logAnalyticsNavigationEvent("activities");
                 backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createActivitiesKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToStatistics:
+                logAnalyticsNavigationEvent("statisticsActivitySelection");
                 backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createStatisticsActivitySelectionKey()), StateChange.REPLACE);
                 break;
             case R.id.navigationMenuGoToSettings:
+                logAnalyticsNavigationEvent("settings");
                 backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createSettingsKey());
                 break;
             case R.id.navigationMenuGoToHelp:
+                logAnalyticsNavigationEvent("help");
                 backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createHelpKey());
                 break;
         }
@@ -238,47 +248,62 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void navigateToFragmentNewActivity() {
+        logAnalyticsNavigationEvent("newActivity");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createNewActivityKey());
     }
 
     @Override
     public void navigateToFragmentUpdateActivity(@NonNull String activityId) {
+        logAnalyticsNavigationEvent("updateActivity");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createUpdateActivityKey(activityId));
     }
 
     @Override
     public void navigateToFragmentNewRoutine() {
+        logAnalyticsNavigationEvent("newRoutine");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createNewRoutineKey());
     }
 
     @Override
     public void navigateToFragmentUpdateRoutine(@NonNull String routineId) {
+        logAnalyticsNavigationEvent("updateRoutine");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createUpdateRoutineKey(routineId));
     }
 
     @Override
     public void navigateToFragmentTagEditor() {
+        logAnalyticsNavigationEvent("tagEditor");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createTagEditorKey());
     }
 
     @Override
     public void navigateToFragmentRoutineEditor(@NonNull String routineId) {
+        logAnalyticsNavigationEvent("routineEditor");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createRoutineEditorKey(routineId));
     }
 
     @Override
     public void navigateToFragmentAddRoutineEntry(@NonNull String routineId, int routineDay) {
+        logAnalyticsNavigationEvent("addRoutineEntry");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createAddRoutineEntryKey(routineId, routineDay));
     }
 
     @Override
     public void navigateToFragmentActivitySelection() {
+        logAnalyticsNavigationEvent("activitySelection");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createFragmentActivitySelection());
     }
 
     @Override
     public void navigateToFragmentStatistics(@NonNull String activityId) {
+        logAnalyticsNavigationEvent("statisticsShowActivity");
         backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createStatisticsKey(activityId));
+    }
+
+    private void logAnalyticsNavigationEvent(final String id) {
+        final Bundle bundle = new Bundle();
+        bundle.putString("screenId", id);
+        firebaseAnalytics.logEvent("navigation", bundle);
     }
 
     @Override
