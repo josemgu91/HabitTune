@@ -20,6 +20,7 @@
 package com.josemgu91.habittune.android.ui.settings;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
+import com.josemgu91.habittune.android.FragmentInteractionListener;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.Repository;
 
@@ -41,6 +43,14 @@ public class FragmentSettingsPreference extends PreferenceFragmentCompat {
 
     private final static String JSON_MEDIA_TYPE = "application/json";
     private final static String ALL_MEDIA_TYPE = "*/*";
+
+    private FragmentInteractionListener fragmentInteractionListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentInteractionListener = (FragmentInteractionListener) context;
+    }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -82,6 +92,7 @@ public class FragmentSettingsPreference extends PreferenceFragmentCompat {
                 final Repository repository = ((Application) getActivity().getApplication()).getRepository();
                 try {
                     repository.importFrom(fileUri.toString());
+                    uiThreadHandler.post(() -> fragmentInteractionListener.updateWidgets());
                 } catch (DataGatewayException e) {
                     e.printStackTrace();
                     uiThreadHandler.post(() -> showError(R.string.settings_error_import_backup));

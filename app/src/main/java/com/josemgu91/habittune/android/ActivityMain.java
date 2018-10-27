@@ -19,6 +19,8 @@
 
 package com.josemgu91.habittune.android;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -38,6 +40,7 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.navigation.FragmentKey;
 import com.josemgu91.habittune.android.navigation.FragmentKeyFactory;
 import com.josemgu91.habittune.android.navigation.FragmentStateChanger;
+import com.josemgu91.habittune.android.ui.widget.WidgetProviderStatistics;
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
 import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.History;
@@ -297,5 +300,16 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public void hideSoftKeyboard() {
         inputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+    }
+
+    @Override
+    public void updateWidgets() {
+        final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        final int[] widgetIds = appWidgetManager
+                .getAppWidgetIds(new ComponentName(getApplication(), WidgetProviderStatistics.class));
+        final Intent intent = new Intent(this, WidgetProviderStatistics.class)
+                .setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+                .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
+        sendBroadcast(intent);
     }
 }

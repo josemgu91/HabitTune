@@ -80,6 +80,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
     @Override
     protected void onDelete(ActivityItem itemToDelete) {
         viewModelActivities.deleteActivity(itemToDelete.getId());
+        fragmentInteractionListener.updateWidgets();
     }
 
     @Override
