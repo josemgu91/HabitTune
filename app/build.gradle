@@ -19,6 +19,7 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 28
@@ -98,6 +99,10 @@ dependencies {
     })
     def crashlyticsVersion = '2.9.5'
     implementation "com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion"
+    def firebasePerformanceMonitoringVersion = '16.2.0'
+    implementation("com.google.firebase:firebase-perf:$firebasePerformanceMonitoringVersion", {
+        exclude group: 'com.android.support'
+    })
 
     def jUnitVersion = '4.12'
     def testRunnerVersion = '1.0.2'
