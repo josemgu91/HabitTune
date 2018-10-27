@@ -91,6 +91,10 @@ dependencies {
     implementation "com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion"
     def fastCsvVersion = '1.0.3'
     implementation "de.siegmar:fastcsv:$fastCsvVersion"
+    def firebaseVersion = '16.0.4'
+    implementation("com.google.firebase:firebase-core:$firebaseVersion", {
+        exclude group: 'com.android.support'
+    })
 
     def jUnitVersion = '4.12'
     def testRunnerVersion = '1.0.2'
@@ -106,3 +110,5 @@ dependencies {
 task installRelease(dependsOn: "installCleanDebug", type: Exec, group: "help") {
     commandLine 'adb', 'shell', 'am', 'start', '-n', "com.josemgu91.habittune/.android.ActivityMain"
 }
+
+apply plugin: 'com.google.gms.google-services'
