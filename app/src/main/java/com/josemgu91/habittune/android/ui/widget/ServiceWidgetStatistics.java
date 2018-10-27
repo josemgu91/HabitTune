@@ -38,15 +38,16 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.ActivityMain;
+import com.josemgu91.habittune.android.Application;
+import com.josemgu91.habittune.android.ui.common.DateFormatter;
+import com.josemgu91.habittune.android.ui.statistics.ChartHelper;
+import com.josemgu91.habittune.domain.usecases.CalculateAssistanceStatistics;
+import com.josemgu91.habittune.domain.usecases.GetActivity;
+import com.josemgu91.habittune.domain.usecases.common.UseCaseOutput;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class ServiceWidgetStatistics extends IntentService {
 
@@ -56,16 +57,18 @@ public class ServiceWidgetStatistics extends IntentService {
     public final static String ARG_WIDGET_IDS = "widgetIds";
 
     private AppWidgetManager appWidgetManager;
-    private int[] widgetIds;
 
     private final static int GRAPH_WIDTH_PX = 1024;
     private final static int GRAPH_HEIGHT_PX = 1024;
 
-    public ServiceWidgetStatistics() {
-        super("ServiceWidgetStatistics");
-    }
+    public final static String TAG = "ServiceWidgetStatistics";
 
-    public static void update(@NonNull final Context context, @NonNull final int[] appWidgetIds) {
+    private ChartHelper chartHelper;
+
+    private CalculateAssistanceStatistics calculateAssistanceStatistics;
+    private GetActivity getActivity;
+
+    public static void start(@NonNull final Context context, @NonNull final int[] appWidgetIds) {
         final Intent intent = new Intent(context, ServiceWidgetStatistics.class);
         intent.putExtra(ARG_WIDGET_IDS, appWidgetIds);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -75,10 +78,13 @@ public class ServiceWidgetStatistics extends IntentService {
         }
     }
 
+    public ServiceWidgetStatistics() {
+        super(TAG);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        appWidgetManager = AppWidgetManager.getInstance(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             final NotificationChannel notificationChannel = new NotificationChannel(
                     FOREGROUND_NOTIFICATION_CHANNEL_ID,
@@ -98,49 +104,100 @@ public class ServiceWidgetStatistics extends IntentService {
                     .build();
             startForeground(FOREGROUND_NOTIFICATION_ID, notification);
         }
+        final Application application = (Application) getApplicationContext();
+        calculateAssistanceStatistics = application.getUseCaseFactory().createCalculateAssistanceStatistics();
+        getActivity = application.getUseCaseFactory().createGetActivity();
+        appWidgetManager = AppWidgetManager.getInstance(this);
+        chartHelper = new ChartHelper(this, new DateFormatter());
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        checkIntent(intent);
-        final Bundle intentExtras = intent.getExtras();
-        widgetIds = intentExtras.getIntArray(ARG_WIDGET_IDS);
-        updateWidgets();
+        if (isIntentValid(intent)) {
+            final Bundle intentExtras = intent.getExtras();
+            final int[] widgetIds = intentExtras.getIntArray(ARG_WIDGET_IDS);
+            updateWidgets(widgetIds);
+        }
     }
 
-    private void checkIntent(final Intent intent) {
+    private boolean isIntentValid(final Intent intent) {
         if (intent == null) {
-            throw new IllegalArgumentException("Intent is null!");
+            return false;
         }
         final Bundle intentExtras = intent.getExtras();
         if (intentExtras == null) {
-            throw new IllegalArgumentException("Intent extras is null!");
+            return false;
         }
         if (!intentExtras.containsKey(ARG_WIDGET_IDS)) {
-            throw new IllegalStateException("The Intent hasn't the ARG_WIDGET_IDS key!");
+            return false;
         }
+        return true;
     }
 
-    private void updateWidgets() {
-        //TODO: Is there a way to get the RemoteView size?
-        final Bitmap statisticalGraphicsBitmap = createStatisticalGraphic(GRAPH_WIDTH_PX, GRAPH_HEIGHT_PX);
+    private void updateWidgets(final int[] widgetIds) {
         for (final int appWidgetId : widgetIds) {
-            final Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
-            final String activityId = options.getString(WidgetProviderStatistics.OPTION_ACTIVITY_ID);
-            updateRemoteView(appWidgetId, statisticalGraphicsBitmap, activityId);
+            updateWidget(appWidgetId);
         }
     }
 
-    private Bitmap createStatisticalGraphic(final int widthPx, final int heightPx) {
-        final List<PieEntry> pieEntries = new ArrayList<>();
-        pieEntries.add(new PieEntry(0.5f, "Test Data 1"));
-        pieEntries.add(new PieEntry(0.5f, "Test Data 2"));
-        final PieDataSet pieDataSet = new PieDataSet(pieEntries, "Test Data Set");
-        pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        final PieData pieData = new PieData(pieDataSet);
+    private void updateWidget(final int widgetId) {
+        final Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
+        final String activityId = options.getString(WidgetProviderStatistics.OPTION_ACTIVITY_ID);
+        final CountDownLatch countDownLatch = new CountDownLatch(2);
+        final Object[] responses = new Object[2];
+        calculateAssistanceStatistics.execute(new CalculateAssistanceStatistics.Input(activityId), new UseCaseOutput<CalculateAssistanceStatistics.Output>() {
+            @Override
+            public void onSuccess(@Nullable CalculateAssistanceStatistics.Output output) {
+                //Warning: This runs on UI thread. The Bitmap generation can potentially block it.
+                //TODO: Is there a way to get the RemoteView size?
+                final Bitmap statisticalGraphicsBitmap = createStatisticalGraphic(output, GRAPH_WIDTH_PX, GRAPH_HEIGHT_PX);
+                responses[0] = statisticalGraphicsBitmap;
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void inProgress() {
+            }
+
+            @Override
+            public void onError() {
+                countDownLatch.countDown();
+            }
+        });
+        getActivity.execute(new GetActivity.Input(activityId), new UseCaseOutput<GetActivity.Output>() {
+            @Override
+            public void onSuccess(@Nullable GetActivity.Output output) {
+                responses[1] = output.getName();
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void inProgress() {
+
+            }
+
+            @Override
+            public void onError() {
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        final Bitmap chartBitmap = (Bitmap) responses[0];
+        final String activityName = (String) responses[1];
+        if (chartBitmap != null && activityName != null) {
+            updateRemoteView(widgetId, chartBitmap, activityName, activityId);
+        } else {
+            updateRemoteViewActivityNotFound(widgetId);
+        }
+    }
+
+    private Bitmap createStatisticalGraphic(final CalculateAssistanceStatistics.Output assistanceStatistics, final int widthPx, final int heightPx) {
         final PieChart pieChart = new PieChart(this);
-        pieChart.setData(pieData);
-        pieChart.invalidate();
+        chartHelper.populateChart(pieChart, assistanceStatistics);
         final int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(widthPx, View.MeasureSpec.EXACTLY);
         final int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(heightPx, View.MeasureSpec.EXACTLY);
         pieChart.measure(widthMeasureSpec, heightMeasureSpec);
@@ -157,13 +214,16 @@ public class ServiceWidgetStatistics extends IntentService {
         return bitmap;
     }
 
-    private void updateRemoteView(final int widgetId, final Bitmap bitmap, final String activityId) {
+    private void updateRemoteView(final int widgetId, final Bitmap bitmap, final String activityName, final String activityId) {
         final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_statistics);
+        remoteViews.setViewVisibility(R.id.textViewActivityDeletedMessage, View.GONE);
+        remoteViews.setViewVisibility(R.id.linearLayoutResult, View.VISIBLE);
         remoteViews.setBitmap(R.id.imageViewStatisticalGraphics, "setImageBitmap", bitmap);
-        remoteViews.setTextViewText(R.id.textViewActivityName, "Activity " + activityId);
+        remoteViews.setTextViewText(R.id.textViewActivityName, activityName);
+        //Request code must be unique because the PendingIntent doesn't difference the Intent extras.
         remoteViews.setOnClickPendingIntent(R.id.linearLayout, PendingIntent.getActivity(
                 this,
-                1,
+                Integer.valueOf(activityId),
                 new Intent(this, ActivityMain.class)
                         .putExtra(ActivityMain.OPT_ARG_ACTIVITY_ID, activityId),
                 PendingIntent.FLAG_UPDATE_CURRENT
@@ -171,7 +231,10 @@ public class ServiceWidgetStatistics extends IntentService {
         appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 
-    private void finishService() {
-        stopSelf();
+    private void updateRemoteViewActivityNotFound(final int widgetId) {
+        final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_statistics);
+        remoteViews.setViewVisibility(R.id.textViewActivityDeletedMessage, View.VISIBLE);
+        remoteViews.setViewVisibility(R.id.linearLayoutResult, View.GONE);
+        appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 }

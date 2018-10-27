@@ -111,6 +111,7 @@
     <string name="widget_statistics_content_description">Gráficos estadísticos.</string>
     <string name="widget_statistics_notification_update_title">Widget de Estadísticas</string>
     <string name="widget_statistics_notification_update_content">Actualizando&#8230;</string>
+    <string name="widget_statistics_error_activity_deleted">¡La Actividad fue eliminada!</string>
 
     <string name="notification_channel_widget_update">Actualización de Widgets</string>
 

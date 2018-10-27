@@ -17,27 +17,42 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:background="@android:color/white">
 
     <TextView
-        android:id="@+id/textViewActivityName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        tools:text="This is the Title" />
-
-    <ImageView
-        android:id="@+id/imageViewStatisticalGraphics"
+        android:id="@+id/textViewActivityDeletedMessage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/widget_statistics_content_description"
-        tools:src="@drawable/cpv_ic_arrow_right_black_24dp" />
+        android:gravity="center"
+        android:text="@string/widget_statistics_error_activity_deleted"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display2"
+        android:visibility="gone" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayoutResult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewActivityName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            tools:text="This is the Title" />
+
+        <ImageView
+            android:id="@+id/imageViewStatisticalGraphics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_statistics_content_description"
+            tools:src="@drawable/cpv_ic_arrow_right_black_24dp" />
+
+    </LinearLayout>
+</FrameLayout>

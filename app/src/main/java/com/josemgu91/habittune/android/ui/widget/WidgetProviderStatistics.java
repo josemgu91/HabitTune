@@ -47,11 +47,11 @@ public class WidgetProviderStatistics extends AppWidgetProvider {
         for (int i = 0; i < appWidgetsIdsToUpdateList.size(); i++) {
             appWidgetsIdsToUpdateArray[i] = appWidgetsIdsToUpdateList.get(i);
         }
-        ServiceWidgetStatistics.update(context, appWidgetsIdsToUpdateArray);
+        ServiceWidgetStatistics.start(context, appWidgetsIdsToUpdateArray);
     }
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        ServiceWidgetStatistics.update(context, new int[]{appWidgetId});
+        ServiceWidgetStatistics.start(context, new int[]{appWidgetId});
     }
 }

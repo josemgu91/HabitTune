@@ -38,11 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -53,9 +48,6 @@ import com.josemgu91.habittune.databinding.FragmentStatisticsBinding;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;
 import com.josemgu91.habittune.domain.datagateways.Repository;
 import com.josemgu91.habittune.domain.usecases.CalculateAssistanceStatistics;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FragmentStatistics extends BaseFragment {
 
@@ -78,7 +70,7 @@ public class FragmentStatistics extends BaseFragment {
     private ViewModelStatistics viewModelStatistics;
     private FragmentStatisticsBinding fragmentStatisticsBinding;
 
-    private DateFormatter dateFormatter;
+    private ChartHelper chartHelper;
 
     @Override
     public void onAttach(Context context) {
@@ -86,7 +78,8 @@ public class FragmentStatistics extends BaseFragment {
         viewModelStatistics = ViewModelProviders.of(this, viewModelFactory).get(ViewModelStatistics.class);
         final Bundle arguments = getArguments();
         activityId = arguments.getString(ARG_ACTIVITY_ID);
-        dateFormatter = new DateFormatter();
+        final DateFormatter dateFormatter = new DateFormatter();
+        chartHelper = new ChartHelper(context, dateFormatter);
     }
 
     @Override
@@ -136,7 +129,7 @@ public class FragmentStatistics extends BaseFragment {
             if (response.status != Response.Status.SUCCESS) {
                 return;
             }
-            renderAssistanceStatistics(response.successData);
+            showAssistanceStatistics(response.successData);
         });
     }
 
@@ -164,43 +157,8 @@ public class FragmentStatistics extends BaseFragment {
         }
     }
 
-    private void renderAssistanceStatistics(CalculateAssistanceStatistics.Output assistanceStatistics) {
-        final int totalEvents = assistanceStatistics.getTotalEvents();
-        final int missedEvents = assistanceStatistics.getEventsMissed();
-        final int completedEvents = totalEvents - missedEvents;
-        final int averageStartErrorInSeconds = assistanceStatistics.getAverageStartTimeErrorInSeconds();
-        final int averageEndErrorInSeconds = assistanceStatistics.getAverageEndTimeErrorInSeconds();
-        final String formattedUpdateDate = dateFormatter.formatDate(assistanceStatistics.getUpToDate());
-
-        final String totalEventsText = getString(R.string.statistics_pie_events_total, totalEvents);
-        final String upToDateText = getString(R.string.statistics_pie_up_to_date, formattedUpdateDate);
-        final int averageStartErrorInMinutes = averageStartErrorInSeconds / 60;
-        final int averageEndErrorInMinutes = averageEndErrorInSeconds / 60;
-        final String averageStartErrorText = getString(R.string.statistics_pie_variation_start, averageStartErrorInMinutes);
-        final String averageEndErrorText = getString(R.string.statistics_pie_variation_end, averageEndErrorInMinutes);
-        final String averageVariationLabel = getString(R.string.statistics_pie_variation_average_label);
-
-        final List<PieEntry> pieEntries = new ArrayList<>();
-        pieEntries.add(new PieEntry(completedEvents, getString(R.string.statistics_pie_events_completed_label)));
-        pieEntries.add(new PieEntry(missedEvents, getString(R.string.statistics_pie_events_missed_label)));
-        final PieDataSet pieDataSet = new PieDataSet(pieEntries, upToDateText);
-        pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        final PieData pieData = new PieData(pieDataSet);
-
-        fragmentStatisticsBinding.pieChart.setData(pieData);
-        final Description description = new Description();
-        description.setText(
-                new StringBuilder()
-                        .append(averageVariationLabel)
-                        .append(" ")
-                        .append(averageStartErrorText)
-                        .append(" ")
-                        .append(averageEndErrorText)
-                        .toString()
-        );
-        fragmentStatisticsBinding.pieChart.setDescription(description);
-        fragmentStatisticsBinding.pieChart.setCenterText(totalEventsText);
-        fragmentStatisticsBinding.pieChart.invalidate();
+    private void showAssistanceStatistics(CalculateAssistanceStatistics.Output assistanceStatistics) {
+        chartHelper.populateChart(fragmentStatisticsBinding.pieChart, assistanceStatistics);
     }
 
     private void onExportToCsv() {

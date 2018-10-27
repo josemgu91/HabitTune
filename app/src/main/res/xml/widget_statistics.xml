@@ -20,9 +20,9 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="com.josemgu91.habittune.android.ui.widget.ActivityStatisticsWidgetConfiguration"
     android:initialLayout="@layout/widget_statistics"
-    android:minWidth="40dp"
-    android:minHeight="40dp"
+    android:minWidth="110dp"
+    android:minHeight="110dp"
     android:previewImage="@mipmap/ic_launcher"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="1800000"
+    android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen" />
