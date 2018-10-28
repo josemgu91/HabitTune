@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import com.josemgu91.habittune.android.FragmentHelp;
 import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
 import com.josemgu91.habittune.android.ui.activity_create_update.FragmentNewActivity;
 import com.josemgu91.habittune.android.ui.activity_create_update.FragmentUpdateActivity;
@@ -45,7 +44,6 @@ public class FragmentKeyFactory {
     public static final String FRAGMENT_TAG_ACTIVITIES = "fragmentActivities";
     public static final String FRAGMENT_TAG_STATISTICS = "fragmentStatistics";
     public static final String FRAGMENT_TAG_SETTINGS = "fragmentSettings";
-    public static final String FRAGMENT_TAG_HELP = "fragmentHelp";
 
     public static final String FRAGMENT_TAG_NEW_ACTIVITY = "fragmentNewActivity";
     public static final String FRAGMENT_TAG_UPDATE_ACTIVITY = "fragmentUpdateActivity";
@@ -135,10 +133,6 @@ public class FragmentKeyFactory {
         return new FragmentKey(FRAGMENT_TAG_SETTINGS, null);
     }
 
-    public FragmentKey createHelpKey() {
-        return new FragmentKey(FRAGMENT_TAG_HELP, null);
-    }
-
     public static class FragmentFactory {
         public Fragment createFragment(final FragmentKey fragmentKey) {
             final Bundle arguments = fragmentKey.getArguments();
@@ -155,8 +149,6 @@ public class FragmentKeyFactory {
                     );
                 case FRAGMENT_TAG_SETTINGS:
                     return new FragmentSettings();
-                case FRAGMENT_TAG_HELP:
-                    return new FragmentHelp();
                 case FRAGMENT_TAG_NEW_ACTIVITY:
                     return new FragmentNewActivity();
                 case FRAGMENT_TAG_UPDATE_ACTIVITY:

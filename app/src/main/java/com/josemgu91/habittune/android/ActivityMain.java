@@ -159,7 +159,6 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.navigationMenuGoToHelp:
                 logAnalyticsNavigationEvent("help");
-                //backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createHelpKey());
                 startActivity(new Intent(this, TourActivity.class));
                 break;
         }
@@ -208,9 +207,6 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 break;
             case FragmentKeyFactory.FRAGMENT_TAG_SETTINGS:
                 navigationView.setCheckedItem(R.id.navigationMenuGoToSettings);
-                break;
-            case FragmentKeyFactory.FRAGMENT_TAG_HELP:
-                navigationView.setCheckedItem(R.id.navigationMenuGoToHelp);
                 break;
         }
         fragmentStateChanger.handleStateChange(stateChange);
