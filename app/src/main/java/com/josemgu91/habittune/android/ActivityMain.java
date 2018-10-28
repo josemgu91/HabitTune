@@ -19,11 +19,14 @@
 
 package com.josemgu91.habittune.android;
 
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -31,6 +34,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -89,6 +93,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        showInitialTourAtFirstTime();
     }
 
     @Override
@@ -159,7 +164,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.navigationMenuGoToHelp:
                 logAnalyticsNavigationEvent("help");
-                startActivity(new Intent(this, TourActivity.class));
+                launchTourScreen();
                 break;
         }
         drawerLayout.closeDrawers();
@@ -334,5 +339,23 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 .setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
                 .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
         sendBroadcast(intent);
+    }
+
+    //FIXME: Quick and dirty code. Can leak the Activity for very little time during a configuration change.
+    @SuppressLint("ApplySharedPref")
+    private void showInitialTourAtFirstTime() {
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        AsyncTask.execute(() -> {
+            final String firstStartKey = "firstStart";
+            final boolean firstStart = sharedPreferences.getBoolean(firstStartKey, true);
+            if (firstStart) {
+                sharedPreferences.edit().putBoolean(firstStartKey, false).commit();
+                runOnUiThread(this::launchTourScreen);
+            }
+        });
+    }
+
+    private void launchTourScreen() {
+        startActivity(new Intent(this, TourActivity.class));
     }
 }
