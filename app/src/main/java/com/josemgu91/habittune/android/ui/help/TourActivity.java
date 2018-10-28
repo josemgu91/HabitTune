@@ -21,6 +21,7 @@ package com.josemgu91.habittune.android.ui.help;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
 import com.github.paolorotolo.appintro.AppIntro;
@@ -43,5 +44,13 @@ public class TourActivity extends AppIntro {
             sliderPage.setTitleColor(ContextCompat.getColor(this, R.color.primaryText));
             addSlide(AppIntroFragment.newInstance(sliderPage));
         }
+        showSkipButton(false);
+        setColorDoneText(ContextCompat.getColor(this, R.color.primaryText));
+        setNextArrowColor(ContextCompat.getColor(this, R.color.primaryText));
+    }
+
+    @Override
+    public void onDonePressed(Fragment currentFragment) {
+        finish();
     }
 }

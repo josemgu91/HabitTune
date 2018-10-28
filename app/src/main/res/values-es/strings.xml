@@ -29,8 +29,6 @@
 
     <string name="menu_delete_items">Borrar Elementos</string>
 
-    <string name="help_title">Ayuda</string>
-
     <string name="activities_title">Actividades</string>
     <string name="activities_delete_dialog_title">¿Eliminar Actividad?</string>
     <string name="activities_delete_dialog_content">Vamos a eliminar esta actividad y removerla de todas tus rutinas. Tus rutinas y etiquetas no serán eliminadas pero las estadísticas de esta actividad se irán para siempre.</string>
@@ -112,6 +110,8 @@
     <string name="widget_statistics_notification_update_title">Widget de Estadísticas</string>
     <string name="widget_statistics_notification_update_content">Actualizando&#8230;</string>
     <string name="widget_statistics_error_activity_deleted">¡La Actividad fue eliminada!</string>
+
+    <string name="help_title">Ayuda</string>
 
     <string name="notification_channel_widget_update">Actualización de Widgets</string>
 

@@ -41,6 +41,7 @@ import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.navigation.FragmentKey;
 import com.josemgu91.habittune.android.navigation.FragmentKeyFactory;
 import com.josemgu91.habittune.android.navigation.FragmentStateChanger;
+import com.josemgu91.habittune.android.ui.help.TourActivity;
 import com.josemgu91.habittune.android.ui.widget.WidgetProviderStatistics;
 import com.josemgu91.habittune.databinding.ActivityMainBinding;
 import com.zhuinden.simplestack.BackstackDelegate;
@@ -158,7 +159,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.navigationMenuGoToHelp:
                 logAnalyticsNavigationEvent("help");
-                backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createHelpKey());
+                //backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createHelpKey());
+                startActivity(new Intent(this, TourActivity.class));
                 break;
         }
         drawerLayout.closeDrawers();
