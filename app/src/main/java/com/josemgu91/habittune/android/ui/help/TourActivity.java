@@ -46,6 +46,10 @@ public class TourActivity extends AppIntro {
         }
         showSkipButton(false);
         setColorDoneText(ContextCompat.getColor(this, R.color.primaryText));
+        setIndicatorColor(
+                ContextCompat.getColor(this, R.color.primaryText),
+                ContextCompat.getColor(this, R.color.primaryDark)
+        );
         setNextArrowColor(ContextCompat.getColor(this, R.color.primaryText));
     }
 
