@@ -103,6 +103,8 @@ dependencies {
     implementation("com.google.firebase:firebase-perf:$firebasePerformanceMonitoringVersion", {
         exclude group: 'com.android.support'
     })
+    def appIntroVersion = 'v4.2.3'
+    implementation "com.github.paolorotolo:appintro:$appIntroVersion"
 
     def jUnitVersion = '4.12'
     def testRunnerVersion = '1.0.2'
