@@ -25,55 +25,64 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/listElementMarginStart"
-        android:paddingTop="@dimen/listElementMarginTop"
-        android:paddingEnd="@dimen/listElementMarginEnd"
-        android:paddingBottom="@dimen/listElementMarginBottom">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/textViewActivityStartHour"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textViewActivityName"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewActivityColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="08:00" />
+
+        <ImageView
+            android:id="@+id/imageViewActivityColor"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/secondary"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/textViewActivityName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_marginStart="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/primaryText"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textViewActivityEndHour"
-            app:layout_constraintStart_toEndOf="@+id/textViewActivityStartHour"
+            app:layout_constraintEnd_toStartOf="@+id/textViewAssistance"
+            app:layout_constraintStart_toEndOf="@+id/imageViewActivityColor"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Activity Name" />
 
         <TextView
             android:id="@+id/textViewActivityEndHour"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewActivityName"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewActivityColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewActivityStartHour"
             tools:text="13:00" />
 
         <TextView
             android:id="@+id/textViewAssistance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="end|bottom"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/secondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewActivityName"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="&#10003;&#10003;" />
 
     </android.support.constraint.ConstraintLayout>

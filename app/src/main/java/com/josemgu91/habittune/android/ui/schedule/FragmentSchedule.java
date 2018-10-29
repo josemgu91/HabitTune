@@ -24,12 +24,14 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
@@ -129,6 +131,7 @@ public class FragmentSchedule extends BaseFragment {
                     routineEntry.getStartTime(),
                     routineEntry.getEndTime(),
                     routineEntry.getCycleNumber(),
+                    routineEntry.getActivity().getColor(),
                     routineEntry.getAssistanceRegisterLiveData(),
                     getViewLifecycleOwner()
             ));
@@ -183,15 +186,20 @@ public class FragmentSchedule extends BaseFragment {
         private final int activityStartHour;
         private final int activityEndHour;
         private final int cycleNumber;
+        @ColorInt
+        private final int activityColor;
+        @NonNull
         private final LiveData<GetRoutineEntriesByDate.Output.AssistanceRegister> assistanceRegisterLiveData;
+        @NonNull
         private final LifecycleOwner lifecycleOwner;
 
-        public ActivityItem(@NonNull String routineEntryId, @NonNull String activityName, int activityStartHour, int activityEndHour, int cycleNumber, LiveData<GetRoutineEntriesByDate.Output.AssistanceRegister> assistanceRegisterLiveData, LifecycleOwner lifecycleOwner) {
+        public ActivityItem(@NonNull String routineEntryId, @NonNull String activityName, int activityStartHour, int activityEndHour, int cycleNumber, int activityColor, @NonNull LiveData<GetRoutineEntriesByDate.Output.AssistanceRegister> assistanceRegisterLiveData, @NonNull LifecycleOwner lifecycleOwner) {
             this.routineEntryId = routineEntryId;
             this.activityName = activityName;
             this.activityStartHour = activityStartHour;
             this.activityEndHour = activityEndHour;
             this.cycleNumber = cycleNumber;
+            this.activityColor = activityColor;
             this.assistanceRegisterLiveData = assistanceRegisterLiveData;
             this.lifecycleOwner = lifecycleOwner;
         }
@@ -204,6 +212,7 @@ public class FragmentSchedule extends BaseFragment {
             return activityStartHour == that.activityStartHour &&
                     activityEndHour == that.activityEndHour &&
                     cycleNumber == that.cycleNumber &&
+                    activityColor == that.activityColor &&
                     Objects.equals(routineEntryId, that.routineEntryId) &&
                     Objects.equals(activityName, that.activityName) &&
                     Objects.equals(assistanceRegisterLiveData, that.assistanceRegisterLiveData) &&
@@ -212,7 +221,7 @@ public class FragmentSchedule extends BaseFragment {
 
         @Override
         public int hashCode() {
-            return Objects.hash(routineEntryId, activityName, activityStartHour, activityEndHour, cycleNumber, assistanceRegisterLiveData, lifecycleOwner);
+            return Objects.hash(routineEntryId, activityName, activityStartHour, activityEndHour, cycleNumber, activityColor, assistanceRegisterLiveData, lifecycleOwner);
         }
 
         @Override
@@ -230,6 +239,7 @@ public class FragmentSchedule extends BaseFragment {
             holder.textViewName.setText(activityName);
             holder.textViewStartHour.setText(formatHour(activityStartHour));
             holder.textViewEndHour.setText(formatHour(activityEndHour));
+            holder.imageViewColor.setBackgroundColor(activityColor);
             assistanceRegisterLiveData.observe(lifecycleOwner, assistanceRegister -> {
                 if (assistanceRegister.getStartTime() == UNDEFINED_ASSISTANCE_TIME) {
                     holder.textViewAssistance.setText("");
@@ -260,6 +270,7 @@ public class FragmentSchedule extends BaseFragment {
             private final TextView textViewEndHour;
             private final TextView textViewName;
             private final TextView textViewAssistance;
+            private final ImageView imageViewColor;
 
             public ViewHolder(View view, FlexibleAdapter adapter) {
                 super(view, adapter);
@@ -267,6 +278,7 @@ public class FragmentSchedule extends BaseFragment {
                 textViewEndHour = view.findViewById(R.id.textViewActivityEndHour);
                 textViewName = view.findViewById(R.id.textViewActivityName);
                 textViewAssistance = view.findViewById(R.id.textViewAssistance);
+                imageViewColor = view.findViewById(R.id.imageViewActivityColor);
             }
         }
 
