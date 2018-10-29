@@ -63,10 +63,10 @@ public class FragmentSettingsPreference extends PreferenceFragmentCompat {
             importBackup();
             return true;
         });
-        findPreference(getString(R.string.preferenceKeyAbout)).setOnPreferenceClickListener(preference -> {
+        /*findPreference(getString(R.string.preferenceKeyAbout)).setOnPreferenceClickListener(preference -> {
             showAbout();
             return true;
-        });
+        });*/
     }
 
     @Override
