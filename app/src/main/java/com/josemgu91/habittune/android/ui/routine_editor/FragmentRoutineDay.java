@@ -24,6 +24,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -118,7 +119,8 @@ public class FragmentRoutineDay extends Fragment {
                     routineEntry.getId(),
                     formattedStartTime,
                     formattedEndTime,
-                    routineEntry.getActivity().getName()
+                    routineEntry.getActivity().getName(),
+                    routineEntry.getActivity().getColor()
             ));
         }
         routineEntryItemFlexibleAdapter.updateDataSet(routineEntryItems);
@@ -172,12 +174,15 @@ public class FragmentRoutineDay extends Fragment {
         private final String activityEndHour;
         @NonNull
         private final String activityName;
+        @ColorInt
+        private final int activityColor;
 
-        public RoutineEntryItem(@NonNull String routineEntryId, @NonNull String activityStartHour, @NonNull String activityEndHour, @NonNull String activityName) {
+        public RoutineEntryItem(@NonNull String routineEntryId, @NonNull String activityStartHour, @NonNull String activityEndHour, @NonNull String activityName, int activityColor) {
             this.routineEntryId = routineEntryId;
             this.activityStartHour = activityStartHour;
             this.activityEndHour = activityEndHour;
             this.activityName = activityName;
+            this.activityColor = activityColor;
         }
 
         @Override
@@ -185,7 +190,8 @@ public class FragmentRoutineDay extends Fragment {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             RoutineEntryItem that = (RoutineEntryItem) o;
-            return Objects.equals(routineEntryId, that.routineEntryId) &&
+            return activityColor == that.activityColor &&
+                    Objects.equals(routineEntryId, that.routineEntryId) &&
                     Objects.equals(activityStartHour, that.activityStartHour) &&
                     Objects.equals(activityEndHour, that.activityEndHour) &&
                     Objects.equals(activityName, that.activityName);
@@ -193,7 +199,8 @@ public class FragmentRoutineDay extends Fragment {
 
         @Override
         public int hashCode() {
-            return Objects.hash(routineEntryId, activityStartHour, activityEndHour, activityName);
+
+            return Objects.hash(routineEntryId, activityStartHour, activityEndHour, activityName, activityColor);
         }
 
         @Override
@@ -212,6 +219,7 @@ public class FragmentRoutineDay extends Fragment {
             holder.textViewActivityStartHour.setText(activityStartHour);
             holder.textViewActivityEndtHour.setText(activityEndHour);
             holder.textViewActivityName.setText(activityName);
+            holder.imageViewActivityColor.setBackgroundColor(activityColor);
         }
 
         public static class RoutineEntryViewHolder extends FlexibleViewHolder {
@@ -222,6 +230,7 @@ public class FragmentRoutineDay extends Fragment {
             private final TextView textViewActivityEndtHour;
             private final TextView textViewActivityName;
             private final ImageView imageViewOverflowButton;
+            private final ImageView imageViewActivityColor;
 
             public RoutineEntryViewHolder(View view, FlexibleAdapter adapter) {
                 super(view, adapter);
@@ -229,6 +238,7 @@ public class FragmentRoutineDay extends Fragment {
                 textViewActivityEndtHour = view.findViewById(R.id.textViewActivityEndHour);
                 textViewActivityName = view.findViewById(R.id.textViewActivityName);
                 imageViewOverflowButton = view.findViewById(R.id.imageViewOverflowButton);
+                imageViewActivityColor = view.findViewById(R.id.imageViewActivityColor);
                 final PopupMenu popupMenu = new PopupMenu(view.getContext(), imageViewOverflowButton);
                 popupMenu.inflate(R.menu.element_routine_entry);
                 popupMenu.setOnMenuItemClickListener(item -> {
