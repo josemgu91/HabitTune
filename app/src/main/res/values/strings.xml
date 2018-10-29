@@ -70,6 +70,7 @@
     <string name="update_routine_action_update">Update</string>
 
     <string name="routine_editor_title">Routine Editor</string>
+    <string name="routine_editor_empty">Add activities for this day.</string>
     <string name="routine_editor_element_overflow_button">More options&#8230;</string>
     <string name="routine_editor_element_delete">Delete</string>
     <string name="routine_editor_action_update_routine">Update</string>

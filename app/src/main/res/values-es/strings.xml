@@ -68,6 +68,7 @@
     <string name="update_routine_action_update">Modificar</string>
 
     <string name="routine_editor_title">Editor de Rutina</string>
+    <string name="routine_editor_empty">Agrega actividades para este día.</string>
     <string name="routine_editor_element_overflow_button">Más opciones&#8230;</string>
     <string name="routine_editor_element_delete">Eliminar</string>
     <string name="routine_editor_action_update_routine">Modificar</string>

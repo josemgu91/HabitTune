@@ -70,6 +70,7 @@ public class FragmentRoutineDay extends Fragment {
     private ViewModelRoutineDay viewModelRoutineDay;
     private int routineDay;
     private String routineId;
+    private FragmentRoutineDayBinding fragmentRoutineDayBinding;
 
     @Override
     public void onAttach(Context context) {
@@ -84,7 +85,7 @@ public class FragmentRoutineDay extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentRoutineDayBinding fragmentRoutineDayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_day, container, false);
+        fragmentRoutineDayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_routine_day, container, false);
         routineEntryItemFlexibleAdapter = new RoutineEntriesFlexibleAdapter(viewModelRoutineDay::deleteRoutineEntry, null);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setAdapter(routineEntryItemFlexibleAdapter);
         fragmentRoutineDayBinding.recyclerViewRoutineDayEntries.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -109,6 +110,12 @@ public class FragmentRoutineDay extends Fragment {
     }
 
     private void updateRoutineEntries(List<GetRoutineEntries.Output> routineEntries) {
+        if (routineEntries.size() == 0) {
+            fragmentRoutineDayBinding.setShowWarning(true);
+            fragmentRoutineDayBinding.textViewWarning.setText(R.string.routine_editor_empty);
+            return;
+        }
+        fragmentRoutineDayBinding.setShowWarning(false);
         final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
         final Calendar calendar = Calendar.getInstance();
         final List<RoutineEntryItem> routineEntryItems = new ArrayList<>();

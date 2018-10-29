@@ -21,6 +21,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="showWarning"
+            type="boolean" />
+    </data>
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -35,6 +44,24 @@
             android:paddingTop="@dimen/listMarginTop"
             android:paddingEnd="@dimen/listMarginEnd"
             android:paddingBottom="@dimen/listMarginBottom"
+            android:visibility="@{!showWarning ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewWarning"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingStart="@dimen/listMarginStart"
+            android:paddingTop="@dimen/listMarginTop"
+            android:paddingEnd="@dimen/listMarginEnd"
+            android:paddingBottom="@dimen/listMarginBottom"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/primaryText"
+            android:visibility="@{showWarning ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

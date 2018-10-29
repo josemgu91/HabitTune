@@ -20,6 +20,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="showWarning"
+            type="boolean" />
+    </data>
+
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
@@ -47,7 +56,25 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingStart="@dimen/listMarginStart"
+            android:paddingTop="@dimen/listMarginTop"
+            android:paddingEnd="@dimen/listMarginEnd"
+            android:paddingBottom="@dimen/listMarginBottom"
+            android:visibility="@{!showWarning ? View.VISIBLE : View.INVISIBLE}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <TextView
+            android:id="@+id/textViewWarning"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="@dimen/listMarginStart"
+            android:paddingTop="@dimen/listMarginTop"
+            android:paddingEnd="@dimen/listMarginEnd"
+            android:paddingBottom="@dimen/listMarginBottom"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/primaryText"
+            android:visibility="@{showWarning ? View.VISIBLE : View.GONE}" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>
