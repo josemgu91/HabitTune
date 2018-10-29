@@ -19,13 +19,43 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="showWarningMessage"
+            type="boolean"
+            android:value="false" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingStart="@dimen/listMarginStart"
-        android:paddingTop="@dimen/listMarginTop"
-        android:paddingEnd="@dimen/listMarginEnd"
-        android:paddingBottom="@dimen/listMarginBottom" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/listMarginStart"
+            android:paddingTop="@dimen/listMarginTop"
+            android:paddingEnd="@dimen/listMarginEnd"
+            android:paddingBottom="@dimen/listMarginBottom"
+            android:visibility="@{showWarningMessage ? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:id="@+id/textViewWarning"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="@dimen/listMarginStart"
+            android:paddingTop="@dimen/listMarginTop"
+            android:paddingEnd="@dimen/listMarginEnd"
+            android:paddingBottom="@dimen/listMarginBottom"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/primaryText"
+            android:visibility="@{showWarningMessage ? View.VISIBLE : View.GONE}" />
+    </FrameLayout>
 </layout>

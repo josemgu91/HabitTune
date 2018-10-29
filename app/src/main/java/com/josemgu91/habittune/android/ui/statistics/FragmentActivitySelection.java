@@ -103,6 +103,11 @@ public class FragmentActivitySelection extends BaseFragment {
     }
 
     private void updateActivities(List<GetActivity.Output> outputs) {
+        if (outputs.size() == 0) {
+            fragmentActivitySelectionBinding.setShowWarning(true);
+            fragmentActivitySelectionBinding.textViewWarning.setText(R.string.activities_empty);
+            return;
+        }
         final List<ActivityItem> activities = new ArrayList<>();
         for (final GetActivity.Output output : outputs) {
             activities.add(new ActivityItem(output.getId(), output.getName(), output.getColor()));

@@ -115,6 +115,11 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
     }
 
     private void updateRoutines(List<GetRoutines.Output> outputs) {
+        if (outputs.size() == 0) {
+            fragmentListBinding.setShowWarning(true);
+            fragmentListBinding.textViewWarning.setText(R.string.routines_empty);
+            return;
+        }
         final List<RoutineItem> routineItems = new ArrayList<>();
         for (final GetRoutines.Output output : outputs) {
             routineItems.add(new RoutineItem(output.getId(), output.getName(), output.getColor()));

@@ -116,6 +116,12 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
     }
 
     private void updateActivities(List<GetActivity.Output> outputs) {
+        if (outputs.size() == 0) {
+            fragmentListBinding.setShowWarning(true);
+            fragmentListBinding.textViewWarning.setText(R.string.activities_empty);
+            return;
+        }
+        fragmentListBinding.setShowWarning(false);
         final List<ActivityItem> activities = new ArrayList<>();
         for (final GetActivity.Output output : outputs) {
             activities.add(new ActivityItem(output.getId(), output.getName(), output.getColor()));

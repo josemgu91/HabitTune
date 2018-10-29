@@ -17,7 +17,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -28,6 +27,10 @@
 
         <variable
             name="showProgress"
+            type="boolean" />
+
+        <variable
+            name="showWarning"
             type="boolean" />
     </data>
 
@@ -40,11 +43,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="@dimen/listMarginBottom"
-            android:paddingEnd="@dimen/listMarginEnd"
             android:paddingStart="@dimen/listMarginStart"
             android:paddingTop="@dimen/listMarginTop"
-            android:visibility="@{showProgress ? View.GONE : View.VISIBLE}"
+            android:paddingEnd="@dimen/listMarginEnd"
+            android:paddingBottom="@dimen/listMarginBottom"
+            android:visibility="@{!showProgress &amp;&amp; !showWarning ? View.VISIBLE : View.INVISIBLE}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.FloatingActionButton
@@ -54,7 +57,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/floating_action_button_margin"
             android:src="@drawable/ic_action_add_white_24dp"
-            android:visibility="@{showProgress ? View.GONE : View.VISIBLE}"
+            android:visibility="@{!showProgress ? View.VISIBLE : View.GONE}"
             app:fabSize="normal"
             app:layout_anchor="@id/recyclerView"
             app:layout_anchorGravity="bottom|end" />
@@ -67,5 +70,17 @@
             android:visibility="@{showProgress ? View.VISIBLE : View.GONE}"
             tools:visibility="gone" />
 
+        <TextView
+            android:id="@+id/textViewWarning"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="@dimen/listMarginStart"
+            android:paddingTop="@dimen/listMarginTop"
+            android:paddingEnd="@dimen/listMarginEnd"
+            android:paddingBottom="@dimen/listMarginBottom"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/primaryText"
+            android:visibility="@{!showProgress &amp;&amp; showWarning ? View.VISIBLE : View.GONE}" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>

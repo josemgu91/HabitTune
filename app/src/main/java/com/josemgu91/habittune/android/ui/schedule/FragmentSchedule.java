@@ -123,6 +123,12 @@ public class FragmentSchedule extends BaseFragment {
     }
 
     private void onRoutinesUpdated(final List<GetRoutineEntriesByDate.Output> routineEntries) {
+        if (routineEntries.size() == 0) {
+            fragmentScheduleBinding.setShowWarningMessage(true);
+            fragmentScheduleBinding.textViewWarning.setText(R.string.schedule_empty);
+            return;
+        }
+        fragmentScheduleBinding.setShowWarningMessage(false);
         final ArrayList<ActivityItem> activityItems = new ArrayList<>();
         for (GetRoutineEntriesByDate.Output routineEntry : routineEntries) {
             activityItems.add(new ActivityItem(
