@@ -73,10 +73,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingBottom="@dimen/listMarginBottom"
-                android:paddingEnd="@dimen/listMarginEnd"
                 android:paddingStart="@dimen/listMarginStart"
                 android:paddingTop="@dimen/listMarginTop"
+                android:paddingEnd="@dimen/listMarginEnd"
+                android:paddingBottom="@dimen/listMarginBottom"
                 android:visibility="@{showProgress ? View.GONE : View.VISIBLE}"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 tools:listitem="@layout/element_tag" />

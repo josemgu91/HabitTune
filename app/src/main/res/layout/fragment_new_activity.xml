@@ -36,6 +36,7 @@
             android:hint="@string/new_activity_hint_activity_name"
             android:inputType="textCapSentences"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -48,6 +49,7 @@
             android:hint="@string/new_activity_hint_activity_description"
             android:inputType="textMultiLine"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextActivityName" />
@@ -61,6 +63,7 @@
             android:padding="4dp"
             android:text="@string/new_activity_label_activity_color"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintBottom_toTopOf="@+id/textViewActivityTags"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextActivityDescription" />
@@ -88,7 +91,7 @@
             android:background="?attr/editTextBackground"
             android:hint="@string/new_activity_hint_activity_tags"
             android:textAppearance="?android:attr/textAppearanceInverse"
-            android:textColor="?attr/editTextColor"
+            android:textColor="@color/primaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/barrierColorBottom" />

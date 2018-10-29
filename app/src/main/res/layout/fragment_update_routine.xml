@@ -36,6 +36,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/new_routine_hint_routine_name"
             android:inputType="textCapSentences"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -47,6 +49,8 @@
             android:layout_marginTop="8dp"
             android:hint="@string/new_routine_hint_routine_description"
             android:inputType="textMultiLine"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextRoutineName" />
@@ -60,7 +64,8 @@
             android:layout_marginBottom="8dp"
             android:padding="4dp"
             android:text="@string/new_routine_label_routine_color"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextRoutineDescription" />
 
