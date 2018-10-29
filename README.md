@@ -10,6 +10,19 @@ Anybody who wants to follow a routine, form new habits and/or wants to organize 
 - Backup and restore the app data.
 ## Build Notes
 - Add your own **google-services.json** file inside the **app** folder.
+## Used External Libraries
+- [Android Architecture Componenets.](https://developer.android.com/topic/libraries/architecture/adding-components)
+- [MPAndroidChart.](https://github.com/PhilJay/MPAndroidChart)
+- [Android SQLite support library.](https://github.com/requery/sqlite-android)
+- [Simple Stack.](https://github.com/Zhuinden/simple-stack/tree/master)
+- [Color Picker.](https://github.com/jaredrummler/ColorPicker)
+- [FlexibleAdapter.](https://github.com/davideas/FlexibleAdapter)
+- [FastCSV.](https://github.com/osiegmar/FastCSV)
+- [Firebase Libraries.](https://firebase.google.com/)
+- [AppIntro.](https://github.com/paolorotolo/AppIntro)
+- JUnit.
+- Espresso.
+- Android Support Library.
 ## License
 ```
 Copyright (C) 2018  José Miguel García Urrutia <josemgu91@gmail.com>
