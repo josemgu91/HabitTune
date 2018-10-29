@@ -32,7 +32,7 @@ import com.josemgu91.habittune.R;
 public class TourActivity extends AppIntro {
 
     private final int[] drawables = new int[]{
-            R.drawable.nav_header,
+            R.drawable.tour_habittune,
             R.drawable.tour_activity,
             R.drawable.tour_routine,
             R.drawable.tour_routine_entry,
