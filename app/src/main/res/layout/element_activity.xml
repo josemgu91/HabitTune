@@ -22,31 +22,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.CardView style="@style/ActivityCard">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="?listPreferredItemHeight"
+        android:padding="8dp">
 
-        <LinearLayout
-            android:id="@+id/elementContainer"
-            style="@style/ActivityCardContainer"
-            android:background="@drawable/element_background"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imageViewActivityColor"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/secondary"
+            tools:ignore="ContentDescription" />
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+        <TextView
+            android:id="@+id/textViewActivityName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/primaryText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewActivityColor"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Play Piano" />
 
-                <TextView
-                    android:id="@+id/textViewActivityName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Play Piano" />
-
-            </android.support.constraint.ConstraintLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </android.support.constraint.ConstraintLayout>
 </layout>

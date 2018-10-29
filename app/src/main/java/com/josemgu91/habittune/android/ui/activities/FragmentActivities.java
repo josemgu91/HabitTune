@@ -37,6 +37,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
 
     private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID = "activityId";
     private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME = "activityName";
+    private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_COLOR = "activityColor";
 
     private ViewModelActivities viewModelActivities;
 
@@ -50,6 +51,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
     protected void saveItemToDeleteState(Bundle outState) {
         outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID, itemToDelete.getId());
         outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME, itemToDelete.getName());
+        outState.putInt(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_COLOR, itemToDelete.getColor());
     }
 
     @Override
@@ -59,7 +61,8 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
         }
         final String id = savedInstanceState.getString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID);
         final String name = savedInstanceState.getString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME);
-        return new ActivityItem(id, name);
+        final int color = savedInstanceState.getInt(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_COLOR);
+        return new ActivityItem(id, name, color);
     }
 
     @Override
@@ -115,7 +118,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
     private void updateActivities(List<GetActivity.Output> outputs) {
         final List<ActivityItem> activities = new ArrayList<>();
         for (final GetActivity.Output output : outputs) {
-            activities.add(new ActivityItem(output.getId(), output.getName()));
+            activities.add(new ActivityItem(output.getId(), output.getName(), output.getColor()));
         }
         recyclerViewFlexibleAdapter.updateDataSet(activities);
     }

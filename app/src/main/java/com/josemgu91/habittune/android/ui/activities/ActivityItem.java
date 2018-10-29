@@ -19,7 +19,9 @@
 
 package com.josemgu91.habittune.android.ui.activities;
 
+import android.support.annotation.ColorInt;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
@@ -36,11 +38,23 @@ public class ActivityItem extends AbstractFlexibleItem<ActivityItem.ActivityView
 
     private final String id;
     private final String name;
+    @ColorInt
+    private final int color;
 
-    public ActivityItem(String id, String name) {
+    public ActivityItem(String id, String name, int color) {
         this.id = id;
         this.name = name;
-        setSwipeable(true);
+        this.color = color;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActivityItem that = (ActivityItem) o;
+        return color == that.color &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
     }
 
     public String getId() {
@@ -51,18 +65,13 @@ public class ActivityItem extends AbstractFlexibleItem<ActivityItem.ActivityView
         return name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ActivityItem that = (ActivityItem) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name);
+    public int getColor() {
+        return color;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, color);
     }
 
     @Override
@@ -77,16 +86,19 @@ public class ActivityItem extends AbstractFlexibleItem<ActivityItem.ActivityView
 
     @Override
     public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, ActivityViewHolder holder, int position, List<Object> payloads) {
-        holder.textViewActivity.setText(name);
+        holder.textViewActivityName.setText(name);
+        holder.imageViewActivityColor.setBackgroundColor(color);
     }
 
     public static class ActivityViewHolder extends FlexibleViewHolder {
 
-        private TextView textViewActivity;
+        private TextView textViewActivityName;
+        private ImageView imageViewActivityColor;
 
         public ActivityViewHolder(View view, FlexibleAdapter adapter) {
             super(view, adapter);
-            textViewActivity = view.findViewById(R.id.textViewActivityName);
+            textViewActivityName = view.findViewById(R.id.textViewActivityName);
+            imageViewActivityColor = view.findViewById(R.id.imageViewActivityColor);
         }
     }
 }

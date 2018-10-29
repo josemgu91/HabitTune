@@ -98,7 +98,7 @@ public class ActivityStatisticsWidgetConfiguration extends AppCompatActivity {
     private void updateActivities(List<GetActivity.Output> outputs) {
         final List<ActivityItem> activities = new ArrayList<>();
         for (final GetActivity.Output output : outputs) {
-            activities.add(new ActivityItem(output.getId(), output.getName()));
+            activities.add(new ActivityItem(output.getId(), output.getName(), output.getColor()));
         }
         flexibleAdapterActivities.updateDataSet(activities);
     }
