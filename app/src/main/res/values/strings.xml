@@ -114,6 +114,20 @@
     <string name="widget_statistics_error_activity_deleted">The Activity was deleted!</string>
 
     <string name="help_title">Help</string>
+    <string-array name="help_titles">
+        <item>HabitTune</item>
+        <item>Create activities</item>
+        <item>Create routines</item>
+        <item>Add activities</item>
+        <item>Register your daily times</item>
+    </string-array>
+    <string-array name="help_descriptions">
+        <item>Make, strength and tune your habits!</item>
+        <item>Go to the Activities section and add your daily activities.</item>
+        <item>Go to the Routines section and add your routines.</item>
+        <item>Add activities to your routines.</item>
+        <item>Mark the start and end times of your daily activities.</item>
+    </string-array>
 
     <string name="notification_channel_widget_update">Widget Updates</string>
 

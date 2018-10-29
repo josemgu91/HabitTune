@@ -31,15 +31,31 @@ import com.josemgu91.habittune.R;
 
 public class TourActivity extends AppIntro {
 
+    private final int[] drawables = new int[]{
+            R.drawable.nav_header,
+            R.drawable.tour_activity,
+            R.drawable.tour_routine,
+            R.drawable.tour_routine_entry,
+            R.drawable.tour_schedule
+    };
+
+    private final int[] background = new int[]{
+            R.color.primary,
+            R.color.primary,
+            R.color.primary,
+            R.color.primary,
+            R.color.primary
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         for (int i = 0; i < 5; i++) {
             final SliderPage sliderPage = new SliderPage();
-            sliderPage.setTitle("Title " + i);
-            sliderPage.setDescription("Description " + i);
-            sliderPage.setImageDrawable(R.mipmap.ic_launcher);
-            sliderPage.setBgColor(ContextCompat.getColor(this, R.color.primary));
+            sliderPage.setTitle(getResources().getStringArray(R.array.help_titles)[i]);
+            sliderPage.setDescription(getResources().getStringArray(R.array.help_descriptions)[i]);
+            sliderPage.setImageDrawable(drawables[i]);
+            sliderPage.setBgColor(ContextCompat.getColor(this, background[i]));
             sliderPage.setDescColor(ContextCompat.getColor(this, R.color.primaryText));
             sliderPage.setTitleColor(ContextCompat.getColor(this, R.color.primaryText));
             addSlide(AppIntroFragment.newInstance(sliderPage));

@@ -112,6 +112,20 @@
     <string name="widget_statistics_error_activity_deleted">¡La Actividad fue eliminada!</string>
 
     <string name="help_title">Ayuda</string>
+    <string-array name="help_titles">
+        <item>HabitTune</item>
+        <item>Crea actividades</item>
+        <item>Crea rutinas</item>
+        <item>Agrega actividades</item>
+        <item>Registra tus tiempos</item>
+    </string-array>
+    <string-array name="help_descriptions">
+        <item>¡Haz, fortalece y afina tus hábitos!</item>
+        <item>Anda a la sección Actividades y agrega tus actividades diarias.</item>
+        <item>Anda a la sección Rutinas y agrega tus rutinas diarias.</item>
+        <item>Agrega actividades a tus rutinas.</item>
+        <item>Marca las horas de inicio y fin de tus actividades diarias.</item>
+    </string-array>
 
     <string name="notification_channel_widget_update">Actualización de Widgets</string>
 
