@@ -26,7 +26,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        android:padding="8dp">
+        android:paddingStart="@dimen/listElementMarginStart"
+        android:paddingTop="@dimen/listElementMarginTop"
+        android:paddingEnd="@dimen/listElementMarginEnd"
+        android:paddingBottom="@dimen/listElementMarginBottom">
 
         <ImageView
             android:id="@+id/imageViewActivityColor"

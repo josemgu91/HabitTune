@@ -19,9 +19,19 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pieChart"
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" />
+        android:paddingStart="@dimen/layoutMarginStart"
+        android:paddingTop="@dimen/layoutMarginTop"
+        android:paddingEnd="@dimen/layoutMarginEnd"
+        android:paddingBottom="@dimen/layoutMarginBottom">
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center" />
+    </FrameLayout>
 </layout>
