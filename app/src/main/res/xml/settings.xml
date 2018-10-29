@@ -34,11 +34,11 @@
         android:title="@string/settings_import_backup"
         app:iconSpaceReserved="false" />
 
-    <Preference
+    <!--<Preference
         android:key="@string/preferenceKeyAbout"
         android:persistent="false"
         android:summary="@string/settings_about_summary"
         android:title="@string/settings_about"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false" />-->
 
 </PreferenceScreen>
