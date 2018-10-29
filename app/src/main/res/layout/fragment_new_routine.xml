@@ -24,17 +24,19 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/layoutMarginBottom"
-        android:paddingEnd="@dimen/layoutMarginEnd"
         android:paddingStart="@dimen/layoutMarginStart"
-        android:paddingTop="@dimen/layoutMarginTop">
+        android:paddingTop="@dimen/layoutMarginTop"
+        android:paddingEnd="@dimen/layoutMarginEnd"
+        android:paddingBottom="@dimen/layoutMarginBottom">
 
         <EditText
             android:id="@+id/editTextRoutineName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:color="@color/primaryText"
             android:hint="@string/new_routine_hint_routine_name"
             android:inputType="textCapSentences"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -46,6 +48,8 @@
             android:layout_marginTop="8dp"
             android:hint="@string/new_routine_hint_routine_description"
             android:inputType="textMultiLine"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextRoutineName" />
@@ -57,7 +61,8 @@
             android:layout_marginTop="8dp"
             android:freezesText="true"
             android:padding="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextRoutineDescription"
@@ -76,11 +81,12 @@
             android:id="@+id/textViewColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:padding="4dp"
             android:text="@string/new_routine_label_routine_color"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/primaryText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/seekBarNumberOfDays" />
 
@@ -88,9 +94,9 @@
             android:id="@+id/viewColor"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:ems="10"
             android:hint="@string/new_routine_hint_routine_color"
             android:inputType="textPersonName"

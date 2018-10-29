@@ -24,10 +24,10 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/listElementMarginBottom"
-        android:paddingEnd="@dimen/listElementMarginEnd"
         android:paddingStart="@dimen/listElementMarginStart"
-        android:paddingTop="@dimen/listElementMarginTop">
+        android:paddingTop="@dimen/listElementMarginTop"
+        android:paddingEnd="@dimen/listElementMarginEnd"
+        android:paddingBottom="@dimen/listElementMarginBottom">
 
         <ImageView
             android:id="@+id/imageViewAddIcon"
@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewAddIcon"

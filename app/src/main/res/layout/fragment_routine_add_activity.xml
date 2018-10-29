@@ -24,10 +24,10 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/layoutMarginBottom"
-        android:paddingEnd="@dimen/layoutMarginEnd"
         android:paddingStart="@dimen/layoutMarginStart"
-        android:paddingTop="@dimen/layoutMarginTop">
+        android:paddingTop="@dimen/layoutMarginTop"
+        android:paddingEnd="@dimen/layoutMarginEnd"
+        android:paddingBottom="@dimen/layoutMarginBottom">
 
         <TextView
             android:id="@+id/textViewSelectAnActivity"
@@ -36,7 +36,7 @@
             android:layout_marginTop="8dp"
             android:background="?attr/editTextBackground"
             android:hint="@string/add_routine_entry_hint_select_activity"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textAppearance="?android:attr/textAppearanceInverse"
             android:textColor="?attr/editTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:text="@string/add_routine_entry_start_hour"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintBottom_toBottomOf="@+id/textViewStartHour"
             app:layout_constraintEnd_toStartOf="@+id/textViewStartHour"
             app:layout_constraintHorizontal_bias="0.5"
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="?attr/editTextBackground"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textAppearance="?android:attr/textAppearanceInverse"
             android:textColor="?attr/editTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textViewLabelStartHour"
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:text="@string/add_routine_entry_end_hour"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintBottom_toBottomOf="@+id/textViewEndHour"
             app:layout_constraintEnd_toStartOf="@+id/textViewEndHour"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="?attr/editTextBackground"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textAppearance="?android:attr/textAppearanceInverse"
             android:textColor="?attr/editTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textViewLabelEndHour"
