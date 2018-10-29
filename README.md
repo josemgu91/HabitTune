@@ -8,6 +8,8 @@ Anybody who wants to follow a routine, form new habits and/or wants to organize 
 - View your routine activities statistics.
 - Export statistics in CSV format.
 - Backup and restore the app data.
+## Build Notes
+- Add your own **google-services.json** file inside the **app** folder.
 ## License
 ```
 Copyright (C) 2018  José Miguel García Urrutia <josemgu91@gmail.com>

@@ -136,3 +136,6 @@ fabric.properties
 
 # Firebase
 google-services.json
+
+# Test Release Key
+!test-release-keystore.jks
