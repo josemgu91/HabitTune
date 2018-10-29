@@ -77,6 +77,7 @@
     <string name="routine_editor_action_update_routine">Update</string>
 
     <string name="add_routine_entry_title">Assign Activity</string>
+    <string name="add_routine_error_no_activity">You must add an activity.</string>
     <string name="add_routine_entry_action_add">Assign</string>
     <string name="add_routine_entry_hint_select_activity">Select an activity.</string>
     <string name="add_routine_entry_start_hour">Start</string>

@@ -175,6 +175,13 @@ public class FragmentAddRoutineEntry extends BaseFragment implements TimePickerD
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionAddRoutineEntry) {
+            if (selectedActivityId == null) {
+                fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setError(
+                        getString(R.string.add_routine_error_no_activity)
+                );
+                return true;
+            }
+            fragmentRoutineAddActivityBinding.textViewSelectAnActivity.setError(null);
             createRoutineEntry();
             fragmentInteractionListener.finishFragment();
             return true;
