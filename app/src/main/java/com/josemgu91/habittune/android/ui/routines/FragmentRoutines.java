@@ -37,6 +37,7 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
 
     private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID = "routineId";
     private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME = "routineName";
+    private static final String SAVED_INSTANCE_STATE_ITEM_TO_DELETE_COLOR = "routineColor";
 
     private ViewModelRoutines viewModelRoutines;
 
@@ -50,6 +51,7 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
     protected void saveItemToDeleteState(Bundle outState) {
         outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID, itemToDelete.getId());
         outState.putString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME, itemToDelete.getName());
+        outState.putInt(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_COLOR, itemToDelete.getColor());
     }
 
     @Override
@@ -59,7 +61,8 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
         }
         final String id = savedInstanceState.getString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_ID);
         final String name = savedInstanceState.getString(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_NAME);
-        return new RoutineItem(id, name);
+        final int color = savedInstanceState.getInt(SAVED_INSTANCE_STATE_ITEM_TO_DELETE_COLOR);
+        return new RoutineItem(id, name, color);
     }
 
     @Override
@@ -114,7 +117,7 @@ public class FragmentRoutines extends FragmentList<RoutineItem> {
     private void updateRoutines(List<GetRoutines.Output> outputs) {
         final List<RoutineItem> routineItems = new ArrayList<>();
         for (final GetRoutines.Output output : outputs) {
-            routineItems.add(new RoutineItem(output.getId(), output.getName()));
+            routineItems.add(new RoutineItem(output.getId(), output.getName(), output.getColor()));
         }
         recyclerViewFlexibleAdapter.updateDataSet(routineItems);
     }

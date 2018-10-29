@@ -19,7 +19,9 @@
 
 package com.josemgu91.habittune.android.ui.routines;
 
+import android.support.annotation.ColorInt;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.josemgu91.habittune.R;
@@ -36,11 +38,13 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
 
     private final String id;
     private final String name;
+    @ColorInt
+    private final int color;
 
-    public RoutineItem(String id, String name) {
+    public RoutineItem(String id, String name, int color) {
         this.id = id;
         this.name = name;
-        setSwipeable(true);
+        this.color = color;
     }
 
     public String getId() {
@@ -51,19 +55,23 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
         return name;
     }
 
+    public int getColor() {
+        return color;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RoutineItem that = (RoutineItem) o;
-        return Objects.equals(id, that.id) &&
+        return color == that.color &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, color);
     }
 
     @Override
@@ -79,15 +87,18 @@ public class RoutineItem extends AbstractFlexibleItem<RoutineItem.RoutineViewHol
     @Override
     public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, RoutineViewHolder holder, int position, List<Object> payloads) {
         holder.textViewRoutineName.setText(name);
+        holder.imageViewRoutineColor.setBackgroundColor(color);
     }
 
     public static class RoutineViewHolder extends FlexibleViewHolder {
 
         private TextView textViewRoutineName;
+        private ImageView imageViewRoutineColor;
 
         public RoutineViewHolder(View view, FlexibleAdapter adapter) {
             super(view, adapter);
             textViewRoutineName = view.findViewById(R.id.textViewRoutineName);
+            imageViewRoutineColor = view.findViewById(R.id.imageViewRoutineColor);
         }
     }
 }
