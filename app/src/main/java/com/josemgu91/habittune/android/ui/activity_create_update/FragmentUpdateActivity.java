@@ -252,7 +252,14 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
     }
 
     private void updateActivity() {
-        final String activityName = fragmentNewActivityBinding.editTextActivityName.getText().toString();
+        final String activityName = fragmentNewActivityBinding.editTextActivityName.getText().toString().trim();
+        if (activityName.length() == 0) {
+            fragmentNewActivityBinding.editTextActivityName.setError(
+                    getString(R.string.new_activity_error_empty_name)
+            );
+            return;
+        }
+        fragmentNewActivityBinding.editTextActivityName.setError(null);
         final String activityDescription = fragmentNewActivityBinding.editTextActivityDescription.getText().toString();
         final UpdateActivity.Input input = new UpdateActivity.Input(
                 activityId,

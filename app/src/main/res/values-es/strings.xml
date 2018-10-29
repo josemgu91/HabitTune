@@ -35,6 +35,7 @@
     <string name="activities_delete_dialog_content">Vamos a eliminar esta actividad y removerla de todas tus rutinas. Tus rutinas y etiquetas no serán eliminadas pero las estadísticas de esta actividad se irán para siempre.</string>
 
     <string name="new_activity_title">Nueva Actividad</string>
+    <string name="new_activity_error_empty_name">El nombre no debe estar vacío.</string>
     <string name="new_activity_hint_activity_name">Nombre de la Actividad</string>
     <string name="new_activity_hint_activity_description">Descripción</string>
     <string name="new_activity_label_activity_color">Color</string>
