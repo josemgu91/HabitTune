@@ -57,6 +57,7 @@
     <string name="routines_delete_dialog_content">Vamos a eliminar esta rutina. Tus actividades no serán eliminadas.</string>
 
     <string name="new_routine_title">Nueva Rutina</string>
+    <string name="new_routine_error_empty_name">El nombre no debe estar vacío.</string>
     <string name="new_routine_hint_routine_name">Nombre de la Rutina</string>
     <string name="new_routine_hint_routine_description">Descripción</string>
     <string name="new_routine_number_of_days">Número de días: %s</string>

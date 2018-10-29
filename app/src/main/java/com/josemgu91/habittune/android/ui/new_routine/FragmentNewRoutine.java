@@ -156,8 +156,16 @@ public class FragmentNewRoutine extends BaseFragment implements ColorPickerDialo
     }
 
     private void createRoutine() {
+        final String routineName = fragmentNewRoutineBinding.editTextRoutineName.getText().toString().trim();
+        if (routineName.length() == 0) {
+            fragmentNewRoutineBinding.editTextRoutineName.setError(
+                    getString(R.string.new_routine_error_empty_name)
+            );
+            return;
+        }
+        fragmentNewRoutineBinding.editTextRoutineName.setError(null);
         viewModelNewRoutine.createRoutine(new CreateRoutine.Input(
-                fragmentNewRoutineBinding.editTextRoutineName.getText().toString(),
+                routineName,
                 fragmentNewRoutineBinding.editTextRoutineDescription.getText().toString(),
                 selectedColor,
                 numberOfDays,

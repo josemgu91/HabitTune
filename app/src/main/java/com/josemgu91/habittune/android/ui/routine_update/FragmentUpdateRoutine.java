@@ -159,6 +159,14 @@ public class FragmentUpdateRoutine extends BaseFragment implements ColorPickerDi
     }
 
     private void updateRoutine() {
+        final String routineName = fragmentUpdateRoutineBinding.editTextRoutineName.getText().toString().trim();
+        if (routineName.length() == 0) {
+            fragmentUpdateRoutineBinding.editTextRoutineName.setError(
+                    getString(R.string.new_routine_error_empty_name)
+            );
+            return;
+        }
+        fragmentUpdateRoutineBinding.editTextRoutineName.setError(null);
         viewModelUpdateRoutine.updateRoutine(
                 routineId,
                 fragmentUpdateRoutineBinding.editTextRoutineName.getText().toString(),
