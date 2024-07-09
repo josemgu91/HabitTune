@@ -19,11 +19,11 @@
 
 package com.josemgu91.habittune.android;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.db.SupportSQLiteDatabase;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.annotation.NonNull;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.josemgu91.habittune.BuildConfig;
 import com.josemgu91.habittune.android.executors.DefaultThreadPoolExecutor;

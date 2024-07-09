@@ -19,15 +19,17 @@
 
 package com.josemgu91.habittune;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.room.Room;
-import android.content.Context;
-import android.database.sqlite.SQLiteConstraintException;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.josemgu91.habittune.data.room.LocalRoomDatabase;
 import com.josemgu91.habittune.data.room.dao.ActivityDao;
@@ -65,6 +67,9 @@ public class RoomDatabaseTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     @Before
     public void createDatabase() {

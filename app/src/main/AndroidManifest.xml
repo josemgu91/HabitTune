@@ -66,8 +66,7 @@
                 android:resource="@xml/widget_statistics" />
         </receiver>
 
-        <service android:name=".android.ui.widget.ServiceWidgetStatistics"
-            android:foregroundServiceType="shortService"/>
+        <service android:name=".android.ui.widget.ServiceWidgetStatistics" />
     </application>
 
 </manifest>
