@@ -19,18 +19,19 @@
 
 package com.josemgu91.habittune.android.ui.activity_create_update;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
@@ -83,8 +84,8 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModelNewActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelNewActivity.class);
-        sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
+        viewModelNewActivity = new ViewModelProvider(this, viewModelFactory).get(ViewModelNewActivity.class);
+        sharedViewModelTagEditor = new ViewModelProvider(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
         activityId = getArguments().getString(ARG_ACTIVITY_ID);
     }
 
@@ -97,7 +98,7 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
             selectedColor = savedInstanceState.getInt(SAVED_INSTANCE_STATE_KEY_COLOR);
             selectedTagsIds = savedInstanceState.getStringArrayList(SAVED_INSTANCE_STATE_KEY_SELECTED_TAGS_IDS);
         }
-        colorPickerDialog = (ColorPickerDialog) getActivity().getFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
+        colorPickerDialog = (ColorPickerDialog) getActivity().getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_COLOR_PICKER);
         if (colorPickerDialog == null) {
             colorPickerDialog = ColorPickerDialog.newBuilder().create();
         }
@@ -199,7 +200,7 @@ public class FragmentUpdateActivity extends BaseFragment implements ColorPickerD
         fragmentInteractionListener.hideSoftKeyboard();
         colorPickerDialog = ColorPickerDialog.newBuilder().setColor(selectedColor).create();
         colorPickerDialog.setColorPickerDialogListener(this);
-        colorPickerDialog.show(getActivity().getFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
+        colorPickerDialog.show(getActivity().getSupportFragmentManager(), FRAGMENT_TAG_COLOR_PICKER);
     }
 
     @Override

@@ -19,8 +19,8 @@
 
 package com.josemgu91.habittune.data.room;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
 import com.josemgu91.habittune.data.room.dao.ActivityDao;
 import com.josemgu91.habittune.data.room.dao.ActivityTagJoinDao;

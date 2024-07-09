@@ -19,7 +19,7 @@
 
 package com.josemgu91.habittune.domain.usecases.common;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public interface UseCaseOutput<Output> {
 

@@ -19,13 +19,13 @@
 
 package com.josemgu91.habittune.data.room;
 
-import android.arch.core.util.Function;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Transformations;
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Transformations;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.josemgu91.habittune.data.room.backup.LocalRoomDatabaseBackupRepository;
 import com.josemgu91.habittune.data.room.csv.CsvExporter;

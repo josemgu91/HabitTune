@@ -20,16 +20,12 @@
 package com.josemgu91.habittune.android.ui.statistics;
 
 import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +33,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
@@ -75,7 +76,7 @@ public class FragmentStatistics extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModelStatistics = ViewModelProviders.of(this, viewModelFactory).get(ViewModelStatistics.class);
+        viewModelStatistics = new ViewModelProvider(this, viewModelFactory).get(ViewModelStatistics.class);
         final Bundle arguments = getArguments();
         activityId = arguments.getString(ARG_ACTIVITY_ID);
         final DateFormatter dateFormatter = new DateFormatter();

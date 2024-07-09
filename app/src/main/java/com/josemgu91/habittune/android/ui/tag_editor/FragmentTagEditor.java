@@ -19,22 +19,23 @@
 
 package com.josemgu91.habittune.android.ui.tag_editor;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -76,8 +77,8 @@ public class FragmentTagEditor extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModelTagEditor = ViewModelProviders.of(this, viewModelFactory).get(ViewModelTagEditor.class);
-        sharedViewModelTagEditor = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
+        viewModelTagEditor = new ViewModelProvider(this, viewModelFactory).get(ViewModelTagEditor.class);
+        sharedViewModelTagEditor = new ViewModelProvider(getActivity(), viewModelFactory).get(SharedViewModelTagEditor.class);
     }
 
     @Override

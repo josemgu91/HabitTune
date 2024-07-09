@@ -26,9 +26,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.StringRes;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.widget.Toast;
+
+import androidx.annotation.StringRes;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;

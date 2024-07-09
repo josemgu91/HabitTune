@@ -19,7 +19,7 @@
 
 package com.josemgu91.habittune.android.ui.activity_selection;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 public class SharedViewModelActivitySelection extends ViewModel {
 

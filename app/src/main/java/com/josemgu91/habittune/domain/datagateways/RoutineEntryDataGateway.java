@@ -19,12 +19,11 @@
 
 package com.josemgu91.habittune.domain.datagateways;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import com.josemgu91.habittune.domain.entities.RoutineEntry;
 
-import java.util.Date;
 import java.util.List;
 
 public interface RoutineEntryDataGateway {

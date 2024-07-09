@@ -19,9 +19,9 @@
 
 package com.josemgu91.habittune.android;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 
 import com.josemgu91.habittune.BuildConfig;
 import com.josemgu91.habittune.android.executors.DefaultThreadPoolExecutor;

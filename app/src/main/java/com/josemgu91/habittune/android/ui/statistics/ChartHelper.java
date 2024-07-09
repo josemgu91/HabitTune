@@ -20,7 +20,7 @@
 package com.josemgu91.habittune.android.ui.statistics;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;

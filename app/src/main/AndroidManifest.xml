@@ -32,6 +32,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".android.ActivityMain"
+            android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +43,8 @@
 
         <activity
             android:name=".android.ui.widget.ActivityStatisticsWidgetConfiguration"
-            android:excludeFromRecents="true">
+            android:excludeFromRecents="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -52,7 +54,9 @@
             android:name=".android.ui.help.TourActivity"
             android:label="@string/help_title" />
 
-        <receiver android:name=".android.ui.widget.WidgetProviderStatistics">
+        <receiver
+            android:name=".android.ui.widget.WidgetProviderStatistics"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -62,7 +66,8 @@
                 android:resource="@xml/widget_statistics" />
         </receiver>
 
-        <service android:name=".android.ui.widget.ServiceWidgetStatistics" />
+        <service android:name=".android.ui.widget.ServiceWidgetStatistics"
+            android:foregroundServiceType="shortService"/>
     </application>
 
 </manifest>

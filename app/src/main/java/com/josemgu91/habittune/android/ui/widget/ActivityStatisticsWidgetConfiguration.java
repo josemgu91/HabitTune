@@ -20,14 +20,14 @@
 package com.josemgu91.habittune.android.ui.widget;
 
 import android.appwidget.AppWidgetManager;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
@@ -63,7 +63,7 @@ public class ActivityStatisticsWidgetConfiguration extends AppCompatActivity {
         activityWidgetStatisticsConfigurationBinding.recyclerView.setAdapter(flexibleAdapterActivities);
         final Application application = (Application) getApplication();
         final ViewModelProvider.Factory viewModelFactory = application.getViewModelFactory();
-        final ViewModelActivitySelection viewModelActivitySelection = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivitySelection.class);
+        final ViewModelActivitySelection viewModelActivitySelection = new ViewModelProvider(this, viewModelFactory).get(ViewModelActivitySelection.class);
         viewModelActivitySelection.fetchActivities();
         viewModelActivitySelection.getGetActivitiesResponse().observe(this, response -> {
             if (response.status != Response.Status.SUCCESS) {

@@ -19,16 +19,17 @@
 
 package com.josemgu91.habittune.android.ui.activity_selection;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -54,8 +55,8 @@ public class FragmentActivitySelection extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModelActivitySelection = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivitySelection.class);
-        sharedViewModelActivitySelection = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
+        viewModelActivitySelection = new ViewModelProvider(this, viewModelFactory).get(ViewModelActivitySelection.class);
+        sharedViewModelActivitySelection = new ViewModelProvider(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
     }
 
     @NonNull

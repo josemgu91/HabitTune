@@ -20,8 +20,9 @@
 package com.josemgu91.habittune.android.navigation;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.josemgu91.habittune.android.ui.activities.FragmentActivities;
 import com.josemgu91.habittune.android.ui.activity_create_update.FragmentNewActivity;

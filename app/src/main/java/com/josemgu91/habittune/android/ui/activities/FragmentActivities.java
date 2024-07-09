@@ -19,10 +19,10 @@
 
 package com.josemgu91.habittune.android.ui.activities;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -44,7 +44,7 @@ public class FragmentActivities extends FragmentList<ActivityItem> {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModelActivities = ViewModelProviders.of(this, viewModelFactory).get(ViewModelActivities.class);
+        viewModelActivities = new ViewModelProvider(this, viewModelFactory).get(ViewModelActivities.class);
     }
 
     @Override

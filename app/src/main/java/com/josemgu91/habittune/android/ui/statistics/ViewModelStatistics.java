@@ -19,11 +19,11 @@
 
 package com.josemgu91.habittune.android.ui.statistics;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.josemgu91.habittune.android.ui.Response;
 import com.josemgu91.habittune.domain.usecases.CalculateAssistanceStatistics;

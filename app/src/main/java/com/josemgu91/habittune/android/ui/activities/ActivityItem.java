@@ -19,10 +19,11 @@
 
 package com.josemgu91.habittune.android.ui.activities;
 
-import android.support.annotation.ColorInt;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
 
 import com.josemgu91.habittune.R;
 

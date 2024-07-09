@@ -19,7 +19,7 @@
 
 package com.josemgu91.habittune.data.room.backup;
 
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 import com.josemgu91.habittune.data.room.LocalRoomDatabase;
 import com.josemgu91.habittune.data.room.model.Activity;

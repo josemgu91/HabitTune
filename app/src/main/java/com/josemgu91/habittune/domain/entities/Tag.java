@@ -19,7 +19,7 @@
 
 package com.josemgu91.habittune.domain.entities;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Objects;
 

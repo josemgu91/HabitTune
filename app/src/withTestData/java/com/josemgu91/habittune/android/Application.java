@@ -19,11 +19,11 @@
 
 package com.josemgu91.habittune.android;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.db.SupportSQLiteDatabase;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.annotation.NonNull;
 
 import com.josemgu91.habittune.BuildConfig;
 import com.josemgu91.habittune.android.executors.DefaultThreadPoolExecutor;

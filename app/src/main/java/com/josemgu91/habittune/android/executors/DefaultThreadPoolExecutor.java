@@ -19,7 +19,7 @@
 
 package com.josemgu91.habittune.android.executors;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.ArrayBlockingQueue;

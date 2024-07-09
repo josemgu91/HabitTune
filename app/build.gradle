@@ -18,10 +18,11 @@
  */
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
+    namespace 'com.josemgu91.habittune'
+    compileSdk 34
+
     signingConfigs {
         testRelease {
             keyAlias 'test-release'
@@ -30,19 +31,15 @@ android {
             storePassword '123456'
         }
     }
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+
     defaultConfig {
         applicationId "com.josemgu91.habittune"
-        minSdkVersion 22
-        targetSdkVersion 28
+        minSdk 24
+        targetSdk 34
         versionCode 28
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    dataBinding {
-        enabled = true
-    }
-    flavorDimensions "data"
+    flavorDimensions = ["data"]
     productFlavors {
         clean {
             dimension "data"
@@ -52,6 +49,10 @@ android {
             dimension "data"
             versionName "rc-1.0-vc${defaultConfig.versionCode}-internal"
         }
+    }
+    buildFeatures {
+        buildConfig true
+        dataBinding true
     }
     buildTypes {
         release {
@@ -67,63 +68,56 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    def supportLibraryVersion = '28.0.0'
-    def constraintLayoutVersion = '1.1.3'
-    def roomVersion = "1.1.1"
-    def lifecycleVersion = "1.1.1"
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
-    implementation "com.android.support:design:$supportLibraryVersion"
-    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
-    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    implementation "com.android.support:cardview-v7:$supportLibraryVersion"
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
-    implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
-    implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
-    implementation "com.android.support:preference-v14:$supportLibraryVersion"
-    def sqLiteSupportLibraryVersion = '3.25.1'
-    implementation "io.requery:sqlite-android:$sqLiteSupportLibraryVersion"
-    def simpleStackVersion = '1.13.0'
+    def appCompatVersion = '1.7.0'
+    def materialVersion = '1.12.0'
+    def constraintLayoutVersion = '2.1.4'
+    def recyclerViewVersion = '1.3.2'
+    def cardViewVersion = '1.0.0'
+    def roomVersion = "2.6.1"
+    def lifecycleVersion = "2.8.3"
+    def preferenceVersion = "1.0.0"
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
+    implementation "androidx.cardview:cardview:$cardViewVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$roomVersion"
+    //implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation "androidx.legacy:legacy-preference-v14:$preferenceVersion"
+    def sqLiteSupportLibraryVersion = '3.45.0'
+    implementation "com.github.requery:sqlite-android:$sqLiteSupportLibraryVersion"
+    def simpleStackVersion = '2.9.0'
     implementation "com.github.Zhuinden:simple-stack:$simpleStackVersion"
-    def colorPickerVersion = '1.0.2'
+    def colorPickerVersion = '1.1.0'
     implementation "com.jaredrummler:colorpicker:$colorPickerVersion"
-    def flexibleAdapterVersion = '5.0.6'
-    implementation "eu.davidea:flexible-adapter:$flexibleAdapterVersion"
-    def mpAndroidChartVersion = 'v3.0.3'
+    def flexibleAdapterVersion = '5.1.1'
+    implementation "com.github.ddB0515.FlexibleAdapter:flexible-adapter:$flexibleAdapterVersion"
+    def mpAndroidChartVersion = 'v3.1.0'
     implementation "com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion"
     def fastCsvVersion = '1.0.3'
     implementation "de.siegmar:fastcsv:$fastCsvVersion"
-    def firebaseVersion = '16.0.4'
-    implementation("com.google.firebase:firebase-core:$firebaseVersion", {
-        exclude group: 'com.android.support'
-    })
-    def crashlyticsVersion = '2.9.5'
-    implementation "com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion"
-    def firebasePerformanceMonitoringVersion = '16.2.0'
-    implementation("com.google.firebase:firebase-perf:$firebasePerformanceMonitoringVersion", {
-        exclude group: 'com.android.support'
-    })
-    def appIntroVersion = 'v4.2.3'
-    implementation "com.github.paolorotolo:appintro:$appIntroVersion"
-    def jUnitVersion = '4.12'
-    def testRunnerVersion = '1.0.2'
-    def espressoVersion = '3.0.2'
+    def appIntroVersion = '6.3.1'
+    implementation "com.github.AppIntro:AppIntro:$appIntroVersion"
+    def jUnitVersion = '4.13.2'
+    def testRunnerVersion = '1.6.1'
+    def coreTestingVersion = '2.2.0'
+    def espressoVersion = '3.6.1'
     testImplementation "junit:junit:$jUnitVersion"
-    androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
-    testImplementation "android.arch.persistence.room:testing:$roomVersion"
-    testImplementation "android.arch.core:core-testing:$lifecycleVersion"
+    androidTestImplementation "androidx.test:runner:$testRunnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    testImplementation "androidx.room:room-testing:$roomVersion"
+    testImplementation "androidx.arch.core:core-testing:$coreTestingVersion"
 }
 
 task installRelease(dependsOn: "installCleanRelease", type: Exec, group: "help") {
     commandLine 'adb', 'shell', 'am', 'start', '-n', "com.josemgu91.habittune/.android.ActivityMain"
 }
-
-apply plugin: 'com.google.gms.google-services'

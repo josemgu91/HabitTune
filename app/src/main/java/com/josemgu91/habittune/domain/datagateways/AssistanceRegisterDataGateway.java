@@ -19,8 +19,8 @@
 
 package com.josemgu91.habittune.domain.datagateways;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.josemgu91.habittune.domain.entities.AssistanceRegister;
 

@@ -19,10 +19,10 @@
 
 package com.josemgu91.habittune.android.navigation;
 
-import android.support.annotation.IdRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.IdRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.zhuinden.simplestack.StateChange;
 
@@ -48,19 +48,19 @@ public class FragmentStateChanger {
         } else if (stateChange.getDirection() == StateChange.REPLACE) {
             fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         }
-        for (final FragmentKey oldKey : stateChange.<FragmentKey>getPreviousState()) {
+        for (final FragmentKey oldKey : stateChange.<FragmentKey>getPreviousKeys()) {
             final Fragment fragment = fragmentManager.findFragmentByTag(oldKey.getFragmentTag());
             if (fragment != null) {
-                if (!stateChange.getNewState().contains(oldKey)) {
+                if (!stateChange.getNewKeys().contains(oldKey)) {
                     fragmentTransaction.remove(fragment);
                 } else if (!fragment.isDetached()) {
                     fragmentTransaction.detach(fragment);
                 }
             }
         }
-        for (final FragmentKey newKey : stateChange.<FragmentKey>getNewState()) {
+        for (final FragmentKey newKey : stateChange.<FragmentKey>getNewKeys()) {
             Fragment fragment = fragmentManager.findFragmentByTag(newKey.getFragmentTag());
-            if (newKey.equals(stateChange.topNewState())) {
+            if (newKey.equals(stateChange.topNewKey())) {
                 if (fragment != null) {
                     if (fragment.isDetached()) {
                         fragmentTransaction.attach(fragment);

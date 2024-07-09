@@ -19,9 +19,9 @@
 
 package com.josemgu91.habittune.android;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 public interface FragmentInteractionListener {
 

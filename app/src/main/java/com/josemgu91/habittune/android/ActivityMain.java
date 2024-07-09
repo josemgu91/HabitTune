@@ -25,22 +25,22 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
+
+import com.google.android.material.navigation.NavigationView;
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.navigation.FragmentKey;
 import com.josemgu91.habittune.android.navigation.FragmentKeyFactory;
@@ -66,13 +66,10 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     private InputMethodManager inputMethodManager;
 
-    private FirebaseAnalytics firebaseAnalytics;
-
     public final static String OPT_ARG_ACTIVITY_ID = "activityId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         fragmentKeyFactory = new FragmentKeyFactory();
         backstackDelegate = new BackstackDelegate(null);
         backstackDelegate.onCreate(savedInstanceState,
@@ -141,31 +138,25 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.navigationMenuGoToSchedule:
-                logAnalyticsNavigationEvent("schedule");
-                backstackDelegate.getBackstack().jumpToRoot();
-                break;
-            case R.id.navigationMenuGoToRoutines:
-                logAnalyticsNavigationEvent("routines");
-                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createRoutinesKey()), StateChange.REPLACE);
-                break;
-            case R.id.navigationMenuGoToActivities:
-                logAnalyticsNavigationEvent("activities");
-                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createActivitiesKey()), StateChange.REPLACE);
-                break;
-            case R.id.navigationMenuGoToStatistics:
-                logAnalyticsNavigationEvent("statisticsActivitySelection");
-                backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createStatisticsActivitySelectionKey()), StateChange.REPLACE);
-                break;
-            case R.id.navigationMenuGoToSettings:
-                logAnalyticsNavigationEvent("settings");
-                backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createSettingsKey());
-                break;
-            case R.id.navigationMenuGoToHelp:
-                logAnalyticsNavigationEvent("help");
-                launchTourScreen();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.navigationMenuGoToSchedule) {
+            logAnalyticsNavigationEvent("schedule");
+            backstackDelegate.getBackstack().jumpToRoot();
+        } else if (itemId == R.id.navigationMenuGoToRoutines) {
+            logAnalyticsNavigationEvent("routines");
+            backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createRoutinesKey()), StateChange.REPLACE);
+        } else if (itemId == R.id.navigationMenuGoToActivities) {
+            logAnalyticsNavigationEvent("activities");
+            backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createActivitiesKey()), StateChange.REPLACE);
+        } else if (itemId == R.id.navigationMenuGoToStatistics) {
+            logAnalyticsNavigationEvent("statisticsActivitySelection");
+            backstackDelegate.getBackstack().setHistory(History.of(fragmentKeyFactory.createScheduleKey(), fragmentKeyFactory.createStatisticsActivitySelectionKey()), StateChange.REPLACE);
+        } else if (itemId == R.id.navigationMenuGoToSettings) {
+            logAnalyticsNavigationEvent("settings");
+            backstackDelegate.getBackstack().goTo(fragmentKeyFactory.createSettingsKey());
+        } else if (itemId == R.id.navigationMenuGoToHelp) {
+            logAnalyticsNavigationEvent("help");
+            launchTourScreen();
         }
         drawerLayout.closeDrawers();
         return true;
@@ -192,11 +183,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                                 stateChange.getDirection() == StateChange.FORWARD ? "Forward" :
                                         "Unknown")
         );
-        if (stateChange.topNewState().equals(stateChange.topPreviousState())) {
+        if (stateChange.topNewKey().equals(stateChange.topPreviousKey())) {
             completionCallback.stateChangeComplete();
             return;
         }
-        final FragmentKey topStateKey = stateChange.topNewState();
+        final FragmentKey topStateKey = stateChange.topNewKey();
         switch (topStateKey.getFragmentTag()) {
             case FragmentKeyFactory.FRAGMENT_TAG_SCHEDULE:
                 navigationView.setCheckedItem(R.id.navigationMenuGoToSchedule);
@@ -304,9 +295,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     private void logAnalyticsNavigationEvent(final String id) {
-        final Bundle bundle = new Bundle();
-        bundle.putString("screenId", id);
-        firebaseAnalytics.logEvent("navigation", bundle);
+        // Nothing.
     }
 
     @Override

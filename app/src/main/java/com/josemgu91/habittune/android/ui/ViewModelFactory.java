@@ -19,9 +19,9 @@
 
 package com.josemgu91.habittune.android.ui;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.josemgu91.habittune.android.ui.activities.ViewModelActivities;
 import com.josemgu91.habittune.android.ui.activity_create_update.ViewModelNewActivity;

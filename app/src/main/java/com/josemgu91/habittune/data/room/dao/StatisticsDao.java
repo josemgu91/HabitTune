@@ -19,9 +19,9 @@
 
 package com.josemgu91.habittune.data.room.dao;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Query;
-import android.support.annotation.NonNull;
+import androidx.room.Dao;
+import androidx.room.Query;
+import androidx.annotation.NonNull;
 
 import com.josemgu91.habittune.data.room.custom_responses.RoutineEntry;
 

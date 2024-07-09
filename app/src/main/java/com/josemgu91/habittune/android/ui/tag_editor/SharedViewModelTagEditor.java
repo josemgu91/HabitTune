@@ -19,7 +19,7 @@
 
 package com.josemgu91.habittune.android.ui.tag_editor;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,13 +20,14 @@
 package com.josemgu91.habittune.android.ui.help;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 
-import com.github.paolorotolo.appintro.AppIntro;
-import com.github.paolorotolo.appintro.AppIntroFragment;
-import com.github.paolorotolo.appintro.model.SliderPage;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import com.github.appintro.AppIntro;
+import com.github.appintro.AppIntroFragment;
+import com.github.appintro.model.SliderPage;
 import com.josemgu91.habittune.R;
 
 public class TourActivity extends AppIntro {
@@ -55,12 +56,12 @@ public class TourActivity extends AppIntro {
             sliderPage.setTitle(getResources().getStringArray(R.array.help_titles)[i]);
             sliderPage.setDescription(getResources().getStringArray(R.array.help_descriptions)[i]);
             sliderPage.setImageDrawable(drawables[i]);
-            sliderPage.setBgColor(ContextCompat.getColor(this, background[i]));
-            sliderPage.setDescColor(ContextCompat.getColor(this, R.color.primaryText));
-            sliderPage.setTitleColor(ContextCompat.getColor(this, R.color.primaryText));
+            sliderPage.setBackgroundColorRes(background[i]);
+            sliderPage.setDescriptionColorRes(R.color.primaryText);
+            sliderPage.setTitleColorRes(R.color.primaryText);
             addSlide(AppIntroFragment.newInstance(sliderPage));
         }
-        showSkipButton(false);
+        setSkipButtonEnabled(false);
         setColorDoneText(ContextCompat.getColor(this, R.color.primaryText));
         setIndicatorColor(
                 ContextCompat.getColor(this, R.color.primaryText),

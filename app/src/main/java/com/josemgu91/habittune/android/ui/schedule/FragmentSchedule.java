@@ -19,20 +19,21 @@
 
 package com.josemgu91.habittune.android.ui.schedule;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -65,7 +66,7 @@ public class FragmentSchedule extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModelSchedule = ViewModelProviders.of(this, viewModelFactory).get(ViewModelSchedule.class);
+        viewModelSchedule = new ViewModelProvider(this, viewModelFactory).get(ViewModelSchedule.class);
     }
 
     @Override

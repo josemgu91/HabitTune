@@ -19,8 +19,8 @@
 
 package com.josemgu91.habittune.domain.usecases;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.josemgu91.habittune.domain.datagateways.AssistanceRegisterDataGateway;
 import com.josemgu91.habittune.domain.datagateways.DataGatewayException;

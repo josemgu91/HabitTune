@@ -22,10 +22,11 @@ package com.josemgu91.habittune.android.ui.routine_entry_add;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 public class TimePickerDialog extends DialogFragment implements android.app.TimePickerDialog.OnTimeSetListener {
 

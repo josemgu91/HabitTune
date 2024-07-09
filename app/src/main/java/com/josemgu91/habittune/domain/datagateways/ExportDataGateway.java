@@ -19,7 +19,7 @@
 
 package com.josemgu91.habittune.domain.datagateways;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public interface ExportDataGateway {
 

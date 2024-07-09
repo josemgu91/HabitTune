@@ -19,19 +19,20 @@
 
 package com.josemgu91.habittune.android.ui.routine_entry_add;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.FragmentInteractionListener;
@@ -81,8 +82,8 @@ public class FragmentAddRoutineEntry extends BaseFragment implements TimePickerD
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModelRoutineAddActivity = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineAddActivity.class);
-        sharedViewModelActivitySelection = ViewModelProviders.of(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
+        viewModelRoutineAddActivity = new ViewModelProvider(this, viewModelFactory).get(ViewModelRoutineAddActivity.class);
+        sharedViewModelActivitySelection = new ViewModelProvider(getActivity(), viewModelFactory).get(SharedViewModelActivitySelection.class);
         final Bundle arguments = getArguments();
         routineId = arguments.getString(ARG_ROUTINE_ID);
         routineDay = arguments.getInt(ARG_ROUTINE_DAY);
@@ -209,15 +210,12 @@ public class FragmentAddRoutineEntry extends BaseFragment implements TimePickerD
     @Override
     public void onTimeSet(final int hourOfDay, final int minute) {
         final Hour hour = new Hour(hourOfDay, minute);
-        switch (viewThatStartedTimePicker) {
-            case R.id.textViewStartHour:
-                startHour = hour;
-                fragmentRoutineAddActivityBinding.textViewStartHour.setText(hour.format());
-                break;
-            case R.id.textViewEndHour:
-                endHour = hour;
-                fragmentRoutineAddActivityBinding.textViewEndHour.setText(hour.format());
-                break;
+        if (viewThatStartedTimePicker == R.id.textViewStartHour) {
+            startHour = hour;
+            fragmentRoutineAddActivityBinding.textViewStartHour.setText(hour.format());
+        } else if (viewThatStartedTimePicker == R.id.textViewEndHour) {
+            endHour = hour;
+            fragmentRoutineAddActivityBinding.textViewEndHour.setText(hour.format());
         }
     }
 

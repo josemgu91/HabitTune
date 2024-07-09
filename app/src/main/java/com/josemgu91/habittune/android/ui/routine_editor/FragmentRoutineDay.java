@@ -19,22 +19,22 @@
 
 package com.josemgu91.habittune.android.ui.routine_editor;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.josemgu91.habittune.R;
 import com.josemgu91.habittune.android.Application;
@@ -79,7 +79,7 @@ public class FragmentRoutineDay extends Fragment {
         routineDay = arguments.getInt(ARG_ROUTINE_DAY);
         routineId = arguments.getString(ARG_ROUTINE_ID);
         final ViewModelProvider.Factory viewModelFactory = ((Application) context.getApplicationContext()).getViewModelFactory();
-        viewModelRoutineDay = ViewModelProviders.of(this, viewModelFactory).get(ViewModelRoutineDay.class);
+        viewModelRoutineDay = new ViewModelProvider(this, viewModelFactory).get(ViewModelRoutineDay.class);
     }
 
     @Nullable

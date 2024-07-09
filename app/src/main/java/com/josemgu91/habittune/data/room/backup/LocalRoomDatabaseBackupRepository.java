@@ -21,7 +21,7 @@ package com.josemgu91.habittune.data.room.backup;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.josemgu91.habittune.data.file.ContentResolverFile;
 import com.josemgu91.habittune.data.room.LocalRoomDatabase;
