@@ -1,15 +1,16 @@
 # HabitTune
 Do you struggle and feel that you cannot follow a routine? **HabitTune** will help you in order to follow your daily activities in time. Create a new routine *(e.g. “Morning routine”)*, create a new activity *(e.g. “Clean my room”)* and assign it to your routine. You can create multiple activities and routines. Follow your routine and check out your statistics in order to know how you are doing it. This will help to motivate you in order to do it better every day. **HabitTune** can help you to fulfill your goals, want to learn new things? Just create a study routine and go on. Make, strength and tune your habits!
+
 ## Intended User
 Anybody who wants to follow a routine, form new habits and/or wants to organize its daily life.
+
 ## Features
 - Create your routine.
 - Register your daily activities start and end times.
 - View your routine activities statistics.
 - Export statistics in CSV format.
 - Backup and restore the app data.
-## Build Notes
-- Add your own **google-services.json** file inside the **app** folder.
+
 ## Used External Libraries
 - [Android Architecture Componenets.](https://developer.android.com/topic/libraries/architecture/adding-components)
 - [MPAndroidChart.](https://github.com/PhilJay/MPAndroidChart)
@@ -18,11 +19,11 @@ Anybody who wants to follow a routine, form new habits and/or wants to organize 
 - [Color Picker.](https://github.com/jaredrummler/ColorPicker)
 - [FlexibleAdapter.](https://github.com/davideas/FlexibleAdapter)
 - [FastCSV.](https://github.com/osiegmar/FastCSV)
-- [Firebase Libraries.](https://firebase.google.com/)
-- [AppIntro.](https://github.com/paolorotolo/AppIntro)
-- JUnit.
+- [AppIntro.](https://github.com/AppIntro/AppIntro)
+- JUnit4.
 - Espresso.
-- Android Support Library.
+- Android Jetpack.
+
 ## License
 ```
 Copyright (C) 2018  José Miguel García Urrutia <josemgu91@gmail.com>
